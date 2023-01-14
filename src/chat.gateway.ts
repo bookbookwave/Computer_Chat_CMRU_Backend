@@ -5,7 +5,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class ChatGateway {
   @WebSocketServer()
   server;
@@ -13,5 +13,6 @@ export class ChatGateway {
   @SubscribeMessage('message')
   handleMessage(@MessageBody() message: string): void {
     this.server.emit('message', message);
+    console.log(message);
   }
 }
