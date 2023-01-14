@@ -1,0 +1,128 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-arm64-openssl-1.1.x", "darwin-arm64"]
+}
+
+generator nestgraphql {
+  provider               = "prisma-nestjs-graphql"
+  output                 = "../src/@generated"
+  emitSingle             = true
+  purgeOutput            = true
+  fields_Upload_from     = "graphql-upload"
+  fields_Upload_input    = true
+  fields_Upload_output   = false
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @default(cuid())
+  /// @Validator.MinLength(3)
+  name     String
+  /// @Validator.IsEmail()
+  email    String     @unique
+  password String
+  role     Role       @default(USER)
+  /// @FieldType('Upload.GraphQLUpload')
+  /// @PropertyType('Upload.Upload')
+  avatar   String     @default("via.placeholder.com/150*150")
+  createAt DateTime   @default(now())
+  updateAt DateTime   @updatedAt
+  Download Download[]
+  Page     Page[]
+  Post     Post[]
+}
+
+model Category {
+  id   String @id @default(cuid())
+  /// @Validator.MinLength(3)
+  name String
+  Post Post[]
+}
+
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  /// @FieldType('Upload.GraphQLUpload')
+  /// @PropertyType('Upload.Upload')
+  thumbnail  String   @default("https://via.placeholder.com/480x320")
+  userId     String
+  categoryId String
+  view       Int      @default(0)
+  /// @Validator.IsNotEmpty()
+  /// @Validator.IsString()
+  /// @Validator.MinLength(10)
+  content    String
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id])
+  author     User     @relation(fields: [userId], references: [id])
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  /// @FieldType('Upload.GraphQLUpload')
+  /// @PropertyType('Upload.Upload')
+  thumbnail String   @default("https://via.placeholder.com/480x320")
+  userId    String
+  view      Int      @default(0)
+  /// @Validator.IsNotEmpty()
+  /// @Validator.IsString()
+  /// @Validator.MinLength(10)
+  content   String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  author    User     @relation(fields: [userId], references: [id])
+}
+
+model Banner {
+  id       String   @id @default(cuid())
+  title    String
+  /// @FieldType('Upload.GraphQLUpload')
+  /// @PropertyType('Upload.Upload')
+  image    String
+  link     String?
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model DownloadCategory {
+  id       String     @id @default(cuid())
+  /// @Validator.MinLength(3)
+  name     String
+  Download Download[]
+}
+
+model Download {
+  id                 String           @id @default(cuid())
+  downloadCategoryId String
+  link               String
+  /// @FieldType('Upload.GraphQLUpload')
+  /// @PropertyType('Upload.Upload')
+  thumbnail          String           @default("https://via.placeholder.com/150")
+  userId             String
+  counting           Int              @default(0)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  downloadCategory   DownloadCategory @relation(fields: [downloadCategoryId], references: [id])
+  author             User             @relation(fields: [userId], references: [id])
+}
+
+model Configuration {
+  id    String @id @default(cuid())
+  /// @Validator.MinLength(3)
+  name  String
+  /// @Validator.IsNotEmpty()
+  value String
+}
+
+enum Role {
+  ADMIN
+  USER
+}

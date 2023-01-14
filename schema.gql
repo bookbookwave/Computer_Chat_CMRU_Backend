@@ -1,0 +1,813 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BannerCountAggregate {
+  id: Int!
+  title: Int!
+  image: Int!
+  link: Int!
+  createAt: Int!
+  updateAt: Int!
+  _all: Int!
+}
+
+type BannerMaxAggregate {
+  id: String
+  title: String
+  image: String
+  link: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type BannerMinAggregate {
+  id: String
+  title: String
+  image: String
+  link: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type Banner {
+  id: ID!
+  title: String!
+  image: String!
+  link: String
+  createAt: DateTime!
+  updateAt: DateTime!
+}
+
+type CategoryCountAggregate {
+  id: Int!
+  name: Int!
+  _all: Int!
+}
+
+type CategoryCount {
+  Post: Int!
+}
+
+type CategoryMaxAggregate {
+  id: String
+  name: String
+}
+
+type CategoryMinAggregate {
+  id: String
+  name: String
+}
+
+type Category {
+  id: ID!
+  name: String!
+  Post: [Post!]
+  _count: CategoryCount!
+}
+
+type ConfigurationCountAggregate {
+  id: Int!
+  name: Int!
+  value: Int!
+  _all: Int!
+}
+
+type ConfigurationMaxAggregate {
+  id: String
+  name: String
+  value: String
+}
+
+type ConfigurationMinAggregate {
+  id: String
+  name: String
+  value: String
+}
+
+type Configuration {
+  id: ID!
+  name: String!
+  value: String!
+}
+
+type DownloadAvgAggregate {
+  counting: Float
+}
+
+type DownloadCategoryCount {
+  Download: Int!
+}
+
+type DownloadCountAggregate {
+  id: Int!
+  downloadCategoryId: Int!
+  link: Int!
+  thumbnail: Int!
+  userId: Int!
+  counting: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  _all: Int!
+}
+
+type DownloadMaxAggregate {
+  id: String
+  downloadCategoryId: String
+  link: String
+  thumbnail: String
+  userId: String
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DownloadMinAggregate {
+  id: String
+  downloadCategoryId: String
+  link: String
+  thumbnail: String
+  userId: String
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DownloadSumAggregate {
+  counting: Int
+}
+
+type Download {
+  id: ID!
+  downloadCategoryId: String!
+  link: String!
+  thumbnail: String!
+  userId: String!
+  counting: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  downloadCategory: DownloadCategory!
+  author: User!
+}
+
+type DownloadCategoryCountAggregate {
+  id: Int!
+  name: Int!
+  _all: Int!
+}
+
+type DownloadCategoryMaxAggregate {
+  id: String
+  name: String
+}
+
+type DownloadCategoryMinAggregate {
+  id: String
+  name: String
+}
+
+type DownloadCategory {
+  id: ID!
+  name: String!
+  Download: [Download!]
+  _count: DownloadCategoryCount!
+}
+
+type PageAvgAggregate {
+  view: Float
+}
+
+type PageCountAggregate {
+  id: Int!
+  title: Int!
+  thumbnail: Int!
+  userId: Int!
+  view: Int!
+  content: Int!
+  createAt: Int!
+  updateAt: Int!
+  _all: Int!
+}
+
+type PageMaxAggregate {
+  id: String
+  title: String
+  thumbnail: String
+  userId: String
+  view: Int
+  content: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type PageMinAggregate {
+  id: String
+  title: String
+  thumbnail: String
+  userId: String
+  view: Int
+  content: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type PageSumAggregate {
+  view: Int
+}
+
+type Page {
+  id: ID!
+  title: String!
+  thumbnail: String!
+  userId: String!
+  view: Int!
+  content: String!
+  createAt: DateTime!
+  updateAt: DateTime!
+  author: User!
+}
+
+type PostAvgAggregate {
+  view: Float
+}
+
+type PostCountAggregate {
+  id: Int!
+  title: Int!
+  thumbnail: Int!
+  userId: Int!
+  categoryId: Int!
+  view: Int!
+  content: Int!
+  createAt: Int!
+  updateAt: Int!
+  _all: Int!
+}
+
+type PostMaxAggregate {
+  id: String
+  title: String
+  thumbnail: String
+  userId: String
+  categoryId: String
+  view: Int
+  content: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type PostMinAggregate {
+  id: String
+  title: String
+  thumbnail: String
+  userId: String
+  categoryId: String
+  view: Int
+  content: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type PostSumAggregate {
+  view: Int
+}
+
+type Post {
+  id: ID!
+  title: String!
+  thumbnail: String!
+  userId: String!
+  categoryId: String!
+  view: Int!
+  content: String!
+  createAt: DateTime!
+  updateAt: DateTime!
+  category: Category!
+  author: User!
+}
+
+type UserCountAggregate {
+  id: Int!
+  name: Int!
+  email: Int!
+  password: Int!
+  role: Int!
+  avatar: Int!
+  createAt: Int!
+  updateAt: Int!
+  _all: Int!
+}
+
+type UserCount {
+  Download: Int!
+  Page: Int!
+  Post: Int!
+}
+
+type UserMaxAggregate {
+  id: String
+  name: String
+  email: String
+  password: String
+  role: Role
+  avatar: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type UserMinAggregate {
+  id: String
+  name: String
+  email: String
+  password: String
+  role: Role
+  avatar: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  role: Role!
+  avatar: String!
+  createAt: DateTime!
+  updateAt: DateTime!
+  Download: [Download!]
+  Page: [Page!]
+  Post: [Post!]
+  _count: UserCount!
+}
+
+type Query {
+  user(id: String!): User!
+  users: [User!]!
+  category(id: String!): Category!
+  categories: [Category!]!
+  post(id: String!): Post!
+  posts: [Post!]!
+  page(id: String!): Page!
+  pages: [Page!]!
+  banner(id: String!): Banner!
+  banners: Banner!
+  download(id: String!): Download!
+  downloads: [Download!]!
+  configuration(id: String!): Configuration!
+  configurations: Configuration!
+  downloadCategory(id: String!): DownloadCategory!
+  downloadCategories: DownloadCategory!
+}
+
+type Mutation {
+  createUser(input: UserUncheckedCreateInput!): User!
+  updateUser(input: UserUncheckedCreateInput!): User!
+  deleteUser(id: String!): String!
+  login(input: inputLogin!): String!
+  register(input: inputRegister!): String!
+  createCategory(input: CategoryCreateInput!): Category!
+  updateCategory(input: CategoryCreateInput!): Category!
+  deleteCategory(id: String!): Boolean!
+  createPost(input: PostUncheckedCreateInput!): Post!
+  updatePost(input: PostUncheckedCreateInput!): Post!
+  deletePost(id: String!): Boolean!
+  createPage(input: PageUncheckedCreateInput!): Page!
+  updatePage(input: PageUncheckedCreateInput!): Page!
+  deletePage(id: String!): Boolean!
+  createBanner(input: BannerCreateInput!): Banner!
+  updateBanner(input: BannerCreateInput!): Banner!
+  deleteBanner(id: String!): Boolean!
+  createDownload(input: DownloadUncheckedCreateInput!): Download!
+  updateDownload(input: DownloadUncheckedCreateInput!): Download!
+  deleteDownload(id: String!): Boolean!
+  createConfig(input: ConfigurationCreateInput!): Configuration!
+  updateConfig(input: ConfigurationCreateInput!): Configuration!
+  deleteConfig(id: String!): Boolean!
+  createDownloadCategory(input: DownloadCategoryCreateInput!): DownloadCategory!
+  updateDownloadCategory(input: DownloadCategoryCreateInput!): DownloadCategory!
+  deleteDownloadCategory(id: String!): Boolean!
+}
+
+input UserUncheckedCreateInput {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: Upload
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadUncheckedCreateNestedManyWithoutAuthorInput
+  Page: PageUncheckedCreateNestedManyWithoutAuthorInput
+  Post: PostUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input DownloadUncheckedCreateNestedManyWithoutAuthorInput {
+  create: [DownloadCreateWithoutAuthorInput!]
+  connectOrCreate: [DownloadCreateOrConnectWithoutAuthorInput!]
+  createMany: DownloadCreateManyAuthorInputEnvelope
+  connect: [DownloadWhereUniqueInput!]
+}
+
+input DownloadCreateWithoutAuthorInput {
+  id: String
+  link: String!
+  thumbnail: Upload
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  downloadCategory: DownloadCategoryCreateNestedOneWithoutDownloadInput!
+}
+
+input DownloadCategoryCreateNestedOneWithoutDownloadInput {
+  create: DownloadCategoryCreateWithoutDownloadInput
+  connectOrCreate: DownloadCategoryCreateOrConnectWithoutDownloadInput
+  connect: DownloadCategoryWhereUniqueInput
+}
+
+input DownloadCategoryCreateWithoutDownloadInput {
+  id: String
+  name: String!
+}
+
+input DownloadCategoryCreateOrConnectWithoutDownloadInput {
+  where: DownloadCategoryWhereUniqueInput!
+  create: DownloadCategoryCreateWithoutDownloadInput!
+}
+
+input DownloadCategoryWhereUniqueInput {
+  id: String
+}
+
+input DownloadCreateOrConnectWithoutAuthorInput {
+  where: DownloadWhereUniqueInput!
+  create: DownloadCreateWithoutAuthorInput!
+}
+
+input DownloadWhereUniqueInput {
+  id: String
+}
+
+input DownloadCreateManyAuthorInputEnvelope {
+  data: [DownloadCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input DownloadCreateManyAuthorInput {
+  id: String
+  downloadCategoryId: String!
+  link: String!
+  thumbnail: Upload
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input PageUncheckedCreateNestedManyWithoutAuthorInput {
+  create: [PageCreateWithoutAuthorInput!]
+  connectOrCreate: [PageCreateOrConnectWithoutAuthorInput!]
+  createMany: PageCreateManyAuthorInputEnvelope
+  connect: [PageWhereUniqueInput!]
+}
+
+input PageCreateWithoutAuthorInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input PageCreateOrConnectWithoutAuthorInput {
+  where: PageWhereUniqueInput!
+  create: PageCreateWithoutAuthorInput!
+}
+
+input PageWhereUniqueInput {
+  id: String
+}
+
+input PageCreateManyAuthorInputEnvelope {
+  data: [PageCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PageCreateManyAuthorInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input PostUncheckedCreateNestedManyWithoutAuthorInput {
+  create: [PostCreateWithoutAuthorInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+  connect: [PostWhereUniqueInput!]
+}
+
+input PostCreateWithoutAuthorInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+  category: CategoryCreateNestedOneWithoutPostInput!
+}
+
+input CategoryCreateNestedOneWithoutPostInput {
+  create: CategoryCreateWithoutPostInput
+  connectOrCreate: CategoryCreateOrConnectWithoutPostInput
+  connect: CategoryWhereUniqueInput
+}
+
+input CategoryCreateWithoutPostInput {
+  id: String
+  name: String!
+}
+
+input CategoryCreateOrConnectWithoutPostInput {
+  where: CategoryWhereUniqueInput!
+  create: CategoryCreateWithoutPostInput!
+}
+
+input CategoryWhereUniqueInput {
+  id: String
+}
+
+input PostCreateOrConnectWithoutAuthorInput {
+  where: PostWhereUniqueInput!
+  create: PostCreateWithoutAuthorInput!
+}
+
+input PostWhereUniqueInput {
+  id: String
+}
+
+input PostCreateManyAuthorInputEnvelope {
+  data: [PostCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateManyAuthorInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  categoryId: String!
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input inputLogin {
+  email: String!
+  password: String!
+}
+
+input inputRegister {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: Upload
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadCreateNestedManyWithoutAuthorInput
+  Page: PageCreateNestedManyWithoutAuthorInput
+  Post: PostCreateNestedManyWithoutAuthorInput
+  confirmPassword: String!
+}
+
+input DownloadCreateNestedManyWithoutAuthorInput {
+  create: [DownloadCreateWithoutAuthorInput!]
+  connectOrCreate: [DownloadCreateOrConnectWithoutAuthorInput!]
+  createMany: DownloadCreateManyAuthorInputEnvelope
+  connect: [DownloadWhereUniqueInput!]
+}
+
+input PageCreateNestedManyWithoutAuthorInput {
+  create: [PageCreateWithoutAuthorInput!]
+  connectOrCreate: [PageCreateOrConnectWithoutAuthorInput!]
+  createMany: PageCreateManyAuthorInputEnvelope
+  connect: [PageWhereUniqueInput!]
+}
+
+input PostCreateNestedManyWithoutAuthorInput {
+  create: [PostCreateWithoutAuthorInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+  connect: [PostWhereUniqueInput!]
+}
+
+input CategoryCreateInput {
+  id: String
+  name: String!
+  Post: PostCreateNestedManyWithoutCategoryInput
+}
+
+input PostCreateNestedManyWithoutCategoryInput {
+  create: [PostCreateWithoutCategoryInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutCategoryInput!]
+  createMany: PostCreateManyCategoryInputEnvelope
+  connect: [PostWhereUniqueInput!]
+}
+
+input PostCreateWithoutCategoryInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+  author: UserCreateNestedOneWithoutPostInput!
+}
+
+input UserCreateNestedOneWithoutPostInput {
+  create: UserCreateWithoutPostInput
+  connectOrCreate: UserCreateOrConnectWithoutPostInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutPostInput {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: Upload
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadCreateNestedManyWithoutAuthorInput
+  Page: PageCreateNestedManyWithoutAuthorInput
+}
+
+input UserCreateOrConnectWithoutPostInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutPostInput!
+}
+
+input UserWhereUniqueInput {
+  id: String
+  email: String
+}
+
+input PostCreateOrConnectWithoutCategoryInput {
+  where: PostWhereUniqueInput!
+  create: PostCreateWithoutCategoryInput!
+}
+
+input PostCreateManyCategoryInputEnvelope {
+  data: [PostCreateManyCategoryInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateManyCategoryInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  userId: String!
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input PostUncheckedCreateInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  userId: String!
+  categoryId: String!
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input PageUncheckedCreateInput {
+  id: String
+  title: String!
+  thumbnail: Upload
+  userId: String!
+  view: Int
+  content: String!
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input BannerCreateInput {
+  id: String
+  title: String!
+  image: Upload!
+  link: String
+  createAt: DateTime
+  updateAt: DateTime
+}
+
+input DownloadUncheckedCreateInput {
+  id: String
+  downloadCategoryId: String!
+  link: String!
+  thumbnail: Upload
+  userId: String!
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ConfigurationCreateInput {
+  id: String
+  name: String!
+  value: String!
+}
+
+input DownloadCategoryCreateInput {
+  id: String
+  name: String!
+  Download: DownloadCreateNestedManyWithoutDownloadCategoryInput
+}
+
+input DownloadCreateNestedManyWithoutDownloadCategoryInput {
+  create: [DownloadCreateWithoutDownloadCategoryInput!]
+  connectOrCreate: [DownloadCreateOrConnectWithoutDownloadCategoryInput!]
+  createMany: DownloadCreateManyDownloadCategoryInputEnvelope
+  connect: [DownloadWhereUniqueInput!]
+}
+
+input DownloadCreateWithoutDownloadCategoryInput {
+  id: String
+  link: String!
+  thumbnail: Upload
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  author: UserCreateNestedOneWithoutDownloadInput!
+}
+
+input UserCreateNestedOneWithoutDownloadInput {
+  create: UserCreateWithoutDownloadInput
+  connectOrCreate: UserCreateOrConnectWithoutDownloadInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutDownloadInput {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: Upload
+  createAt: DateTime
+  updateAt: DateTime
+  Page: PageCreateNestedManyWithoutAuthorInput
+  Post: PostCreateNestedManyWithoutAuthorInput
+}
+
+input UserCreateOrConnectWithoutDownloadInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutDownloadInput!
+}
+
+input DownloadCreateOrConnectWithoutDownloadCategoryInput {
+  where: DownloadWhereUniqueInput!
+  create: DownloadCreateWithoutDownloadCategoryInput!
+}
+
+input DownloadCreateManyDownloadCategoryInputEnvelope {
+  data: [DownloadCreateManyDownloadCategoryInput!]!
+  skipDuplicates: Boolean
+}
+
+input DownloadCreateManyDownloadCategoryInput {
+  id: String
+  link: String!
+  thumbnail: Upload
+  userId: String!
+  counting: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
