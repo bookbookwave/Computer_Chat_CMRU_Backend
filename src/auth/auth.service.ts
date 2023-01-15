@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma.service';
 import { compareSync, hashSync } from 'bcryptjs';
 import * as dotenv from 'dotenv';
+import { PrismaService } from 'src/prisma.service';
 dotenv.config();
 
 export type JWTPayLoad = {

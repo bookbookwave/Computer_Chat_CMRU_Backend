@@ -124,5 +124,6 @@ model Configuration {
 
 enum Role {
   ADMIN
+  TEACHER
   USER
 }

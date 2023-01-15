@@ -26,7 +26,7 @@ export class AuthResolver {
     let avatar = 'https://via.placeholder.com/150x150';
     if (input.avatar) {
       const { file } = await input.avatar;
-      avatar = await this.utilsService.singleUpload(file);
+      avatar = await this.utilsService.singleUpload(await input.avatar);
     }
 
     return this.authService.signUp({ ...input, avatar: avatar });

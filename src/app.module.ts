@@ -1,9 +1,10 @@
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as dotenv from 'dotenv';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -30,7 +31,7 @@ dotenv.config();
       //   outputAs: 'class',
       // },
       debug: true,
-      playground: true,
+      playground: false,
       context: ({ req }) => ({ req }),
       autoSchemaFile: 'schema.gql',
     }),
@@ -51,4 +52,10 @@ dotenv.config();
   controllers: [AppController],
   providers: [AppService, ChatGateway],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(graphqlUploadExpress({ maxFileSize: 100000000, maxFiles: 10 }))
+      .forRoutes('graphql');
+  }
+}
