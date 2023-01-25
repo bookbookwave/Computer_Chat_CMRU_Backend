@@ -63,13 +63,12 @@ export class AuthService {
 
     if (!isPasswordValid) {
       throw new Error(`Password is incorrect, Try again...`);
+    } else {
+      const token = this.signToken({
+        userId: found.id,
+      });
+      return token;
     }
-
-    const token = this.signToken({
-      userId: found.id,
-    });
-
-    return token;
   }
 
   async signUp(

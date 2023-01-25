@@ -1,3 +1,4 @@
+import { hashSync } from 'bcryptjs';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Role, User, UserUncheckedCreateInput } from '../@generated';
@@ -43,7 +44,7 @@ export class UserService {
         where: { id: input.id },
         data: {
           name: input.name,
-          password: input.password,
+          password: hashSync(input.password, 10),
           email: input.email,
           role: input.role,
         },

@@ -2,6 +2,7 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as dotenv from 'dotenv';
 import { graphqlUploadExpress } from 'graphql-upload';
@@ -18,6 +19,7 @@ import { DownloadModule } from './download/download.module';
 import { PageModule } from './page/page.module';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
+import { UtilsService } from './utils/utils.service';
 
 dotenv.config();
 @Module({
@@ -36,7 +38,7 @@ dotenv.config();
       autoSchemaFile: 'schema.gql',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(__dirname, '../..', 'uploads'),
     }),
 
     UserModule,
@@ -48,9 +50,10 @@ dotenv.config();
     DownloadModule,
     ConfigurationModule,
     DownloadCategoryModule,
+    MulterModule.register({ dest: './uploads' }),
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway],
+  providers: [AppService, ChatGateway, UtilsService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

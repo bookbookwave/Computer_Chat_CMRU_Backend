@@ -322,6 +322,7 @@ type UserMaxAggregate {
 
 enum Role {
   ADMIN
+  TEACHER
   USER
 }
 
@@ -405,16 +406,13 @@ input UserUncheckedCreateInput {
   email: String!
   password: String!
   role: Role
-  avatar: Upload
+  avatar: String
   createAt: DateTime
   updateAt: DateTime
   Download: DownloadUncheckedCreateNestedManyWithoutAuthorInput
   Page: PageUncheckedCreateNestedManyWithoutAuthorInput
   Post: PostUncheckedCreateNestedManyWithoutAuthorInput
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input DownloadUncheckedCreateNestedManyWithoutAuthorInput {
   create: [DownloadCreateWithoutAuthorInput!]
@@ -426,7 +424,7 @@ input DownloadUncheckedCreateNestedManyWithoutAuthorInput {
 input DownloadCreateWithoutAuthorInput {
   id: String
   link: String!
-  thumbnail: Upload
+  thumbnail: String
   counting: Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -471,7 +469,7 @@ input DownloadCreateManyAuthorInput {
   id: String
   downloadCategoryId: String!
   link: String!
-  thumbnail: Upload
+  thumbnail: String
   counting: Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -487,7 +485,7 @@ input PageUncheckedCreateNestedManyWithoutAuthorInput {
 input PageCreateWithoutAuthorInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   view: Int
   content: String!
   createAt: DateTime
@@ -511,7 +509,7 @@ input PageCreateManyAuthorInputEnvelope {
 input PageCreateManyAuthorInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   view: Int
   content: String!
   createAt: DateTime
@@ -528,7 +526,7 @@ input PostUncheckedCreateNestedManyWithoutAuthorInput {
 input PostCreateWithoutAuthorInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   view: Int
   content: String!
   createAt: DateTime
@@ -573,7 +571,7 @@ input PostCreateManyAuthorInputEnvelope {
 input PostCreateManyAuthorInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   categoryId: String!
   view: Int
   content: String!
@@ -592,7 +590,7 @@ input inputRegister {
   email: String!
   password: String!
   role: Role
-  avatar: Upload
+  avatar: String
   createAt: DateTime
   updateAt: DateTime
   Download: DownloadCreateNestedManyWithoutAuthorInput
@@ -638,7 +636,7 @@ input PostCreateNestedManyWithoutCategoryInput {
 input PostCreateWithoutCategoryInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   view: Int
   content: String!
   createAt: DateTime
@@ -658,7 +656,7 @@ input UserCreateWithoutPostInput {
   email: String!
   password: String!
   role: Role
-  avatar: Upload
+  avatar: String
   createAt: DateTime
   updateAt: DateTime
   Download: DownloadCreateNestedManyWithoutAuthorInput
@@ -688,7 +686,7 @@ input PostCreateManyCategoryInputEnvelope {
 input PostCreateManyCategoryInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   userId: String!
   view: Int
   content: String!
@@ -699,7 +697,7 @@ input PostCreateManyCategoryInput {
 input PostUncheckedCreateInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   userId: String!
   categoryId: String!
   view: Int
@@ -711,7 +709,7 @@ input PostUncheckedCreateInput {
 input PageUncheckedCreateInput {
   id: String
   title: String!
-  thumbnail: Upload
+  thumbnail: String
   userId: String!
   view: Int
   content: String!
@@ -722,7 +720,7 @@ input PageUncheckedCreateInput {
 input BannerCreateInput {
   id: String
   title: String!
-  image: Upload!
+  image: String!
   link: String
   createAt: DateTime
   updateAt: DateTime
@@ -732,7 +730,7 @@ input DownloadUncheckedCreateInput {
   id: String
   downloadCategoryId: String!
   link: String!
-  thumbnail: Upload
+  thumbnail: String
   userId: String!
   counting: Int
   createdAt: DateTime
@@ -761,7 +759,7 @@ input DownloadCreateNestedManyWithoutDownloadCategoryInput {
 input DownloadCreateWithoutDownloadCategoryInput {
   id: String
   link: String!
-  thumbnail: Upload
+  thumbnail: String
   counting: Int
   createdAt: DateTime
   updatedAt: DateTime
@@ -780,7 +778,7 @@ input UserCreateWithoutDownloadInput {
   email: String!
   password: String!
   role: Role
-  avatar: Upload
+  avatar: String
   createAt: DateTime
   updateAt: DateTime
   Page: PageCreateNestedManyWithoutAuthorInput
@@ -805,7 +803,7 @@ input DownloadCreateManyDownloadCategoryInputEnvelope {
 input DownloadCreateManyDownloadCategoryInput {
   id: String
   link: String!
-  thumbnail: Upload
+  thumbnail: String
   userId: String!
   counting: Int
   createdAt: DateTime

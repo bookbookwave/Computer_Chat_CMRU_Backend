@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /@generated
-/uploads/*
+/uploads/images/*
 
 # Logs
 logs

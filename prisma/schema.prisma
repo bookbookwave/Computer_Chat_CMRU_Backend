@@ -8,9 +8,9 @@ generator nestgraphql {
   output                 = "../src/@generated"
   emitSingle             = true
   purgeOutput            = true
-  fields_Upload_from     = "graphql-upload"
-  fields_Upload_input    = true
-  fields_Upload_output   = false
+  // fields_Upload_from     = "graphql-upload"
+  // fields_Upload_input    = true
+  // fields_Upload_output   = false
   fields_Validator_from  = "class-validator"
   fields_Validator_input = true
 }

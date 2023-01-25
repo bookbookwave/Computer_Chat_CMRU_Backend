@@ -25,8 +25,10 @@ export class UserResolver {
     @Args('input') input: UserUncheckedCreateInput,
   ): Promise<User> {
     let avatar = 'https://via.placeholder.com/150x150';
+    console.log('input :>> ', input);
     if (input.avatar) {
-      avatar = await this.utilsService.singleUpload(input.avatar);
+      avatar = input.avatar;
+      // avatar = await this.utilsService.singleUpload(input.avatar);
     }
     return await this.userService.createUser({ ...input, avatar: avatar });
   }
@@ -36,7 +38,8 @@ export class UserResolver {
   ): Promise<User> {
     let avatar = 'https://via.placeholder.com/150x150';
     if (input.avatar) {
-      avatar = await this.utilsService.singleUpload(input.avatar);
+      avatar = input.avatar;
+      // avatar = await this.utilsService.singleUpload(input.avatar);
     }
     return this.userService.updateUser({ ...input, avatar: avatar });
   }
