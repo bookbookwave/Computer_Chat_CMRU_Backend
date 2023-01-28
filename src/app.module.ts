@@ -20,7 +20,14 @@ import { PageModule } from './page/page.module';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
 import { UtilsService } from './utils/utils.service';
-
+import { MessageModule } from './message/message.module';
+// import { MessageRoomModule } from './message-room/message-room.module';
+import { ProjectModule } from './project/project.module';
+import { ProjectStatusModule } from './project-status/project-status.module';
+import { ProjectTypeModule } from './project-type/project-type.module';
+import { UserProjectModule } from './user-project/user-project.module';
+import { ChatService } from './chat.service';
+import { PrismaService } from './prisma.service';
 dotenv.config();
 @Module({
   imports: [
@@ -33,7 +40,7 @@ dotenv.config();
       //   outputAs: 'class',
       // },
       debug: true,
-      playground: false,
+      playground: true,
       context: ({ req }) => ({ req }),
       autoSchemaFile: 'schema.gql',
     }),
@@ -51,9 +58,20 @@ dotenv.config();
     ConfigurationModule,
     DownloadCategoryModule,
     MulterModule.register({ dest: './uploads' }),
+    MessageModule,
+    ProjectModule,
+    ProjectStatusModule,
+    ProjectTypeModule,
+    UserProjectModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway, UtilsService],
+  providers: [
+    AppService,
+    ChatGateway,
+    UtilsService,
+    ChatService,
+    PrismaService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

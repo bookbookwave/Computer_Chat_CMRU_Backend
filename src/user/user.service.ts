@@ -22,14 +22,14 @@ export class UserService {
         data: {
           name: input.name,
           email: input.email,
-          password: input.password,
-          role: input.role ?? Role.USER,
+          password: hashSync(input.password, 10),
+          role: input.role,
           avatar: input.avatar,
         },
       });
       return {
         ...user,
-        role: user.role == 'ADMIN' ? Role.ADMIN : Role.USER,
+        role: user.role === 'ADMIN' ? Role.ADMIN : Role.USER,
       };
     } catch (error) {
       throw new Error(error.message);
@@ -47,6 +47,7 @@ export class UserService {
           password: hashSync(input.password, 10),
           email: input.email,
           role: input.role,
+          avatar: input.avatar,
         },
       });
     } catch (error) {

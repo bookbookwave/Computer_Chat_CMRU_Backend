@@ -14,6 +14,10 @@ export type JWTPayLoad = {
   exp?: number;
   iat?: number;
   userId: string;
+  role: Role;
+  email: string;
+  avatar: string;
+  name: string;
 };
 @Injectable()
 export class AuthService {
@@ -66,6 +70,10 @@ export class AuthService {
     } else {
       const token = this.signToken({
         userId: found.id,
+        email: found.email,
+        role: found.role as Role,
+        avatar: found.avatar,
+        name: found.name,
       });
       return token;
     }

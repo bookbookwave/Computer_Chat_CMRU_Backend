@@ -178,6 +178,45 @@ type DownloadCategory {
   _count: DownloadCategoryCount!
 }
 
+type MessageCountAggregate {
+  id: Int!
+  message: Int!
+  userId: Int!
+  projectId: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  _all: Int!
+}
+
+type MessageMaxAggregate {
+  id: String
+  message: String
+  userId: String
+  projectId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type MessageMinAggregate {
+  id: String
+  message: String
+  userId: String
+  projectId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type Message {
+  id: ID!
+  message: String!
+  userId: String!
+  project: Project!
+  author: User!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type PageAvgAggregate {
   view: Float
 }
@@ -291,6 +330,111 @@ type Post {
   author: User!
 }
 
+type ProjectCountAggregate {
+  id: Int!
+  nameTH: Int!
+  nameEN: Int!
+  statusId: Int!
+  typeId: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  _all: Int!
+}
+
+type ProjectCount {
+  UserProject: Int!
+  Message: Int!
+}
+
+type ProjectMaxAggregate {
+  id: String
+  nameTH: String
+  nameEN: String
+  statusId: String
+  typeId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProjectMinAggregate {
+  id: String
+  nameTH: String
+  nameEN: String
+  statusId: String
+  typeId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProjectStatusCount {
+  Project: Int!
+}
+
+type Project {
+  id: ID!
+  nameTH: String!
+  nameEN: String!
+  statusId: String!
+  typeId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  projectType: ProjectType!
+  status: ProjectStatus!
+  UserProject: [UserProject!]
+  Message: [Message!]
+  _count: ProjectCount!
+}
+
+type ProjectStatusCountAggregate {
+  id: Int!
+  name: Int!
+  _all: Int!
+}
+
+type ProjectStatusMaxAggregate {
+  id: String
+  name: String
+}
+
+type ProjectStatusMinAggregate {
+  id: String
+  name: String
+}
+
+type ProjectStatus {
+  id: ID!
+  name: String!
+  Project: [Project!]
+  _count: ProjectStatusCount!
+}
+
+type ProjectTypeCountAggregate {
+  id: Int!
+  name: Int!
+  _all: Int!
+}
+
+type ProjectTypeCount {
+  Project: Int!
+}
+
+type ProjectTypeMaxAggregate {
+  id: String
+  name: String
+}
+
+type ProjectTypeMinAggregate {
+  id: String
+  name: String
+}
+
+type ProjectType {
+  id: ID!
+  name: String!
+  Project: [Project!]
+  _count: ProjectTypeCount!
+}
+
 type UserCountAggregate {
   id: Int!
   name: Int!
@@ -307,6 +451,8 @@ type UserCount {
   Download: Int!
   Page: Int!
   Post: Int!
+  Message: Int!
+  UserProject: Int!
 }
 
 type UserMaxAggregate {
@@ -349,7 +495,32 @@ type User {
   Download: [Download!]
   Page: [Page!]
   Post: [Post!]
+  Message: [Message!]
+  UserProject: [UserProject!]
   _count: UserCount!
+}
+
+type UserProjectCountAggregate {
+  projectId: Int!
+  userId: Int!
+  _all: Int!
+}
+
+type UserProjectMaxAggregate {
+  projectId: String
+  userId: String
+}
+
+type UserProjectMinAggregate {
+  projectId: String
+  userId: String
+}
+
+type UserProject {
+  project: Project!
+  user: User!
+  projectId: String!
+  userId: String!
 }
 
 type Query {
@@ -369,6 +540,17 @@ type Query {
   configurations: Configuration!
   downloadCategory(id: String!): DownloadCategory!
   downloadCategories: DownloadCategory!
+  message(id: String!): Message!
+  messages: [Message!]!
+  project(id: String!): Project!
+  projects: [Project!]!
+  projectsById(id: String!): [Project!]!
+  fineStatus(id: String!): ProjectStatus!
+  getStatus: [ProjectStatus!]!
+  findProjectType(id: String!): ProjectType!
+  getProjectType: [ProjectType!]!
+  findUserProject(id: String!): UserProject!
+  getUserProject(id: String!): [UserProject!]!
 }
 
 type Mutation {
@@ -398,6 +580,19 @@ type Mutation {
   createDownloadCategory(input: DownloadCategoryCreateInput!): DownloadCategory!
   updateDownloadCategory(input: DownloadCategoryCreateInput!): DownloadCategory!
   deleteDownloadCategory(id: String!): Boolean!
+  createMessage(input: MessageUncheckedCreateInput!): Message!
+  updateMessage(input: MessageUncheckedCreateInput!): Message!
+  deleteMessage(id: String!): Boolean!
+  createProject(input: ProjectUncheckedCreateInput!): Project!
+  updateProject(input: ProjectUncheckedCreateInput!): Project!
+  deleteProject(id: String!): String!
+  createStatus(input: ProjectStatusUncheckedCreateInput!): ProjectStatus!
+  updateStatus(input: ProjectStatusUncheckedCreateInput!): ProjectStatus!
+  deleteStatus(id: String!): Boolean!
+  createProjectType(input: ProjectTypeUncheckedCreateInput!): ProjectType!
+  updateProjectType(input: ProjectTypeUncheckedCreateInput!): ProjectType!
+  deleteProjectType(id: String!): Boolean!
+  createUserProject(input: Input!): Boolean!
 }
 
 input UserUncheckedCreateInput {
@@ -412,6 +607,8 @@ input UserUncheckedCreateInput {
   Download: DownloadUncheckedCreateNestedManyWithoutAuthorInput
   Page: PageUncheckedCreateNestedManyWithoutAuthorInput
   Post: PostUncheckedCreateNestedManyWithoutAuthorInput
+  Message: MessageUncheckedCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectUncheckedCreateNestedManyWithoutUserInput
 }
 
 input DownloadUncheckedCreateNestedManyWithoutAuthorInput {
@@ -579,12 +776,96 @@ input PostCreateManyAuthorInput {
   updateAt: DateTime
 }
 
-input inputLogin {
-  email: String!
-  password: String!
+input MessageUncheckedCreateNestedManyWithoutAuthorInput {
+  create: [MessageCreateWithoutAuthorInput!]
+  connectOrCreate: [MessageCreateOrConnectWithoutAuthorInput!]
+  createMany: MessageCreateManyAuthorInputEnvelope
+  connect: [MessageWhereUniqueInput!]
 }
 
-input inputRegister {
+input MessageCreateWithoutAuthorInput {
+  id: String
+  message: String!
+  project: ProjectCreateNestedOneWithoutMessageInput!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProjectCreateNestedOneWithoutMessageInput {
+  create: ProjectCreateWithoutMessageInput
+  connectOrCreate: ProjectCreateOrConnectWithoutMessageInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutMessageInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+}
+
+input ProjectTypeCreateNestedOneWithoutProjectInput {
+  create: ProjectTypeCreateWithoutProjectInput
+  connectOrCreate: ProjectTypeCreateOrConnectWithoutProjectInput
+  connect: ProjectTypeWhereUniqueInput
+}
+
+input ProjectTypeCreateWithoutProjectInput {
+  id: String
+  name: String!
+}
+
+input ProjectTypeCreateOrConnectWithoutProjectInput {
+  where: ProjectTypeWhereUniqueInput!
+  create: ProjectTypeCreateWithoutProjectInput!
+}
+
+input ProjectTypeWhereUniqueInput {
+  id: String
+}
+
+input ProjectStatusCreateNestedOneWithoutProjectInput {
+  create: ProjectStatusCreateWithoutProjectInput
+  connectOrCreate: ProjectStatusCreateOrConnectWithoutProjectInput
+  connect: ProjectStatusWhereUniqueInput
+}
+
+input ProjectStatusCreateWithoutProjectInput {
+  id: String
+  name: String!
+}
+
+input ProjectStatusCreateOrConnectWithoutProjectInput {
+  where: ProjectStatusWhereUniqueInput!
+  create: ProjectStatusCreateWithoutProjectInput!
+}
+
+input ProjectStatusWhereUniqueInput {
+  id: String
+}
+
+input UserProjectCreateNestedManyWithoutProjectInput {
+  create: [UserProjectCreateWithoutProjectInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutProjectInput!]
+  createMany: UserProjectCreateManyProjectInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
+}
+
+input UserProjectCreateWithoutProjectInput {
+  user: UserCreateNestedOneWithoutUserProjectInput!
+}
+
+input UserCreateNestedOneWithoutUserProjectInput {
+  create: UserCreateWithoutUserProjectInput
+  connectOrCreate: UserCreateOrConnectWithoutUserProjectInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutUserProjectInput {
   id: String
   name: String!
   email: String!
@@ -596,7 +877,7 @@ input inputRegister {
   Download: DownloadCreateNestedManyWithoutAuthorInput
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
-  confirmPassword: String!
+  Message: MessageCreateNestedManyWithoutAuthorInput
 }
 
 input DownloadCreateNestedManyWithoutAuthorInput {
@@ -618,6 +899,212 @@ input PostCreateNestedManyWithoutAuthorInput {
   connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
   createMany: PostCreateManyAuthorInputEnvelope
   connect: [PostWhereUniqueInput!]
+}
+
+input MessageCreateNestedManyWithoutAuthorInput {
+  create: [MessageCreateWithoutAuthorInput!]
+  connectOrCreate: [MessageCreateOrConnectWithoutAuthorInput!]
+  createMany: MessageCreateManyAuthorInputEnvelope
+  connect: [MessageWhereUniqueInput!]
+}
+
+input MessageCreateOrConnectWithoutAuthorInput {
+  where: MessageWhereUniqueInput!
+  create: MessageCreateWithoutAuthorInput!
+}
+
+input MessageWhereUniqueInput {
+  id: String
+}
+
+input MessageCreateManyAuthorInputEnvelope {
+  data: [MessageCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input MessageCreateManyAuthorInput {
+  id: String
+  message: String!
+  projectId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserCreateOrConnectWithoutUserProjectInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutUserProjectInput!
+}
+
+input UserWhereUniqueInput {
+  id: String
+  email: String
+}
+
+input UserProjectCreateOrConnectWithoutProjectInput {
+  where: UserProjectWhereUniqueInput!
+  create: UserProjectCreateWithoutProjectInput!
+}
+
+input UserProjectWhereUniqueInput {
+  projectId_userId: UserProjectProjectIdUserIdCompoundUniqueInput
+}
+
+input UserProjectProjectIdUserIdCompoundUniqueInput {
+  projectId: String!
+  userId: String!
+}
+
+input UserProjectCreateManyProjectInputEnvelope {
+  data: [UserProjectCreateManyProjectInput!]!
+  skipDuplicates: Boolean
+}
+
+input UserProjectCreateManyProjectInput {
+  userId: String!
+}
+
+input ProjectCreateOrConnectWithoutMessageInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutMessageInput!
+}
+
+input ProjectWhereUniqueInput {
+  id: String
+}
+
+input UserProjectUncheckedCreateNestedManyWithoutUserInput {
+  create: [UserProjectCreateWithoutUserInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutUserInput!]
+  createMany: UserProjectCreateManyUserInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
+}
+
+input UserProjectCreateWithoutUserInput {
+  project: ProjectCreateNestedOneWithoutUserProjectInput!
+}
+
+input ProjectCreateNestedOneWithoutUserProjectInput {
+  create: ProjectCreateWithoutUserProjectInput
+  connectOrCreate: ProjectCreateOrConnectWithoutUserProjectInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutUserProjectInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  Message: MessageCreateNestedManyWithoutProjectInput
+}
+
+input MessageCreateNestedManyWithoutProjectInput {
+  create: [MessageCreateWithoutProjectInput!]
+  connectOrCreate: [MessageCreateOrConnectWithoutProjectInput!]
+  createMany: MessageCreateManyProjectInputEnvelope
+  connect: [MessageWhereUniqueInput!]
+}
+
+input MessageCreateWithoutProjectInput {
+  id: String
+  message: String!
+  author: UserCreateNestedOneWithoutMessageInput!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserCreateNestedOneWithoutMessageInput {
+  create: UserCreateWithoutMessageInput
+  connectOrCreate: UserCreateOrConnectWithoutMessageInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutMessageInput {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: String
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadCreateNestedManyWithoutAuthorInput
+  Page: PageCreateNestedManyWithoutAuthorInput
+  Post: PostCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
+}
+
+input UserProjectCreateNestedManyWithoutUserInput {
+  create: [UserProjectCreateWithoutUserInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutUserInput!]
+  createMany: UserProjectCreateManyUserInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
+}
+
+input UserProjectCreateOrConnectWithoutUserInput {
+  where: UserProjectWhereUniqueInput!
+  create: UserProjectCreateWithoutUserInput!
+}
+
+input UserProjectCreateManyUserInputEnvelope {
+  data: [UserProjectCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input UserProjectCreateManyUserInput {
+  projectId: String!
+}
+
+input UserCreateOrConnectWithoutMessageInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutMessageInput!
+}
+
+input MessageCreateOrConnectWithoutProjectInput {
+  where: MessageWhereUniqueInput!
+  create: MessageCreateWithoutProjectInput!
+}
+
+input MessageCreateManyProjectInputEnvelope {
+  data: [MessageCreateManyProjectInput!]!
+  skipDuplicates: Boolean
+}
+
+input MessageCreateManyProjectInput {
+  id: String
+  message: String!
+  userId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProjectCreateOrConnectWithoutUserProjectInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutUserProjectInput!
+}
+
+input inputLogin {
+  email: String!
+  password: String!
+}
+
+input inputRegister {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: String
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadCreateNestedManyWithoutAuthorInput
+  Page: PageCreateNestedManyWithoutAuthorInput
+  Post: PostCreateNestedManyWithoutAuthorInput
+  Message: MessageCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
+  confirmPassword: String!
 }
 
 input CategoryCreateInput {
@@ -661,16 +1148,13 @@ input UserCreateWithoutPostInput {
   updateAt: DateTime
   Download: DownloadCreateNestedManyWithoutAuthorInput
   Page: PageCreateNestedManyWithoutAuthorInput
+  Message: MessageCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
 }
 
 input UserCreateOrConnectWithoutPostInput {
   where: UserWhereUniqueInput!
   create: UserCreateWithoutPostInput!
-}
-
-input UserWhereUniqueInput {
-  id: String
-  email: String
 }
 
 input PostCreateOrConnectWithoutCategoryInput {
@@ -783,6 +1267,8 @@ input UserCreateWithoutDownloadInput {
   updateAt: DateTime
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
+  Message: MessageCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
 }
 
 input UserCreateOrConnectWithoutDownloadInput {
@@ -808,4 +1294,134 @@ input DownloadCreateManyDownloadCategoryInput {
   counting: Int
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input MessageUncheckedCreateInput {
+  id: String
+  message: String!
+  userId: String!
+  projectId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProjectUncheckedCreateInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  statusId: String!
+  typeId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  UserProject: UserProjectUncheckedCreateNestedManyWithoutProjectInput
+  Message: MessageUncheckedCreateNestedManyWithoutProjectInput
+}
+
+input UserProjectUncheckedCreateNestedManyWithoutProjectInput {
+  create: [UserProjectCreateWithoutProjectInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutProjectInput!]
+  createMany: UserProjectCreateManyProjectInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
+}
+
+input MessageUncheckedCreateNestedManyWithoutProjectInput {
+  create: [MessageCreateWithoutProjectInput!]
+  connectOrCreate: [MessageCreateOrConnectWithoutProjectInput!]
+  createMany: MessageCreateManyProjectInputEnvelope
+  connect: [MessageWhereUniqueInput!]
+}
+
+input ProjectStatusUncheckedCreateInput {
+  id: String
+  name: String!
+  Project: ProjectUncheckedCreateNestedManyWithoutStatusInput
+}
+
+input ProjectUncheckedCreateNestedManyWithoutStatusInput {
+  create: [ProjectCreateWithoutStatusInput!]
+  connectOrCreate: [ProjectCreateOrConnectWithoutStatusInput!]
+  createMany: ProjectCreateManyStatusInputEnvelope
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateWithoutStatusInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  Message: MessageCreateNestedManyWithoutProjectInput
+}
+
+input ProjectCreateOrConnectWithoutStatusInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutStatusInput!
+}
+
+input ProjectCreateManyStatusInputEnvelope {
+  data: [ProjectCreateManyStatusInput!]!
+  skipDuplicates: Boolean
+}
+
+input ProjectCreateManyStatusInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  typeId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProjectTypeUncheckedCreateInput {
+  id: String
+  name: String!
+  Project: ProjectUncheckedCreateNestedManyWithoutProjectTypeInput
+}
+
+input ProjectUncheckedCreateNestedManyWithoutProjectTypeInput {
+  create: [ProjectCreateWithoutProjectTypeInput!]
+  connectOrCreate: [ProjectCreateOrConnectWithoutProjectTypeInput!]
+  createMany: ProjectCreateManyProjectTypeInputEnvelope
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateWithoutProjectTypeInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  Message: MessageCreateNestedManyWithoutProjectInput
+}
+
+input ProjectCreateOrConnectWithoutProjectTypeInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutProjectTypeInput!
+}
+
+input ProjectCreateManyProjectTypeInputEnvelope {
+  data: [ProjectCreateManyProjectTypeInput!]!
+  skipDuplicates: Boolean
+}
+
+input ProjectCreateManyProjectTypeInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  statusId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input Input {
+  data: [UserProjectCreateManyInput!]!
+}
+
+input UserProjectCreateManyInput {
+  projectId: String!
+  userId: String!
 }

@@ -4,37 +4,65 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { ChatService } from './chat.service';
 type MessageBody = {
   userId: string;
   msg: string;
+  projectId: string;
 };
+
+import { Socket } from 'socket.io';
+
 @WebSocketGateway({ cors: true })
 export class ChatGateway {
+  constructor(private chatService: ChatService) {}
+
   @WebSocketServer()
   server;
   users = 0;
 
+  // after init
+  afterInit() {
+    console.log('web scoket init');
+  }
+
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() message: MessageBody): void {
-    this.server.emit('message', message);
-    console.log(message);
+  handleMessage(@MessageBody() input: MessageBody): void {
+    this.server.to(input.projectId).emit('response', input.msg);
+    console.log('msg', input.msg);
+    this.chatService.saveMessage({
+      userId: input.userId,
+      message: input.msg,
+      projectId: input.projectId,
+    });
   }
-  handleConnection(client) {
+
+  // handle on connect
+  handleConnection(client: Socket) {
     this.users++;
-    // Authenticate the user
-    // You will need to implement your own authentication mechanism here
-
-    // const user = authenticate(client);
-    // console.log('client :>> ', client);
-    console.log('user :>> ', this.users, client.id);
-    // Save the user's socket ID
-    // client.user = user;
-
-    // Send a message to the client to confirm the connection
-    client.emit('connection', `Welcome, ${this.users}!`);
+    console.log('user :>> ', client.id, ' connected');
   }
-  handleDisconnection(client) {
+
+  // handle on disconnect
+  handleDisconnect(client) {
     this.users--;
-    client.emit('disconnection', `lost, ${this.users}!`);
+    console.log('user :>> ', client.id, ' disconnected');
+  }
+
+  // client join room by projectId
+  @SubscribeMessage('joinRoom')
+  handleJoin(Client: Socket, room: string): void {
+    Client.join(room);
+    console.log('join :>> ', room);
+    this.server.to(room).emit('response', `user ${Client.id} join, ${room}!`);
+    Client.emit('response', `join, ${room}!`);
+  }
+
+  // client leave room by projectId
+  @SubscribeMessage('leaveRoom')
+  handleLeave(Client: Socket, room: string): void {
+    Client.leave(room);
+    console.log('leave :>> ', room);
+    Client.emit('response', `user ${Client.id} leave, ${room}!`);
   }
 }
