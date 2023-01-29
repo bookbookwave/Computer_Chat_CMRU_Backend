@@ -14,6 +14,12 @@ export class MessageResolver {
   async messages(): Promise<MessageUncheckedCreateInput[]> {
     return this.messageService.getMessages();
   }
+  @Query((returns) => [Message])
+  async messagesByProject(
+    @Args('id') id: string,
+  ): Promise<MessageUncheckedCreateInput[]> {
+    return this.messageService.getMessagesByProject(id);
+  }
   @Mutation((returns) => Message)
   async createMessage(
     @Args('input') input: MessageUncheckedCreateInput,

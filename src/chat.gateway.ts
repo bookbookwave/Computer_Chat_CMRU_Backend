@@ -28,13 +28,16 @@ export class ChatGateway {
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() input: MessageBody): void {
-    this.server.to(input.projectId).emit('response', input.msg);
     console.log('msg', input.msg);
+    console.log('input :>> ', input);
     this.chatService.saveMessage({
       userId: input.userId,
       message: input.msg,
       projectId: input.projectId,
     });
+    this.server
+      .to(input.projectId)
+      .emit('response', { msg: input.msg, userId: input.userId });
   }
 
   // handle on connect
@@ -54,8 +57,11 @@ export class ChatGateway {
   handleJoin(Client: Socket, room: string): void {
     Client.join(room);
     console.log('join :>> ', room);
-    this.server.to(room).emit('response', `user ${Client.id} join, ${room}!`);
-    Client.emit('response', `join, ${room}!`);
+    this.server.to(room).emit('response', { msg: `Server: Now you Join Room` });
+    // this.server
+    //   .to(room)
+    //   .emit('response', { msg: `user ${Client.id} join, ${room}!` });
+    // Client.emit('response', { msg: `join, ${room}!` });
   }
 
   // client leave room by projectId
@@ -63,6 +69,6 @@ export class ChatGateway {
   handleLeave(Client: Socket, room: string): void {
     Client.leave(room);
     console.log('leave :>> ', room);
-    Client.emit('response', `user ${Client.id} leave, ${room}!`);
+    // Client.emit('response', { msg: `user ${Client.id} leave, ${room}!` });
   }
 }

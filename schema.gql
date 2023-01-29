@@ -542,6 +542,7 @@ type Query {
   downloadCategories: DownloadCategory!
   message(id: String!): Message!
   messages: [Message!]!
+  messagesByProject(id: String!): [Message!]!
   project(id: String!): Project!
   projects: [Project!]!
   projectsById(id: String!): [Project!]!

@@ -13,6 +13,13 @@ async function main() {
       },
     });
   }
+  await prisma.user.create({
+    data: {
+      email: 'admin@admin.com',
+      password: hashSync('admin', 10),
+      name: 'Computer Administrator',
+    },
+  });
 }
 
 main();

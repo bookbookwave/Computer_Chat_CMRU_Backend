@@ -20,6 +20,22 @@ export class MessageService {
       throw new Error(error);
     }
   };
+  getMessagesByProject = async (
+    id: string,
+  ): Promise<MessageUncheckedCreateInput[]> => {
+    try {
+      return await this.db.message.findMany({
+        where: { projectId: id },
+        take: 50,
+        include: { author: true, project: true },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   createMessage = async (
     input: MessageUncheckedCreateInput,
   ): Promise<MessageUncheckedCreateInput> => {
