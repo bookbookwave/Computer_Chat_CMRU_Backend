@@ -100,6 +100,16 @@ export enum MessageScalarFieldEnum {
     updatedAt = "updatedAt"
 }
 
+export enum FileScalarFieldEnum {
+    id = "id",
+    fileName = "fileName",
+    file = "file",
+    projectId = "projectId",
+    statusId = "statusId",
+    comment = "comment",
+    createdAt = "createdAt"
+}
+
 export enum DownloadCategoryScalarFieldEnum {
     id = "id",
     name = "name"
@@ -141,6 +151,7 @@ registerEnumType(CategoryScalarFieldEnum, { name: 'CategoryScalarFieldEnum', des
 registerEnumType(ConfigurationScalarFieldEnum, { name: 'ConfigurationScalarFieldEnum', description: undefined })
 registerEnumType(DownloadScalarFieldEnum, { name: 'DownloadScalarFieldEnum', description: undefined })
 registerEnumType(DownloadCategoryScalarFieldEnum, { name: 'DownloadCategoryScalarFieldEnum', description: undefined })
+registerEnumType(FileScalarFieldEnum, { name: 'FileScalarFieldEnum', description: undefined })
 registerEnumType(MessageScalarFieldEnum, { name: 'MessageScalarFieldEnum', description: undefined })
 registerEnumType(PageScalarFieldEnum, { name: 'PageScalarFieldEnum', description: undefined })
 registerEnumType(PostScalarFieldEnum, { name: 'PostScalarFieldEnum', description: undefined })
@@ -2864,7 +2875,7 @@ export class Download {
     downloadCategoryId!: string;
     @Field(() => String, {nullable:false})
     link!: string;
-    @Field(() => String, {nullable:false,defaultValue:'https://via.placeholder.com/150'})
+    @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/300/300'})
     thumbnail!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
@@ -3460,6 +3471,1158 @@ export class UpsertOneDownloadCategoryArgs {
     @Field(() => DownloadCategoryUpdateInput, {nullable:false})
     @Type(() => DownloadCategoryUpdateInput)
     update!: InstanceType<typeof DownloadCategoryUpdateInput>;
+}
+
+@ObjectType()
+export class AggregateFile {
+    @Field(() => FileCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof FileCountAggregate>;
+    @Field(() => FileMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof FileMinAggregate>;
+    @Field(() => FileMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof FileMaxAggregate>;
+}
+
+@ArgsType()
+export class CreateManyFileArgs {
+    @Field(() => [FileCreateManyInput], {nullable:false})
+    @Type(() => FileCreateManyInput)
+    data!: Array<FileCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneFileArgs {
+    @Field(() => FileCreateInput, {nullable:false})
+    @Type(() => FileCreateInput)
+    data!: InstanceType<typeof FileCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyFileArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneFileArgs {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FileAggregateArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+    @Field(() => [FileOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<FileOrderByWithRelationInput>;
+    @Field(() => FileWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => FileCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof FileCountAggregateInput>;
+    @Field(() => FileMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof FileMinAggregateInput>;
+    @Field(() => FileMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof FileMaxAggregateInput>;
+}
+
+@InputType()
+export class FileCountAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    fileName?: true;
+    @Field(() => Boolean, {nullable:true})
+    file?: true;
+    @Field(() => Boolean, {nullable:true})
+    projectId?: true;
+    @Field(() => Boolean, {nullable:true})
+    statusId?: true;
+    @Field(() => Boolean, {nullable:true})
+    comment?: true;
+    @Field(() => Boolean, {nullable:true})
+    createdAt?: true;
+    @Field(() => Boolean, {nullable:true})
+    _all?: true;
+}
+
+@ObjectType()
+export class FileCountAggregate {
+    @Field(() => Int, {nullable:false})
+    id!: number;
+    @Field(() => Int, {nullable:false})
+    fileName!: number;
+    @Field(() => Int, {nullable:false})
+    file!: number;
+    @Field(() => Int, {nullable:false})
+    projectId!: number;
+    @Field(() => Int, {nullable:false})
+    statusId!: number;
+    @Field(() => Int, {nullable:false})
+    comment!: number;
+    @Field(() => Int, {nullable:false})
+    createdAt!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@InputType()
+export class FileCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    fileName?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    file?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    statusId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    comment?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class FileCreateManyProjectInputEnvelope {
+    @Field(() => [FileCreateManyProjectInput], {nullable:false})
+    @Type(() => FileCreateManyProjectInput)
+    data!: Array<FileCreateManyProjectInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class FileCreateManyProjectInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileCreateManyStatusInputEnvelope {
+    @Field(() => [FileCreateManyStatusInput], {nullable:false})
+    @Type(() => FileCreateManyStatusInput)
+    data!: Array<FileCreateManyStatusInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class FileCreateManyStatusInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileCreateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileCreateNestedManyWithoutProjectInput {
+    @Field(() => [FileCreateWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateWithoutProjectInput)
+    create?: Array<FileCreateWithoutProjectInput>;
+    @Field(() => [FileCreateOrConnectWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutProjectInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutProjectInput>;
+    @Field(() => FileCreateManyProjectInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyProjectInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyProjectInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+}
+
+@InputType()
+export class FileCreateNestedManyWithoutStatusInput {
+    @Field(() => [FileCreateWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateWithoutStatusInput)
+    create?: Array<FileCreateWithoutStatusInput>;
+    @Field(() => [FileCreateOrConnectWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutStatusInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutStatusInput>;
+    @Field(() => FileCreateManyStatusInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyStatusInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyStatusInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+}
+
+@InputType()
+export class FileCreateOrConnectWithoutProjectInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileCreateWithoutProjectInput, {nullable:false})
+    @Type(() => FileCreateWithoutProjectInput)
+    create!: InstanceType<typeof FileCreateWithoutProjectInput>;
+}
+
+@InputType()
+export class FileCreateOrConnectWithoutStatusInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileCreateWithoutStatusInput, {nullable:false})
+    @Type(() => FileCreateWithoutStatusInput)
+    create!: InstanceType<typeof FileCreateWithoutStatusInput>;
+}
+
+@InputType()
+export class FileCreateWithoutProjectInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => ProjectStatusCreateNestedOneWithoutFileInput, {nullable:false})
+    status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutFileInput>;
+}
+
+@InputType()
+export class FileCreateWithoutStatusInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:false})
+    project!: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
+}
+
+@InputType()
+export class FileCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:false})
+    project!: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
+    @Field(() => ProjectStatusCreateNestedOneWithoutFileInput, {nullable:false})
+    status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutFileInput>;
+}
+
+@ArgsType()
+export class FileGroupByArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+    @Field(() => [FileOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<FileOrderByWithAggregationInput>;
+    @Field(() => [FileScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof FileScalarFieldEnum>;
+    @Field(() => FileScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof FileScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => FileCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof FileCountAggregateInput>;
+    @Field(() => FileMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof FileMinAggregateInput>;
+    @Field(() => FileMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof FileMaxAggregateInput>;
+}
+
+@ObjectType()
+export class FileGroupBy {
+    @Field(() => String, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date | string;
+    @Field(() => FileCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof FileCountAggregate>;
+    @Field(() => FileMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof FileMinAggregate>;
+    @Field(() => FileMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof FileMaxAggregate>;
+}
+
+@InputType()
+export class FileListRelationFilter {
+    @Field(() => FileWhereInput, {nullable:true})
+    every?: InstanceType<typeof FileWhereInput>;
+    @Field(() => FileWhereInput, {nullable:true})
+    some?: InstanceType<typeof FileWhereInput>;
+    @Field(() => FileWhereInput, {nullable:true})
+    none?: InstanceType<typeof FileWhereInput>;
+}
+
+@InputType()
+export class FileMaxAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    fileName?: true;
+    @Field(() => Boolean, {nullable:true})
+    file?: true;
+    @Field(() => Boolean, {nullable:true})
+    projectId?: true;
+    @Field(() => Boolean, {nullable:true})
+    statusId?: true;
+    @Field(() => Boolean, {nullable:true})
+    comment?: true;
+    @Field(() => Boolean, {nullable:true})
+    createdAt?: true;
+}
+
+@ObjectType()
+export class FileMaxAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    fileName?: string;
+    @Field(() => String, {nullable:true})
+    file?: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    statusId?: string;
+    @Field(() => String, {nullable:true})
+    comment?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    fileName?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    file?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    statusId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    comment?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class FileMinAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    fileName?: true;
+    @Field(() => Boolean, {nullable:true})
+    file?: true;
+    @Field(() => Boolean, {nullable:true})
+    projectId?: true;
+    @Field(() => Boolean, {nullable:true})
+    statusId?: true;
+    @Field(() => Boolean, {nullable:true})
+    comment?: true;
+    @Field(() => Boolean, {nullable:true})
+    createdAt?: true;
+}
+
+@ObjectType()
+export class FileMinAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    fileName?: string;
+    @Field(() => String, {nullable:true})
+    file?: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    statusId?: string;
+    @Field(() => String, {nullable:true})
+    comment?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    fileName?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    file?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    statusId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    comment?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class FileOrderByRelationAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    _count?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class FileOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    fileName?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    file?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    statusId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    comment?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => FileCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof FileCountOrderByAggregateInput>;
+    @Field(() => FileMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof FileMaxOrderByAggregateInput>;
+    @Field(() => FileMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof FileMinOrderByAggregateInput>;
+}
+
+@InputType()
+export class FileOrderByWithRelationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    fileName?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    file?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    statusId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    comment?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
+    project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
+    @Field(() => ProjectStatusOrderByWithRelationInput, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusOrderByWithRelationInput>;
+}
+
+@InputType()
+export class FileScalarWhereWithAggregatesInput {
+    @Field(() => [FileScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<FileScalarWhereWithAggregatesInput>;
+    @Field(() => [FileScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<FileScalarWhereWithAggregatesInput>;
+    @Field(() => [FileScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<FileScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    id?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    fileName?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    file?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    statusId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    comment?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeWithAggregatesFilter>;
+}
+
+@InputType()
+export class FileScalarWhereInput {
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    AND?: Array<FileScalarWhereInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    OR?: Array<FileScalarWhereInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    NOT?: Array<FileScalarWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    fileName?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    file?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    statusId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    comment?: InstanceType<typeof StringFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFilter>;
+}
+
+@InputType()
+export class FileUncheckedCreateNestedManyWithoutProjectInput {
+    @Field(() => [FileCreateWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateWithoutProjectInput)
+    create?: Array<FileCreateWithoutProjectInput>;
+    @Field(() => [FileCreateOrConnectWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutProjectInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutProjectInput>;
+    @Field(() => FileCreateManyProjectInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyProjectInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyProjectInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+}
+
+@InputType()
+export class FileUncheckedCreateNestedManyWithoutStatusInput {
+    @Field(() => [FileCreateWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateWithoutStatusInput)
+    create?: Array<FileCreateWithoutStatusInput>;
+    @Field(() => [FileCreateOrConnectWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutStatusInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutStatusInput>;
+    @Field(() => FileCreateManyStatusInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyStatusInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyStatusInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+}
+
+@InputType()
+export class FileUncheckedCreateWithoutProjectInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileUncheckedCreateWithoutStatusInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileUncheckedCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class FileUncheckedUpdateManyWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateManyWithoutProjectNestedInput {
+    @Field(() => [FileCreateWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateWithoutProjectInput)
+    create?: Array<FileCreateWithoutProjectInput>;
+    @Field(() => [FileCreateOrConnectWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutProjectInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutProjectInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutProjectInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutProjectInput>;
+    @Field(() => FileCreateManyProjectInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyProjectInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyProjectInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutProjectInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutProjectInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutProjectInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutProjectInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateManyWithoutStatusNestedInput {
+    @Field(() => [FileCreateWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateWithoutStatusInput)
+    create?: Array<FileCreateWithoutStatusInput>;
+    @Field(() => [FileCreateOrConnectWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutStatusInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutStatusInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutStatusInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutStatusInput>;
+    @Field(() => FileCreateManyStatusInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyStatusInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyStatusInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutStatusInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutStatusInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutStatusInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutStatusInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateManyInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateWithoutProjectInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateWithoutStatusInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUpdateManyMutationInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUpdateManyWithWhereWithoutProjectInput {
+    @Field(() => FileScalarWhereInput, {nullable:false})
+    @Type(() => FileScalarWhereInput)
+    where!: InstanceType<typeof FileScalarWhereInput>;
+    @Field(() => FileUpdateManyMutationInput, {nullable:false})
+    @Type(() => FileUpdateManyMutationInput)
+    data!: InstanceType<typeof FileUpdateManyMutationInput>;
+}
+
+@InputType()
+export class FileUpdateManyWithWhereWithoutStatusInput {
+    @Field(() => FileScalarWhereInput, {nullable:false})
+    @Type(() => FileScalarWhereInput)
+    where!: InstanceType<typeof FileScalarWhereInput>;
+    @Field(() => FileUpdateManyMutationInput, {nullable:false})
+    @Type(() => FileUpdateManyMutationInput)
+    data!: InstanceType<typeof FileUpdateManyMutationInput>;
+}
+
+@InputType()
+export class FileUpdateManyWithoutProjectNestedInput {
+    @Field(() => [FileCreateWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateWithoutProjectInput)
+    create?: Array<FileCreateWithoutProjectInput>;
+    @Field(() => [FileCreateOrConnectWithoutProjectInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutProjectInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutProjectInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutProjectInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutProjectInput>;
+    @Field(() => FileCreateManyProjectInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyProjectInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyProjectInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutProjectInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutProjectInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutProjectInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutProjectInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutProjectInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
+}
+
+@InputType()
+export class FileUpdateManyWithoutStatusNestedInput {
+    @Field(() => [FileCreateWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateWithoutStatusInput)
+    create?: Array<FileCreateWithoutStatusInput>;
+    @Field(() => [FileCreateOrConnectWithoutStatusInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutStatusInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutStatusInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutStatusInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutStatusInput>;
+    @Field(() => FileCreateManyStatusInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyStatusInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyStatusInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutStatusInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutStatusInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutStatusInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutStatusInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutStatusInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
+}
+
+@InputType()
+export class FileUpdateWithWhereUniqueWithoutProjectInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutProjectInput, {nullable:false})
+    @Type(() => FileUpdateWithoutProjectInput)
+    data!: InstanceType<typeof FileUpdateWithoutProjectInput>;
+}
+
+@InputType()
+export class FileUpdateWithWhereUniqueWithoutStatusInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutStatusInput, {nullable:false})
+    @Type(() => FileUpdateWithoutStatusInput)
+    data!: InstanceType<typeof FileUpdateWithoutStatusInput>;
+}
+
+@InputType()
+export class FileUpdateWithoutProjectInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectStatusUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutFileNestedInput>;
+}
+
+@InputType()
+export class FileUpdateWithoutStatusInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutFileNestedInput>;
+}
+
+@InputType()
+export class FileUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutFileNestedInput>;
+    @Field(() => ProjectStatusUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutFileNestedInput>;
+}
+
+@InputType()
+export class FileUpsertWithWhereUniqueWithoutProjectInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutProjectInput, {nullable:false})
+    @Type(() => FileUpdateWithoutProjectInput)
+    update!: InstanceType<typeof FileUpdateWithoutProjectInput>;
+    @Field(() => FileCreateWithoutProjectInput, {nullable:false})
+    @Type(() => FileCreateWithoutProjectInput)
+    create!: InstanceType<typeof FileCreateWithoutProjectInput>;
+}
+
+@InputType()
+export class FileUpsertWithWhereUniqueWithoutStatusInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutStatusInput, {nullable:false})
+    @Type(() => FileUpdateWithoutStatusInput)
+    update!: InstanceType<typeof FileUpdateWithoutStatusInput>;
+    @Field(() => FileCreateWithoutStatusInput, {nullable:false})
+    @Type(() => FileCreateWithoutStatusInput)
+    create!: InstanceType<typeof FileCreateWithoutStatusInput>;
+}
+
+@InputType()
+export class FileWhereUniqueInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class FileWhereInput {
+    @Field(() => [FileWhereInput], {nullable:true})
+    AND?: Array<FileWhereInput>;
+    @Field(() => [FileWhereInput], {nullable:true})
+    OR?: Array<FileWhereInput>;
+    @Field(() => [FileWhereInput], {nullable:true})
+    NOT?: Array<FileWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    fileName?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    file?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    statusId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    comment?: InstanceType<typeof StringFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFilter>;
+    @Field(() => ProjectRelationFilter, {nullable:true})
+    project?: InstanceType<typeof ProjectRelationFilter>;
+    @Field(() => ProjectStatusRelationFilter, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusRelationFilter>;
+}
+
+@ObjectType()
+export class File {
+    @Field(() => ID, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    projectId!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date;
+    @Field(() => Project, {nullable:false})
+    project?: InstanceType<typeof Project>;
+    @Field(() => ProjectStatus, {nullable:false})
+    status?: InstanceType<typeof ProjectStatus>;
+}
+
+@ArgsType()
+export class FindFirstFileOrThrowArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+    @Field(() => [FileOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<FileOrderByWithRelationInput>;
+    @Field(() => FileWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [FileScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof FileScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstFileArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+    @Field(() => [FileOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<FileOrderByWithRelationInput>;
+    @Field(() => FileWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [FileScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof FileScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyFileArgs {
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+    @Field(() => [FileOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<FileOrderByWithRelationInput>;
+    @Field(() => FileWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [FileScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof FileScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueFileOrThrowArgs {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueFileArgs {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpdateManyFileArgs {
+    @Field(() => FileUpdateManyMutationInput, {nullable:false})
+    @Type(() => FileUpdateManyMutationInput)
+    data!: InstanceType<typeof FileUpdateManyMutationInput>;
+    @Field(() => FileWhereInput, {nullable:true})
+    @Type(() => FileWhereInput)
+    where?: InstanceType<typeof FileWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneFileArgs {
+    @Field(() => FileUpdateInput, {nullable:false})
+    @Type(() => FileUpdateInput)
+    data!: InstanceType<typeof FileUpdateInput>;
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneFileArgs {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileCreateInput, {nullable:false})
+    @Type(() => FileCreateInput)
+    create!: InstanceType<typeof FileCreateInput>;
+    @Field(() => FileUpdateInput, {nullable:false})
+    @Type(() => FileUpdateInput)
+    update!: InstanceType<typeof FileUpdateInput>;
 }
 
 @ObjectType()
@@ -5539,7 +6702,7 @@ export class Page {
     id!: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false,defaultValue:'https://via.placeholder.com/480x320'})
+    @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/480/320'})
     thumbnail!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
@@ -6906,7 +8069,7 @@ export class Post {
     id!: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false,defaultValue:'https://via.placeholder.com/480x320'})
+    @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/480/320'})
     thumbnail!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
@@ -7725,6 +8888,8 @@ export class ProjectCount {
     UserProject?: number;
     @Field(() => Int, {nullable:false})
     Message?: number;
+    @Field(() => Int, {nullable:false})
+    File?: number;
 }
 
 @InputType()
@@ -7828,6 +8993,19 @@ export class ProjectCreateNestedManyWithoutStatusInput {
 }
 
 @InputType()
+export class ProjectCreateNestedOneWithoutFileInput {
+    @Field(() => ProjectCreateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateWithoutFileInput)
+    create?: InstanceType<typeof ProjectCreateWithoutFileInput>;
+    @Field(() => ProjectCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutFileInput>;
+    @Field(() => ProjectWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
+}
+
+@InputType()
 export class ProjectCreateNestedOneWithoutMessageInput {
     @Field(() => ProjectCreateWithoutMessageInput, {nullable:true})
     @Type(() => ProjectCreateWithoutMessageInput)
@@ -7851,6 +9029,16 @@ export class ProjectCreateNestedOneWithoutUserProjectInput {
     @Field(() => ProjectWhereUniqueInput, {nullable:true})
     @Type(() => ProjectWhereUniqueInput)
     connect?: InstanceType<typeof ProjectWhereUniqueInput>;
+}
+
+@InputType()
+export class ProjectCreateOrConnectWithoutFileInput {
+    @Field(() => ProjectWhereUniqueInput, {nullable:false})
+    @Type(() => ProjectWhereUniqueInput)
+    where!: InstanceType<typeof ProjectWhereUniqueInput>;
+    @Field(() => ProjectCreateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectCreateWithoutFileInput)
+    create!: InstanceType<typeof ProjectCreateWithoutFileInput>;
 }
 
 @InputType()
@@ -7894,6 +9082,28 @@ export class ProjectCreateOrConnectWithoutUserProjectInput {
 }
 
 @InputType()
+export class ProjectCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    nameTH!: string;
+    @Field(() => String, {nullable:false})
+    nameEN!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+    @Field(() => ProjectTypeCreateNestedOneWithoutProjectInput, {nullable:false})
+    projectType!: InstanceType<typeof ProjectTypeCreateNestedOneWithoutProjectInput>;
+    @Field(() => ProjectStatusCreateNestedOneWithoutProjectInput, {nullable:false})
+    status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutProjectInput>;
+    @Field(() => UserProjectCreateNestedManyWithoutProjectInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutProjectInput>;
+    @Field(() => MessageCreateNestedManyWithoutProjectInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutProjectInput>;
+}
+
+@InputType()
 export class ProjectCreateWithoutMessageInput {
     @Field(() => String, {nullable:true})
     id?: string;
@@ -7911,6 +9121,8 @@ export class ProjectCreateWithoutMessageInput {
     status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutProjectInput>;
     @Field(() => UserProjectCreateNestedManyWithoutProjectInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -7931,6 +9143,8 @@ export class ProjectCreateWithoutProjectTypeInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -7951,6 +9165,8 @@ export class ProjectCreateWithoutStatusInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -7971,6 +9187,8 @@ export class ProjectCreateWithoutUserProjectInput {
     status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutProjectInput>;
     @Field(() => MessageCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -7993,6 +9211,8 @@ export class ProjectCreateInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutProjectInput>;
 }
 
 @ArgsType()
@@ -8214,6 +9434,8 @@ export class ProjectOrderByWithRelationInput {
     UserProject?: InstanceType<typeof UserProjectOrderByRelationAggregateInput>;
     @Field(() => MessageOrderByRelationAggregateInput, {nullable:true})
     Message?: InstanceType<typeof MessageOrderByRelationAggregateInput>;
+    @Field(() => FileOrderByRelationAggregateInput, {nullable:true})
+    File?: InstanceType<typeof FileOrderByRelationAggregateInput>;
 }
 
 @InputType()
@@ -8276,6 +9498,8 @@ export class ProjectScalarWhereInput {
 export class ProjectStatusCount {
     @Field(() => Int, {nullable:false})
     Project?: number;
+    @Field(() => Int, {nullable:false})
+    File?: number;
 }
 
 @InputType()
@@ -8311,6 +9535,28 @@ export class ProjectUncheckedCreateNestedManyWithoutStatusInput {
 }
 
 @InputType()
+export class ProjectUncheckedCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    nameTH!: string;
+    @Field(() => String, {nullable:false})
+    nameEN!: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    typeId!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+    @Field(() => UserProjectUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutProjectInput>;
+}
+
+@InputType()
 export class ProjectUncheckedCreateWithoutMessageInput {
     @Field(() => String, {nullable:true})
     id?: string;
@@ -8328,6 +9574,8 @@ export class ProjectUncheckedCreateWithoutMessageInput {
     updatedAt?: Date | string;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -8348,6 +9596,8 @@ export class ProjectUncheckedCreateWithoutProjectTypeInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -8368,6 +9618,8 @@ export class ProjectUncheckedCreateWithoutStatusInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -8388,6 +9640,8 @@ export class ProjectUncheckedCreateWithoutUserProjectInput {
     updatedAt?: Date | string;
     @Field(() => MessageUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -8410,6 +9664,8 @@ export class ProjectUncheckedCreateInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutProjectInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutProjectInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutProjectInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutProjectInput>;
 }
 
 @InputType()
@@ -8521,6 +9777,28 @@ export class ProjectUncheckedUpdateManyInput {
 }
 
 @InputType()
+export class ProjectUncheckedUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    nameTH?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    nameEN?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    typeId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => UserProjectUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutProjectNestedInput>;
+}
+
+@InputType()
 export class ProjectUncheckedUpdateWithoutMessageInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
@@ -8538,6 +9816,8 @@ export class ProjectUncheckedUpdateWithoutMessageInput {
     updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8558,6 +9838,8 @@ export class ProjectUncheckedUpdateWithoutProjectTypeInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8578,6 +9860,8 @@ export class ProjectUncheckedUpdateWithoutStatusInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8598,6 +9882,8 @@ export class ProjectUncheckedUpdateWithoutUserProjectInput {
     updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8620,6 +9906,8 @@ export class ProjectUncheckedUpdateInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8731,6 +10019,25 @@ export class ProjectUpdateManyWithoutStatusNestedInput {
 }
 
 @InputType()
+export class ProjectUpdateOneRequiredWithoutFileNestedInput {
+    @Field(() => ProjectCreateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateWithoutFileInput)
+    create?: InstanceType<typeof ProjectCreateWithoutFileInput>;
+    @Field(() => ProjectCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutFileInput>;
+    @Field(() => ProjectUpsertWithoutFileInput, {nullable:true})
+    @Type(() => ProjectUpsertWithoutFileInput)
+    upsert?: InstanceType<typeof ProjectUpsertWithoutFileInput>;
+    @Field(() => ProjectWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
+    @Field(() => ProjectUpdateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectUpdateWithoutFileInput)
+    update?: InstanceType<typeof ProjectUpdateWithoutFileInput>;
+}
+
+@InputType()
 export class ProjectUpdateOneRequiredWithoutMessageNestedInput {
     @Field(() => ProjectCreateWithoutMessageInput, {nullable:true})
     @Type(() => ProjectCreateWithoutMessageInput)
@@ -8789,6 +10096,28 @@ export class ProjectUpdateWithWhereUniqueWithoutStatusInput {
 }
 
 @InputType()
+export class ProjectUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    nameTH?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    nameEN?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectTypeUpdateOneRequiredWithoutProjectNestedInput, {nullable:true})
+    projectType?: InstanceType<typeof ProjectTypeUpdateOneRequiredWithoutProjectNestedInput>;
+    @Field(() => ProjectStatusUpdateOneRequiredWithoutProjectNestedInput, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutProjectNestedInput>;
+    @Field(() => UserProjectUpdateManyWithoutProjectNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutProjectNestedInput>;
+    @Field(() => MessageUpdateManyWithoutProjectNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutProjectNestedInput>;
+}
+
+@InputType()
 export class ProjectUpdateWithoutMessageInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
@@ -8806,6 +10135,8 @@ export class ProjectUpdateWithoutMessageInput {
     status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutProjectNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutProjectNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8826,6 +10157,8 @@ export class ProjectUpdateWithoutProjectTypeInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8846,6 +10179,8 @@ export class ProjectUpdateWithoutStatusInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8866,6 +10201,8 @@ export class ProjectUpdateWithoutUserProjectInput {
     status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutProjectNestedInput>;
     @Field(() => MessageUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8888,6 +10225,8 @@ export class ProjectUpdateInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutProjectNestedInput>;
     @Field(() => MessageUpdateManyWithoutProjectNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutProjectNestedInput>;
+    @Field(() => FileUpdateManyWithoutProjectNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutProjectNestedInput>;
 }
 
 @InputType()
@@ -8914,6 +10253,16 @@ export class ProjectUpsertWithWhereUniqueWithoutStatusInput {
     @Field(() => ProjectCreateWithoutStatusInput, {nullable:false})
     @Type(() => ProjectCreateWithoutStatusInput)
     create!: InstanceType<typeof ProjectCreateWithoutStatusInput>;
+}
+
+@InputType()
+export class ProjectUpsertWithoutFileInput {
+    @Field(() => ProjectUpdateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectUpdateWithoutFileInput)
+    update!: InstanceType<typeof ProjectUpdateWithoutFileInput>;
+    @Field(() => ProjectCreateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectCreateWithoutFileInput)
+    create!: InstanceType<typeof ProjectCreateWithoutFileInput>;
 }
 
 @InputType()
@@ -8972,6 +10321,8 @@ export class ProjectWhereInput {
     UserProject?: InstanceType<typeof UserProjectListRelationFilter>;
     @Field(() => MessageListRelationFilter, {nullable:true})
     Message?: InstanceType<typeof MessageListRelationFilter>;
+    @Field(() => FileListRelationFilter, {nullable:true})
+    File?: InstanceType<typeof FileListRelationFilter>;
 }
 
 @ObjectType()
@@ -8998,6 +10349,8 @@ export class Project {
     UserProject?: Array<UserProject>;
     @Field(() => [Message], {nullable:true})
     Message?: Array<Message>;
+    @Field(() => [File], {nullable:true})
+    File?: Array<File>;
     @Field(() => ProjectCount, {nullable:false})
     _count?: InstanceType<typeof ProjectCount>;
 }
@@ -9198,6 +10551,19 @@ export class ProjectStatusCreateManyInput {
 }
 
 @InputType()
+export class ProjectStatusCreateNestedOneWithoutFileInput {
+    @Field(() => ProjectStatusCreateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusCreateWithoutFileInput)
+    create?: InstanceType<typeof ProjectStatusCreateWithoutFileInput>;
+    @Field(() => ProjectStatusCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof ProjectStatusCreateOrConnectWithoutFileInput>;
+    @Field(() => ProjectStatusWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectStatusWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectStatusWhereUniqueInput>;
+}
+
+@InputType()
 export class ProjectStatusCreateNestedOneWithoutProjectInput {
     @Field(() => ProjectStatusCreateWithoutProjectInput, {nullable:true})
     @Type(() => ProjectStatusCreateWithoutProjectInput)
@@ -9211,6 +10577,16 @@ export class ProjectStatusCreateNestedOneWithoutProjectInput {
 }
 
 @InputType()
+export class ProjectStatusCreateOrConnectWithoutFileInput {
+    @Field(() => ProjectStatusWhereUniqueInput, {nullable:false})
+    @Type(() => ProjectStatusWhereUniqueInput)
+    where!: InstanceType<typeof ProjectStatusWhereUniqueInput>;
+    @Field(() => ProjectStatusCreateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectStatusCreateWithoutFileInput)
+    create!: InstanceType<typeof ProjectStatusCreateWithoutFileInput>;
+}
+
+@InputType()
 export class ProjectStatusCreateOrConnectWithoutProjectInput {
     @Field(() => ProjectStatusWhereUniqueInput, {nullable:false})
     @Type(() => ProjectStatusWhereUniqueInput)
@@ -9221,11 +10597,23 @@ export class ProjectStatusCreateOrConnectWithoutProjectInput {
 }
 
 @InputType()
+export class ProjectStatusCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    name!: string;
+    @Field(() => ProjectCreateNestedManyWithoutStatusInput, {nullable:true})
+    Project?: InstanceType<typeof ProjectCreateNestedManyWithoutStatusInput>;
+}
+
+@InputType()
 export class ProjectStatusCreateWithoutProjectInput {
     @Field(() => String, {nullable:true})
     id?: string;
     @Field(() => String, {nullable:false})
     name!: string;
+    @Field(() => FileCreateNestedManyWithoutStatusInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutStatusInput>;
 }
 
 @InputType()
@@ -9236,6 +10624,8 @@ export class ProjectStatusCreateInput {
     name!: string;
     @Field(() => ProjectCreateNestedManyWithoutStatusInput, {nullable:true})
     Project?: InstanceType<typeof ProjectCreateNestedManyWithoutStatusInput>;
+    @Field(() => FileCreateNestedManyWithoutStatusInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutStatusInput>;
 }
 
 @ArgsType()
@@ -9345,6 +10735,8 @@ export class ProjectStatusOrderByWithRelationInput {
     name?: keyof typeof SortOrder;
     @Field(() => ProjectOrderByRelationAggregateInput, {nullable:true})
     Project?: InstanceType<typeof ProjectOrderByRelationAggregateInput>;
+    @Field(() => FileOrderByRelationAggregateInput, {nullable:true})
+    File?: InstanceType<typeof FileOrderByRelationAggregateInput>;
 }
 
 @InputType()
@@ -9370,11 +10762,23 @@ export class ProjectStatusScalarWhereWithAggregatesInput {
 }
 
 @InputType()
+export class ProjectStatusUncheckedCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    name!: string;
+    @Field(() => ProjectUncheckedCreateNestedManyWithoutStatusInput, {nullable:true})
+    Project?: InstanceType<typeof ProjectUncheckedCreateNestedManyWithoutStatusInput>;
+}
+
+@InputType()
 export class ProjectStatusUncheckedCreateWithoutProjectInput {
     @Field(() => String, {nullable:true})
     id?: string;
     @Field(() => String, {nullable:false})
     name!: string;
+    @Field(() => FileUncheckedCreateNestedManyWithoutStatusInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutStatusInput>;
 }
 
 @InputType()
@@ -9385,6 +10789,8 @@ export class ProjectStatusUncheckedCreateInput {
     name!: string;
     @Field(() => ProjectUncheckedCreateNestedManyWithoutStatusInput, {nullable:true})
     Project?: InstanceType<typeof ProjectUncheckedCreateNestedManyWithoutStatusInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutStatusInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutStatusInput>;
 }
 
 @InputType()
@@ -9396,11 +10802,23 @@ export class ProjectStatusUncheckedUpdateManyInput {
 }
 
 @InputType()
+export class ProjectStatusUncheckedUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => ProjectUncheckedUpdateManyWithoutStatusNestedInput, {nullable:true})
+    Project?: InstanceType<typeof ProjectUncheckedUpdateManyWithoutStatusNestedInput>;
+}
+
+@InputType()
 export class ProjectStatusUncheckedUpdateWithoutProjectInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutStatusNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutStatusNestedInput>;
 }
 
 @InputType()
@@ -9411,6 +10829,8 @@ export class ProjectStatusUncheckedUpdateInput {
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => ProjectUncheckedUpdateManyWithoutStatusNestedInput, {nullable:true})
     Project?: InstanceType<typeof ProjectUncheckedUpdateManyWithoutStatusNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutStatusNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutStatusNestedInput>;
 }
 
 @InputType()
@@ -9419,6 +10839,25 @@ export class ProjectStatusUpdateManyMutationInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class ProjectStatusUpdateOneRequiredWithoutFileNestedInput {
+    @Field(() => ProjectStatusCreateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusCreateWithoutFileInput)
+    create?: InstanceType<typeof ProjectStatusCreateWithoutFileInput>;
+    @Field(() => ProjectStatusCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof ProjectStatusCreateOrConnectWithoutFileInput>;
+    @Field(() => ProjectStatusUpsertWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusUpsertWithoutFileInput)
+    upsert?: InstanceType<typeof ProjectStatusUpsertWithoutFileInput>;
+    @Field(() => ProjectStatusWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectStatusWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectStatusWhereUniqueInput>;
+    @Field(() => ProjectStatusUpdateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectStatusUpdateWithoutFileInput)
+    update?: InstanceType<typeof ProjectStatusUpdateWithoutFileInput>;
 }
 
 @InputType()
@@ -9441,11 +10880,23 @@ export class ProjectStatusUpdateOneRequiredWithoutProjectNestedInput {
 }
 
 @InputType()
+export class ProjectStatusUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateManyWithoutStatusNestedInput, {nullable:true})
+    Project?: InstanceType<typeof ProjectUpdateManyWithoutStatusNestedInput>;
+}
+
+@InputType()
 export class ProjectStatusUpdateWithoutProjectInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => FileUpdateManyWithoutStatusNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutStatusNestedInput>;
 }
 
 @InputType()
@@ -9456,6 +10907,18 @@ export class ProjectStatusUpdateInput {
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => ProjectUpdateManyWithoutStatusNestedInput, {nullable:true})
     Project?: InstanceType<typeof ProjectUpdateManyWithoutStatusNestedInput>;
+    @Field(() => FileUpdateManyWithoutStatusNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutStatusNestedInput>;
+}
+
+@InputType()
+export class ProjectStatusUpsertWithoutFileInput {
+    @Field(() => ProjectStatusUpdateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectStatusUpdateWithoutFileInput)
+    update!: InstanceType<typeof ProjectStatusUpdateWithoutFileInput>;
+    @Field(() => ProjectStatusCreateWithoutFileInput, {nullable:false})
+    @Type(() => ProjectStatusCreateWithoutFileInput)
+    create!: InstanceType<typeof ProjectStatusCreateWithoutFileInput>;
 }
 
 @InputType()
@@ -9488,6 +10951,8 @@ export class ProjectStatusWhereInput {
     name?: InstanceType<typeof StringFilter>;
     @Field(() => ProjectListRelationFilter, {nullable:true})
     Project?: InstanceType<typeof ProjectListRelationFilter>;
+    @Field(() => FileListRelationFilter, {nullable:true})
+    File?: InstanceType<typeof FileListRelationFilter>;
 }
 
 @ObjectType()
@@ -9498,6 +10963,8 @@ export class ProjectStatus {
     name!: string;
     @Field(() => [Project], {nullable:true})
     Project?: Array<Project>;
+    @Field(() => [File], {nullable:true})
+    File?: Array<File>;
     @Field(() => ProjectStatusCount, {nullable:false})
     _count?: InstanceType<typeof ProjectStatusCount>;
 }
@@ -11722,7 +13189,7 @@ export class User {
     password!: string;
     @Field(() => Role, {nullable:false,defaultValue:'USER'})
     role!: keyof typeof Role;
-    @Field(() => String, {nullable:false,defaultValue:'https://via.placeholder.com/150*150'})
+    @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/300/300'})
     avatar!: string;
     @Field(() => Date, {nullable:false})
     createAt!: Date;

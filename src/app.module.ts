@@ -28,6 +28,7 @@ import { ProjectTypeModule } from './project-type/project-type.module';
 import { UserProjectModule } from './user-project/user-project.module';
 import { ChatService } from './chat.service';
 import { PrismaService } from './prisma.service';
+import { FileUploadModule } from './file-upload/file-upload.module';
 dotenv.config();
 @Module({
   imports: [
@@ -63,6 +64,7 @@ dotenv.config();
     ProjectStatusModule,
     ProjectTypeModule,
     UserProjectModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [

@@ -48,7 +48,12 @@ export class ProjectService {
     try {
       return this.db.project.update({
         where: { id: input.id },
-        data: { nameEN: input.nameEN, nameTH: input.nameTH },
+        data: {
+          nameEN: input.nameEN,
+          nameTH: input.nameTH,
+          status: { connect: { id: input.statusId } },
+          projectType: { connect: { id: input.typeId } },
+        },
       });
     } catch (error) {
       throw new Error(error);

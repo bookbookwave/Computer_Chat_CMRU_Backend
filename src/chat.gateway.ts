@@ -39,6 +39,19 @@ export class ChatGateway {
       .to(input.projectId)
       .emit('response', { msg: input.msg, userId: input.userId });
   }
+  @SubscribeMessage('fileUpload')
+  handleFileUploadMessage(@MessageBody() input: MessageBody): void {
+    console.log('msg', input.msg);
+    console.log('input :>> ', input);
+    this.chatService.saveMessage({
+      userId: input.userId,
+      message: input.msg,
+      projectId: input.projectId,
+    });
+    this.server
+      .to(input.projectId)
+      .emit('response', { msg: input.msg, userId: input.userId });
+  }
 
   // handle on connect
   handleConnection(client: Socket) {

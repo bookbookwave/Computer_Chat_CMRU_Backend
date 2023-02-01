@@ -30,7 +30,7 @@ model User {
   role        Role          @default(USER)
   /// @FieldType('Upload.GraphQLUpload')
   /// @PropertyType('Upload.Upload')
-  avatar      String        @default("https://via.placeholder.com/150*150")
+  avatar      String        @default("https://picsum.photos/300/300")
   createAt    DateTime      @default(now())
   updateAt    DateTime      @updatedAt
   Download    Download[]
@@ -54,7 +54,7 @@ model Post {
   title      String
   /// @FieldType('Upload.GraphQLUpload')
   /// @PropertyType('Upload.Upload')
-  thumbnail  String   @default("https://via.placeholder.com/480x320")
+  thumbnail  String   @default("https://picsum.photos/480/320")
   userId     String
   categoryId String
   view       Int      @default(0)
@@ -73,7 +73,7 @@ model Page {
   title     String
   /// @FieldType('Upload.GraphQLUpload')
   /// @PropertyType('Upload.Upload')
-  thumbnail String   @default("https://via.placeholder.com/480x320")
+  thumbnail String   @default("https://picsum.photos/480/320")
   userId    String
   view      Int      @default(0)
   /// @Validator.IsNotEmpty()
@@ -109,7 +109,7 @@ model Download {
   link               String
   /// @FieldType('Upload.GraphQLUpload')
   /// @PropertyType('Upload.Upload')
-  thumbnail          String           @default("https://via.placeholder.com/150")
+  thumbnail          String           @default("https://picsum.photos/300/300")
   userId             String
   counting           Int              @default(0)
   createdAt          DateTime         @default(now())
@@ -141,6 +141,7 @@ model Project {
   // author      User[]
   UserProject UserProject[]
   Message     Message[]
+  File        File[]
 }
 
 // const createPostAndCategory = await prisma.post.create({
@@ -176,6 +177,7 @@ model ProjectStatus {
   id      String    @id @default(cuid())
   name    String
   Project Project[]
+  File    File[]
 }
 
 model ProjectType {
@@ -203,6 +205,18 @@ model Message {
   projectId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model File {
+  id        String        @id @default(cuid())
+  fileName  String
+  file      String
+  projectId String
+  statusId  String
+  comment   String        @db.Text
+  createdAt DateTime      @default(now())
+  project   Project       @relation(fields: [projectId], references: [id])
+  status    ProjectStatus @relation(fields: [statusId], references: [id])
 }
 
 enum Role {

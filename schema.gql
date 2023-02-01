@@ -178,6 +178,49 @@ type DownloadCategory {
   _count: DownloadCategoryCount!
 }
 
+type FileCountAggregate {
+  id: Int!
+  fileName: Int!
+  file: Int!
+  projectId: Int!
+  statusId: Int!
+  comment: Int!
+  createdAt: Int!
+  _all: Int!
+}
+
+type FileMaxAggregate {
+  id: String
+  fileName: String
+  file: String
+  projectId: String
+  statusId: String
+  comment: String
+  createdAt: DateTime
+}
+
+type FileMinAggregate {
+  id: String
+  fileName: String
+  file: String
+  projectId: String
+  statusId: String
+  comment: String
+  createdAt: DateTime
+}
+
+type File {
+  id: ID!
+  fileName: String!
+  file: String!
+  projectId: String!
+  statusId: String!
+  comment: String!
+  createdAt: DateTime!
+  project: Project!
+  status: ProjectStatus!
+}
+
 type MessageCountAggregate {
   id: Int!
   message: Int!
@@ -344,6 +387,7 @@ type ProjectCountAggregate {
 type ProjectCount {
   UserProject: Int!
   Message: Int!
+  File: Int!
 }
 
 type ProjectMaxAggregate {
@@ -368,6 +412,7 @@ type ProjectMinAggregate {
 
 type ProjectStatusCount {
   Project: Int!
+  File: Int!
 }
 
 type Project {
@@ -382,6 +427,7 @@ type Project {
   status: ProjectStatus!
   UserProject: [UserProject!]
   Message: [Message!]
+  File: [File!]
   _count: ProjectCount!
 }
 
@@ -405,6 +451,7 @@ type ProjectStatus {
   id: ID!
   name: String!
   Project: [Project!]
+  File: [File!]
   _count: ProjectStatusCount!
 }
 
@@ -552,6 +599,9 @@ type Query {
   getProjectType: [ProjectType!]!
   findUserProject(id: String!): UserProject!
   getUserProject(id: String!): [UserProject!]!
+  findFile(id: String!): File!
+  getFiles: [File!]!
+  getFilesById(id: String!): [File!]!
 }
 
 type Mutation {
@@ -594,6 +644,9 @@ type Mutation {
   updateProjectType(input: ProjectTypeUncheckedCreateInput!): ProjectType!
   deleteProjectType(id: String!): Boolean!
   createUserProject(input: Input!): Boolean!
+  createFile(input: FileUncheckedCreateInput!): File!
+  updateFile(input: FileUncheckedCreateInput!): File!
+  deleteFile(id: String!): Boolean!
 }
 
 input UserUncheckedCreateInput {
@@ -807,6 +860,7 @@ input ProjectCreateWithoutMessageInput {
   projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
   status: ProjectStatusCreateNestedOneWithoutProjectInput!
   UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  File: FileCreateNestedManyWithoutProjectInput
 }
 
 input ProjectTypeCreateNestedOneWithoutProjectInput {
@@ -838,15 +892,41 @@ input ProjectStatusCreateNestedOneWithoutProjectInput {
 input ProjectStatusCreateWithoutProjectInput {
   id: String
   name: String!
+  File: FileCreateNestedManyWithoutStatusInput
 }
 
-input ProjectStatusCreateOrConnectWithoutProjectInput {
-  where: ProjectStatusWhereUniqueInput!
-  create: ProjectStatusCreateWithoutProjectInput!
+input FileCreateNestedManyWithoutStatusInput {
+  create: [FileCreateWithoutStatusInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutStatusInput!]
+  createMany: FileCreateManyStatusInputEnvelope
+  connect: [FileWhereUniqueInput!]
 }
 
-input ProjectStatusWhereUniqueInput {
+input FileCreateWithoutStatusInput {
   id: String
+  fileName: String!
+  file: String!
+  comment: String!
+  createdAt: DateTime
+  project: ProjectCreateNestedOneWithoutFileInput!
+}
+
+input ProjectCreateNestedOneWithoutFileInput {
+  create: ProjectCreateWithoutFileInput
+  connectOrCreate: ProjectCreateOrConnectWithoutFileInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutFileInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  Message: MessageCreateNestedManyWithoutProjectInput
 }
 
 input UserProjectCreateNestedManyWithoutProjectInput {
@@ -964,43 +1044,6 @@ input UserProjectCreateManyProjectInput {
   userId: String!
 }
 
-input ProjectCreateOrConnectWithoutMessageInput {
-  where: ProjectWhereUniqueInput!
-  create: ProjectCreateWithoutMessageInput!
-}
-
-input ProjectWhereUniqueInput {
-  id: String
-}
-
-input UserProjectUncheckedCreateNestedManyWithoutUserInput {
-  create: [UserProjectCreateWithoutUserInput!]
-  connectOrCreate: [UserProjectCreateOrConnectWithoutUserInput!]
-  createMany: UserProjectCreateManyUserInputEnvelope
-  connect: [UserProjectWhereUniqueInput!]
-}
-
-input UserProjectCreateWithoutUserInput {
-  project: ProjectCreateNestedOneWithoutUserProjectInput!
-}
-
-input ProjectCreateNestedOneWithoutUserProjectInput {
-  create: ProjectCreateWithoutUserProjectInput
-  connectOrCreate: ProjectCreateOrConnectWithoutUserProjectInput
-  connect: ProjectWhereUniqueInput
-}
-
-input ProjectCreateWithoutUserProjectInput {
-  id: String
-  nameTH: String!
-  nameEN: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
-  status: ProjectStatusCreateNestedOneWithoutProjectInput!
-  Message: MessageCreateNestedManyWithoutProjectInput
-}
-
 input MessageCreateNestedManyWithoutProjectInput {
   create: [MessageCreateWithoutProjectInput!]
   connectOrCreate: [MessageCreateOrConnectWithoutProjectInput!]
@@ -1044,6 +1087,135 @@ input UserProjectCreateNestedManyWithoutUserInput {
   connect: [UserProjectWhereUniqueInput!]
 }
 
+input UserProjectCreateWithoutUserInput {
+  project: ProjectCreateNestedOneWithoutUserProjectInput!
+}
+
+input ProjectCreateNestedOneWithoutUserProjectInput {
+  create: ProjectCreateWithoutUserProjectInput
+  connectOrCreate: ProjectCreateOrConnectWithoutUserProjectInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutUserProjectInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  Message: MessageCreateNestedManyWithoutProjectInput
+  File: FileCreateNestedManyWithoutProjectInput
+}
+
+input FileCreateNestedManyWithoutProjectInput {
+  create: [FileCreateWithoutProjectInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutProjectInput!]
+  createMany: FileCreateManyProjectInputEnvelope
+  connect: [FileWhereUniqueInput!]
+}
+
+input FileCreateWithoutProjectInput {
+  id: String
+  fileName: String!
+  file: String!
+  comment: String!
+  createdAt: DateTime
+  status: ProjectStatusCreateNestedOneWithoutFileInput!
+}
+
+input ProjectStatusCreateNestedOneWithoutFileInput {
+  create: ProjectStatusCreateWithoutFileInput
+  connectOrCreate: ProjectStatusCreateOrConnectWithoutFileInput
+  connect: ProjectStatusWhereUniqueInput
+}
+
+input ProjectStatusCreateWithoutFileInput {
+  id: String
+  name: String!
+  Project: ProjectCreateNestedManyWithoutStatusInput
+}
+
+input ProjectCreateNestedManyWithoutStatusInput {
+  create: [ProjectCreateWithoutStatusInput!]
+  connectOrCreate: [ProjectCreateOrConnectWithoutStatusInput!]
+  createMany: ProjectCreateManyStatusInputEnvelope
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateWithoutStatusInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  Message: MessageCreateNestedManyWithoutProjectInput
+  File: FileCreateNestedManyWithoutProjectInput
+}
+
+input ProjectCreateOrConnectWithoutStatusInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutStatusInput!
+}
+
+input ProjectWhereUniqueInput {
+  id: String
+}
+
+input ProjectCreateManyStatusInputEnvelope {
+  data: [ProjectCreateManyStatusInput!]!
+  skipDuplicates: Boolean
+}
+
+input ProjectCreateManyStatusInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  typeId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProjectStatusCreateOrConnectWithoutFileInput {
+  where: ProjectStatusWhereUniqueInput!
+  create: ProjectStatusCreateWithoutFileInput!
+}
+
+input ProjectStatusWhereUniqueInput {
+  id: String
+}
+
+input FileCreateOrConnectWithoutProjectInput {
+  where: FileWhereUniqueInput!
+  create: FileCreateWithoutProjectInput!
+}
+
+input FileWhereUniqueInput {
+  id: String
+}
+
+input FileCreateManyProjectInputEnvelope {
+  data: [FileCreateManyProjectInput!]!
+  skipDuplicates: Boolean
+}
+
+input FileCreateManyProjectInput {
+  id: String
+  fileName: String!
+  file: String!
+  statusId: String!
+  comment: String!
+  createdAt: DateTime
+}
+
+input ProjectCreateOrConnectWithoutUserProjectInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutUserProjectInput!
+}
+
 input UserProjectCreateOrConnectWithoutUserInput {
   where: UserProjectWhereUniqueInput!
   create: UserProjectCreateWithoutUserInput!
@@ -1081,9 +1253,45 @@ input MessageCreateManyProjectInput {
   updatedAt: DateTime
 }
 
-input ProjectCreateOrConnectWithoutUserProjectInput {
+input ProjectCreateOrConnectWithoutFileInput {
   where: ProjectWhereUniqueInput!
-  create: ProjectCreateWithoutUserProjectInput!
+  create: ProjectCreateWithoutFileInput!
+}
+
+input FileCreateOrConnectWithoutStatusInput {
+  where: FileWhereUniqueInput!
+  create: FileCreateWithoutStatusInput!
+}
+
+input FileCreateManyStatusInputEnvelope {
+  data: [FileCreateManyStatusInput!]!
+  skipDuplicates: Boolean
+}
+
+input FileCreateManyStatusInput {
+  id: String
+  fileName: String!
+  file: String!
+  projectId: String!
+  comment: String!
+  createdAt: DateTime
+}
+
+input ProjectStatusCreateOrConnectWithoutProjectInput {
+  where: ProjectStatusWhereUniqueInput!
+  create: ProjectStatusCreateWithoutProjectInput!
+}
+
+input ProjectCreateOrConnectWithoutMessageInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutMessageInput!
+}
+
+input UserProjectUncheckedCreateNestedManyWithoutUserInput {
+  create: [UserProjectCreateWithoutUserInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutUserInput!]
+  createMany: UserProjectCreateManyUserInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
 }
 
 input inputLogin {
@@ -1316,6 +1524,7 @@ input ProjectUncheckedCreateInput {
   updatedAt: DateTime
   UserProject: UserProjectUncheckedCreateNestedManyWithoutProjectInput
   Message: MessageUncheckedCreateNestedManyWithoutProjectInput
+  File: FileUncheckedCreateNestedManyWithoutProjectInput
 }
 
 input UserProjectUncheckedCreateNestedManyWithoutProjectInput {
@@ -1332,10 +1541,18 @@ input MessageUncheckedCreateNestedManyWithoutProjectInput {
   connect: [MessageWhereUniqueInput!]
 }
 
+input FileUncheckedCreateNestedManyWithoutProjectInput {
+  create: [FileCreateWithoutProjectInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutProjectInput!]
+  createMany: FileCreateManyProjectInputEnvelope
+  connect: [FileWhereUniqueInput!]
+}
+
 input ProjectStatusUncheckedCreateInput {
   id: String
   name: String!
   Project: ProjectUncheckedCreateNestedManyWithoutStatusInput
+  File: FileUncheckedCreateNestedManyWithoutStatusInput
 }
 
 input ProjectUncheckedCreateNestedManyWithoutStatusInput {
@@ -1345,34 +1562,11 @@ input ProjectUncheckedCreateNestedManyWithoutStatusInput {
   connect: [ProjectWhereUniqueInput!]
 }
 
-input ProjectCreateWithoutStatusInput {
-  id: String
-  nameTH: String!
-  nameEN: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
-  UserProject: UserProjectCreateNestedManyWithoutProjectInput
-  Message: MessageCreateNestedManyWithoutProjectInput
-}
-
-input ProjectCreateOrConnectWithoutStatusInput {
-  where: ProjectWhereUniqueInput!
-  create: ProjectCreateWithoutStatusInput!
-}
-
-input ProjectCreateManyStatusInputEnvelope {
-  data: [ProjectCreateManyStatusInput!]!
-  skipDuplicates: Boolean
-}
-
-input ProjectCreateManyStatusInput {
-  id: String
-  nameTH: String!
-  nameEN: String!
-  typeId: String!
-  createdAt: DateTime
-  updatedAt: DateTime
+input FileUncheckedCreateNestedManyWithoutStatusInput {
+  create: [FileCreateWithoutStatusInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutStatusInput!]
+  createMany: FileCreateManyStatusInputEnvelope
+  connect: [FileWhereUniqueInput!]
 }
 
 input ProjectTypeUncheckedCreateInput {
@@ -1397,6 +1591,7 @@ input ProjectCreateWithoutProjectTypeInput {
   status: ProjectStatusCreateNestedOneWithoutProjectInput!
   UserProject: UserProjectCreateNestedManyWithoutProjectInput
   Message: MessageCreateNestedManyWithoutProjectInput
+  File: FileCreateNestedManyWithoutProjectInput
 }
 
 input ProjectCreateOrConnectWithoutProjectTypeInput {
@@ -1425,4 +1620,14 @@ input Input {
 input UserProjectCreateManyInput {
   projectId: String!
   userId: String!
+}
+
+input FileUncheckedCreateInput {
+  id: String
+  fileName: String!
+  file: String!
+  projectId: String!
+  statusId: String!
+  comment: String!
+  createdAt: DateTime
 }

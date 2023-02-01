@@ -1,6 +1,5 @@
-import { Args, Field, Mutation, ObjectType, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { UtilsService } from '../utils/utils.service';
-import { UserCreateInput } from './../@generated/index';
 import { inputLogin, inputRegister } from './auth.dto';
 import { AuthService } from './auth.service';
 
