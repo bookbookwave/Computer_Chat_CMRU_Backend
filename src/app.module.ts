@@ -29,6 +29,8 @@ import { UserProjectModule } from './user-project/user-project.module';
 import { ChatService } from './chat.service';
 import { PrismaService } from './prisma.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { LogLoginModule } from './log-login/log-login.module';
+import { BlogNewsModule } from './blog-news/blog-news.module';
 dotenv.config();
 @Module({
   imports: [
@@ -65,6 +67,8 @@ dotenv.config();
     ProjectTypeModule,
     UserProjectModule,
     FileUploadModule,
+    LogLoginModule,
+    BlogNewsModule,
   ],
   controllers: [AppController],
   providers: [

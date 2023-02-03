@@ -22,7 +22,7 @@ export class AuthResolver {
     if (input.password !== input.confirmPassword) {
       throw new Error('Password and confirm password do not match');
     }
-    let avatar = 'https://via.placeholder.com/150x150';
+    let avatar = 'https://picsum.photos/300/300';
     if (input.avatar) {
       avatar = input.avatar;
       // avatar = await this.utilsService.singleUpload(input.avatar);

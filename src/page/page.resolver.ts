@@ -23,7 +23,7 @@ export class PageResolver {
   async createPage(
     @Args('input') input: PageUncheckedCreateInput,
   ): Promise<Page> {
-    let thumbnail = 'https://via.placeholder.com/150x150';
+    let thumbnail = 'https://picsum.photos/300/300';
     if (input.thumbnail) {
       thumbnail = await this.utilService.singleUpload(input.thumbnail);
     }
@@ -36,7 +36,7 @@ export class PageResolver {
   async updatePage(
     @Args('input') input: PageUncheckedCreateInput,
   ): Promise<Page> {
-    let thumbnail = 'https://via.placeholder.com/150x150';
+    let thumbnail = 'https://picsum.photos/300/300';
     if (input.thumbnail) {
       thumbnail = await this.utilService.singleUpload(input.thumbnail);
     }

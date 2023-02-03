@@ -15,25 +15,28 @@ export class BannerResolver {
     return await this.bannerService.getBanner(id);
   }
 
-  @Query((returns) => Banner)
+  @Query((returns) => [Banner])
   async banners(): Promise<Banner[]> {
     return await this.bannerService.allBanners();
   }
 
   @Mutation((returns) => Banner)
   async createBanner(@Args('input') input: BannerCreateInput): Promise<Banner> {
-    let image = 'http://via.placeholder.com/1280x320';
+    console.log('input :>> ', input);
+    let image = 'https://picsum.photos/1280/320';
     if (input.image) {
-      image = await this.utilService.singleUpload(input.image);
+      image = input.image;
+      // image = await this.utilService.singleUpload(input.image);
     }
     return await this.bannerService.createBanner({ ...input, image: image });
   }
 
   @Mutation((returns) => Banner)
   async updateBanner(@Args('input') input: BannerCreateInput): Promise<Banner> {
-    let image = 'http://via.placeholder.com/1280x320';
+    let image = 'https://picsum.photos/1280/320';
     if (input.image) {
-      image = await this.utilService.singleUpload(input.image);
+      image = input.image;
+      // image = await this.utilService.singleUpload(input.image);
     }
     return await this.bannerService.updateBanner({ ...input, image: image });
   }

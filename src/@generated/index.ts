@@ -68,6 +68,21 @@ export enum QueryMode {
     insensitive = "insensitive"
 }
 
+export enum LoginTimeScalarFieldEnum {
+    id = "id",
+    userId = "userId",
+    createdAt = "createdAt"
+}
+
+export enum BlogNewsScalarFieldEnum {
+    id = "id",
+    title = "title",
+    content = "content",
+    link = "link",
+    createdAt = "createdAt",
+    updatedAt = "updatedAt"
+}
+
 export enum PostScalarFieldEnum {
     id = "id",
     title = "title",
@@ -155,6 +170,8 @@ registerEnumType(FileScalarFieldEnum, { name: 'FileScalarFieldEnum', description
 registerEnumType(MessageScalarFieldEnum, { name: 'MessageScalarFieldEnum', description: undefined })
 registerEnumType(PageScalarFieldEnum, { name: 'PageScalarFieldEnum', description: undefined })
 registerEnumType(PostScalarFieldEnum, { name: 'PostScalarFieldEnum', description: undefined })
+registerEnumType(BlogNewsScalarFieldEnum, { name: 'BlogNewsScalarFieldEnum', description: undefined })
+registerEnumType(LoginTimeScalarFieldEnum, { name: 'LoginTimeScalarFieldEnum', description: undefined })
 registerEnumType(QueryMode, { name: 'QueryMode', description: undefined })
 registerEnumType(Role, { name: 'Role', description: undefined })
 registerEnumType(SortOrder, { name: 'SortOrder', description: undefined })
@@ -254,8 +271,8 @@ export class BannerCreateManyInput {
     id?: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false})
-    image!: string;
+    @Field(() => String, {nullable:true})
+    image?: string;
     @Field(() => String, {nullable:true})
     link?: string;
     @Field(() => Date, {nullable:true})
@@ -270,8 +287,8 @@ export class BannerCreateInput {
     id?: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false})
-    image!: string;
+    @Field(() => String, {nullable:true})
+    image?: string;
     @Field(() => String, {nullable:true})
     link?: string;
     @Field(() => Date, {nullable:true})
@@ -487,8 +504,8 @@ export class BannerUncheckedCreateInput {
     id?: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false})
-    image!: string;
+    @Field(() => String, {nullable:true})
+    image?: string;
     @Field(() => String, {nullable:true})
     link?: string;
     @Field(() => Date, {nullable:true})
@@ -595,7 +612,7 @@ export class Banner {
     id!: string;
     @Field(() => String, {nullable:false})
     title!: string;
-    @Field(() => String, {nullable:false})
+    @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/1280/320'})
     image!: string;
     @Field(() => String, {nullable:true})
     link!: string | null;
@@ -731,6 +748,430 @@ export class UpsertOneBannerArgs {
     @Field(() => BannerUpdateInput, {nullable:false})
     @Type(() => BannerUpdateInput)
     update!: InstanceType<typeof BannerUpdateInput>;
+}
+
+@ArgsType()
+export class blogNewsAggregateArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+    @Field(() => [blogNewsOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<blogNewsOrderByWithRelationInput>;
+    @Field(() => blogNewsWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof blogNewsWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+}
+
+@InputType()
+export class blogNewsCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    title?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    content?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    link?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class blogNewsCreateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    title!: string;
+    @Field(() => String, {nullable:false})
+    content!: string;
+    @Field(() => String, {nullable:false})
+    link!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@InputType()
+export class blogNewsCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    title!: string;
+    @Field(() => String, {nullable:false})
+    content!: string;
+    @Field(() => String, {nullable:false})
+    link!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@ArgsType()
+export class blogNewsGroupByArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+    @Field(() => [blogNewsOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<blogNewsOrderByWithAggregationInput>;
+    @Field(() => [BlogNewsScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof BlogNewsScalarFieldEnum>;
+    @Field(() => blogNewsScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof blogNewsScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+}
+
+@InputType()
+export class blogNewsMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    title?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    content?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    link?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class blogNewsMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    title?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    content?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    link?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class blogNewsOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    title?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    content?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    link?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+    @Field(() => blogNewsCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof blogNewsCountOrderByAggregateInput>;
+    @Field(() => blogNewsMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof blogNewsMaxOrderByAggregateInput>;
+    @Field(() => blogNewsMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof blogNewsMinOrderByAggregateInput>;
+}
+
+@InputType()
+export class blogNewsOrderByWithRelationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    title?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    content?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    link?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class blogNewsScalarWhereWithAggregatesInput {
+    @Field(() => [blogNewsScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<blogNewsScalarWhereWithAggregatesInput>;
+    @Field(() => [blogNewsScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<blogNewsScalarWhereWithAggregatesInput>;
+    @Field(() => [blogNewsScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<blogNewsScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    id?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    title?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    content?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    link?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeWithAggregatesFilter>;
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeWithAggregatesFilter>;
+}
+
+@InputType()
+export class blogNewsUncheckedCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    title!: string;
+    @Field(() => String, {nullable:false})
+    content!: string;
+    @Field(() => String, {nullable:false})
+    link!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@InputType()
+export class blogNewsUncheckedUpdateManyInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    title?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    content?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    link?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class blogNewsUncheckedUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    title?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    content?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    link?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class blogNewsUpdateManyMutationInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    title?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    content?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    link?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class blogNewsUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    title?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    content?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    link?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class blogNewsWhereUniqueInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class blogNewsWhereInput {
+    @Field(() => [blogNewsWhereInput], {nullable:true})
+    AND?: Array<blogNewsWhereInput>;
+    @Field(() => [blogNewsWhereInput], {nullable:true})
+    OR?: Array<blogNewsWhereInput>;
+    @Field(() => [blogNewsWhereInput], {nullable:true})
+    NOT?: Array<blogNewsWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    title?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    content?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    link?: InstanceType<typeof StringFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFilter>;
+}
+
+@ObjectType()
+export class blogNews {
+    @Field(() => ID, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    title!: string;
+    @Field(() => String, {nullable:false})
+    content!: string;
+    @Field(() => String, {nullable:false})
+    link!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date;
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date;
+}
+
+@ArgsType()
+export class CreateManyblogNewsArgs {
+    @Field(() => [blogNewsCreateManyInput], {nullable:false})
+    @Type(() => blogNewsCreateManyInput)
+    data!: Array<blogNewsCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneblogNewsArgs {
+    @Field(() => blogNewsCreateInput, {nullable:false})
+    @Type(() => blogNewsCreateInput)
+    data!: InstanceType<typeof blogNewsCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyblogNewsArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneblogNewsArgs {
+    @Field(() => blogNewsWhereUniqueInput, {nullable:false})
+    @Type(() => blogNewsWhereUniqueInput)
+    where!: InstanceType<typeof blogNewsWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindFirstblogNewsOrThrowArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+    @Field(() => [blogNewsOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<blogNewsOrderByWithRelationInput>;
+    @Field(() => blogNewsWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof blogNewsWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [BlogNewsScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof BlogNewsScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstblogNewsArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+    @Field(() => [blogNewsOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<blogNewsOrderByWithRelationInput>;
+    @Field(() => blogNewsWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof blogNewsWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [BlogNewsScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof BlogNewsScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyblogNewsArgs {
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+    @Field(() => [blogNewsOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<blogNewsOrderByWithRelationInput>;
+    @Field(() => blogNewsWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof blogNewsWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [BlogNewsScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof BlogNewsScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueblogNewsOrThrowArgs {
+    @Field(() => blogNewsWhereUniqueInput, {nullable:false})
+    @Type(() => blogNewsWhereUniqueInput)
+    where!: InstanceType<typeof blogNewsWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueblogNewsArgs {
+    @Field(() => blogNewsWhereUniqueInput, {nullable:false})
+    @Type(() => blogNewsWhereUniqueInput)
+    where!: InstanceType<typeof blogNewsWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpdateManyblogNewsArgs {
+    @Field(() => blogNewsUpdateManyMutationInput, {nullable:false})
+    @Type(() => blogNewsUpdateManyMutationInput)
+    data!: InstanceType<typeof blogNewsUpdateManyMutationInput>;
+    @Field(() => blogNewsWhereInput, {nullable:true})
+    @Type(() => blogNewsWhereInput)
+    where?: InstanceType<typeof blogNewsWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneblogNewsArgs {
+    @Field(() => blogNewsUpdateInput, {nullable:false})
+    @Type(() => blogNewsUpdateInput)
+    data!: InstanceType<typeof blogNewsUpdateInput>;
+    @Field(() => blogNewsWhereUniqueInput, {nullable:false})
+    @Type(() => blogNewsWhereUniqueInput)
+    where!: InstanceType<typeof blogNewsWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneblogNewsArgs {
+    @Field(() => blogNewsWhereUniqueInput, {nullable:false})
+    @Type(() => blogNewsWhereUniqueInput)
+    where!: InstanceType<typeof blogNewsWhereUniqueInput>;
+    @Field(() => blogNewsCreateInput, {nullable:false})
+    @Type(() => blogNewsCreateInput)
+    create!: InstanceType<typeof blogNewsCreateInput>;
+    @Field(() => blogNewsUpdateInput, {nullable:false})
+    @Type(() => blogNewsUpdateInput)
+    update!: InstanceType<typeof blogNewsUpdateInput>;
 }
 
 @ObjectType()
@@ -4625,6 +5066,572 @@ export class UpsertOneFileArgs {
     update!: InstanceType<typeof FileUpdateInput>;
 }
 
+@ArgsType()
+export class CreateManyloginTimeArgs {
+    @Field(() => [loginTimeCreateManyInput], {nullable:false})
+    @Type(() => loginTimeCreateManyInput)
+    data!: Array<loginTimeCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneloginTimeArgs {
+    @Field(() => loginTimeCreateInput, {nullable:false})
+    @Type(() => loginTimeCreateInput)
+    data!: InstanceType<typeof loginTimeCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyloginTimeArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneloginTimeArgs {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindFirstloginTimeOrThrowArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => [loginTimeOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<loginTimeOrderByWithRelationInput>;
+    @Field(() => loginTimeWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [LoginTimeScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof LoginTimeScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstloginTimeArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => [loginTimeOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<loginTimeOrderByWithRelationInput>;
+    @Field(() => loginTimeWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [LoginTimeScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof LoginTimeScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyloginTimeArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => [loginTimeOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<loginTimeOrderByWithRelationInput>;
+    @Field(() => loginTimeWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [LoginTimeScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof LoginTimeScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueloginTimeOrThrowArgs {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueloginTimeArgs {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+}
+
+@ArgsType()
+export class loginTimeAggregateArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => [loginTimeOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<loginTimeOrderByWithRelationInput>;
+    @Field(() => loginTimeWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+}
+
+@InputType()
+export class loginTimeCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class loginTimeCreateManyAuthorInputEnvelope {
+    @Field(() => [loginTimeCreateManyAuthorInput], {nullable:false})
+    @Type(() => loginTimeCreateManyAuthorInput)
+    data!: Array<loginTimeCreateManyAuthorInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class loginTimeCreateManyAuthorInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class loginTimeCreateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class loginTimeCreateNestedManyWithoutAuthorInput {
+    @Field(() => [loginTimeCreateWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create?: Array<loginTimeCreateWithoutAuthorInput>;
+    @Field(() => [loginTimeCreateOrConnectWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateOrConnectWithoutAuthorInput)
+    connectOrCreate?: Array<loginTimeCreateOrConnectWithoutAuthorInput>;
+    @Field(() => loginTimeCreateManyAuthorInputEnvelope, {nullable:true})
+    @Type(() => loginTimeCreateManyAuthorInputEnvelope)
+    createMany?: InstanceType<typeof loginTimeCreateManyAuthorInputEnvelope>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    connect?: Array<loginTimeWhereUniqueInput>;
+}
+
+@InputType()
+export class loginTimeCreateOrConnectWithoutAuthorInput {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => loginTimeCreateWithoutAuthorInput, {nullable:false})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create!: InstanceType<typeof loginTimeCreateWithoutAuthorInput>;
+}
+
+@InputType()
+export class loginTimeCreateWithoutAuthorInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class loginTimeCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => UserCreateNestedOneWithoutLoginTimeInput, {nullable:false})
+    author!: InstanceType<typeof UserCreateNestedOneWithoutLoginTimeInput>;
+}
+
+@ArgsType()
+export class loginTimeGroupByArgs {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => [loginTimeOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<loginTimeOrderByWithAggregationInput>;
+    @Field(() => [LoginTimeScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof LoginTimeScalarFieldEnum>;
+    @Field(() => loginTimeScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof loginTimeScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+}
+
+@InputType()
+export class loginTimeMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class loginTimeMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class loginTimeOrderByRelationAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    _count?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class loginTimeOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => loginTimeCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof loginTimeCountOrderByAggregateInput>;
+    @Field(() => loginTimeMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof loginTimeMaxOrderByAggregateInput>;
+    @Field(() => loginTimeMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof loginTimeMinOrderByAggregateInput>;
+}
+
+@InputType()
+export class loginTimeOrderByWithRelationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
+    @Field(() => UserOrderByWithRelationInput, {nullable:true})
+    author?: InstanceType<typeof UserOrderByWithRelationInput>;
+}
+
+@InputType()
+export class loginTimeScalarWhereWithAggregatesInput {
+    @Field(() => [loginTimeScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<loginTimeScalarWhereWithAggregatesInput>;
+    @Field(() => [loginTimeScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<loginTimeScalarWhereWithAggregatesInput>;
+    @Field(() => [loginTimeScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<loginTimeScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    id?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    userId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeWithAggregatesFilter>;
+}
+
+@InputType()
+export class loginTimeScalarWhereInput {
+    @Field(() => [loginTimeScalarWhereInput], {nullable:true})
+    AND?: Array<loginTimeScalarWhereInput>;
+    @Field(() => [loginTimeScalarWhereInput], {nullable:true})
+    OR?: Array<loginTimeScalarWhereInput>;
+    @Field(() => [loginTimeScalarWhereInput], {nullable:true})
+    NOT?: Array<loginTimeScalarWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    userId?: InstanceType<typeof StringFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFilter>;
+}
+
+@InputType()
+export class loginTimeUncheckedCreateNestedManyWithoutAuthorInput {
+    @Field(() => [loginTimeCreateWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create?: Array<loginTimeCreateWithoutAuthorInput>;
+    @Field(() => [loginTimeCreateOrConnectWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateOrConnectWithoutAuthorInput)
+    connectOrCreate?: Array<loginTimeCreateOrConnectWithoutAuthorInput>;
+    @Field(() => loginTimeCreateManyAuthorInputEnvelope, {nullable:true})
+    @Type(() => loginTimeCreateManyAuthorInputEnvelope)
+    createMany?: InstanceType<typeof loginTimeCreateManyAuthorInputEnvelope>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    connect?: Array<loginTimeWhereUniqueInput>;
+}
+
+@InputType()
+export class loginTimeUncheckedCreateWithoutAuthorInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class loginTimeUncheckedCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
+export class loginTimeUncheckedUpdateManyWithoutAuthorNestedInput {
+    @Field(() => [loginTimeCreateWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create?: Array<loginTimeCreateWithoutAuthorInput>;
+    @Field(() => [loginTimeCreateOrConnectWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateOrConnectWithoutAuthorInput)
+    connectOrCreate?: Array<loginTimeCreateOrConnectWithoutAuthorInput>;
+    @Field(() => [loginTimeUpsertWithWhereUniqueWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpsertWithWhereUniqueWithoutAuthorInput)
+    upsert?: Array<loginTimeUpsertWithWhereUniqueWithoutAuthorInput>;
+    @Field(() => loginTimeCreateManyAuthorInputEnvelope, {nullable:true})
+    @Type(() => loginTimeCreateManyAuthorInputEnvelope)
+    createMany?: InstanceType<typeof loginTimeCreateManyAuthorInputEnvelope>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    set?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    disconnect?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    delete?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    connect?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeUpdateWithWhereUniqueWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpdateWithWhereUniqueWithoutAuthorInput)
+    update?: Array<loginTimeUpdateWithWhereUniqueWithoutAuthorInput>;
+    @Field(() => [loginTimeUpdateManyWithWhereWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpdateManyWithWhereWithoutAuthorInput)
+    updateMany?: Array<loginTimeUpdateManyWithWhereWithoutAuthorInput>;
+    @Field(() => [loginTimeScalarWhereInput], {nullable:true})
+    @Type(() => loginTimeScalarWhereInput)
+    deleteMany?: Array<loginTimeScalarWhereInput>;
+}
+
+@InputType()
+export class loginTimeUncheckedUpdateManyWithoutLoginTimeInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUncheckedUpdateManyInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUncheckedUpdateWithoutAuthorInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUncheckedUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUpdateManyMutationInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUpdateManyWithWhereWithoutAuthorInput {
+    @Field(() => loginTimeScalarWhereInput, {nullable:false})
+    @Type(() => loginTimeScalarWhereInput)
+    where!: InstanceType<typeof loginTimeScalarWhereInput>;
+    @Field(() => loginTimeUpdateManyMutationInput, {nullable:false})
+    @Type(() => loginTimeUpdateManyMutationInput)
+    data!: InstanceType<typeof loginTimeUpdateManyMutationInput>;
+}
+
+@InputType()
+export class loginTimeUpdateManyWithoutAuthorNestedInput {
+    @Field(() => [loginTimeCreateWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create?: Array<loginTimeCreateWithoutAuthorInput>;
+    @Field(() => [loginTimeCreateOrConnectWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeCreateOrConnectWithoutAuthorInput)
+    connectOrCreate?: Array<loginTimeCreateOrConnectWithoutAuthorInput>;
+    @Field(() => [loginTimeUpsertWithWhereUniqueWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpsertWithWhereUniqueWithoutAuthorInput)
+    upsert?: Array<loginTimeUpsertWithWhereUniqueWithoutAuthorInput>;
+    @Field(() => loginTimeCreateManyAuthorInputEnvelope, {nullable:true})
+    @Type(() => loginTimeCreateManyAuthorInputEnvelope)
+    createMany?: InstanceType<typeof loginTimeCreateManyAuthorInputEnvelope>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    set?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    disconnect?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    delete?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeWhereUniqueInput], {nullable:true})
+    @Type(() => loginTimeWhereUniqueInput)
+    connect?: Array<loginTimeWhereUniqueInput>;
+    @Field(() => [loginTimeUpdateWithWhereUniqueWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpdateWithWhereUniqueWithoutAuthorInput)
+    update?: Array<loginTimeUpdateWithWhereUniqueWithoutAuthorInput>;
+    @Field(() => [loginTimeUpdateManyWithWhereWithoutAuthorInput], {nullable:true})
+    @Type(() => loginTimeUpdateManyWithWhereWithoutAuthorInput)
+    updateMany?: Array<loginTimeUpdateManyWithWhereWithoutAuthorInput>;
+    @Field(() => [loginTimeScalarWhereInput], {nullable:true})
+    @Type(() => loginTimeScalarWhereInput)
+    deleteMany?: Array<loginTimeScalarWhereInput>;
+}
+
+@InputType()
+export class loginTimeUpdateWithWhereUniqueWithoutAuthorInput {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => loginTimeUpdateWithoutAuthorInput, {nullable:false})
+    @Type(() => loginTimeUpdateWithoutAuthorInput)
+    data!: InstanceType<typeof loginTimeUpdateWithoutAuthorInput>;
+}
+
+@InputType()
+export class loginTimeUpdateWithoutAuthorInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class loginTimeUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => UserUpdateOneRequiredWithoutLoginTimeNestedInput, {nullable:true})
+    author?: InstanceType<typeof UserUpdateOneRequiredWithoutLoginTimeNestedInput>;
+}
+
+@InputType()
+export class loginTimeUpsertWithWhereUniqueWithoutAuthorInput {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => loginTimeUpdateWithoutAuthorInput, {nullable:false})
+    @Type(() => loginTimeUpdateWithoutAuthorInput)
+    update!: InstanceType<typeof loginTimeUpdateWithoutAuthorInput>;
+    @Field(() => loginTimeCreateWithoutAuthorInput, {nullable:false})
+    @Type(() => loginTimeCreateWithoutAuthorInput)
+    create!: InstanceType<typeof loginTimeCreateWithoutAuthorInput>;
+}
+
+@InputType()
+export class loginTimeWhereUniqueInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class loginTimeWhereInput {
+    @Field(() => [loginTimeWhereInput], {nullable:true})
+    AND?: Array<loginTimeWhereInput>;
+    @Field(() => [loginTimeWhereInput], {nullable:true})
+    OR?: Array<loginTimeWhereInput>;
+    @Field(() => [loginTimeWhereInput], {nullable:true})
+    NOT?: Array<loginTimeWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    userId?: InstanceType<typeof StringFilter>;
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFilter>;
+    @Field(() => UserRelationFilter, {nullable:true})
+    author?: InstanceType<typeof UserRelationFilter>;
+}
+
+@ObjectType()
+export class loginTime {
+    @Field(() => ID, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date;
+    @Field(() => User, {nullable:false})
+    author?: InstanceType<typeof User>;
+}
+
+@ArgsType()
+export class UpdateManyloginTimeArgs {
+    @Field(() => loginTimeUpdateManyMutationInput, {nullable:false})
+    @Type(() => loginTimeUpdateManyMutationInput)
+    data!: InstanceType<typeof loginTimeUpdateManyMutationInput>;
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    @Type(() => loginTimeWhereInput)
+    where?: InstanceType<typeof loginTimeWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneloginTimeArgs {
+    @Field(() => loginTimeUpdateInput, {nullable:false})
+    @Type(() => loginTimeUpdateInput)
+    data!: InstanceType<typeof loginTimeUpdateInput>;
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneloginTimeArgs {
+    @Field(() => loginTimeWhereUniqueInput, {nullable:false})
+    @Type(() => loginTimeWhereUniqueInput)
+    where!: InstanceType<typeof loginTimeWhereUniqueInput>;
+    @Field(() => loginTimeCreateInput, {nullable:false})
+    @Type(() => loginTimeCreateInput)
+    create!: InstanceType<typeof loginTimeCreateInput>;
+    @Field(() => loginTimeUpdateInput, {nullable:false})
+    @Type(() => loginTimeUpdateInput)
+    update!: InstanceType<typeof loginTimeUpdateInput>;
+}
+
 @ObjectType()
 export class AggregateMessage {
     @Field(() => MessageCountAggregate, {nullable:true})
@@ -8128,6 +9135,98 @@ export class AffectedRows {
     count!: number;
 }
 
+@ObjectType()
+export class AggregateBlogNews {
+    @Field(() => BlogNewsCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof BlogNewsCountAggregate>;
+    @Field(() => BlogNewsMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof BlogNewsMinAggregate>;
+    @Field(() => BlogNewsMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof BlogNewsMaxAggregate>;
+}
+
+@ObjectType()
+export class AggregateLoginTime {
+    @Field(() => LoginTimeCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof LoginTimeCountAggregate>;
+    @Field(() => LoginTimeMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof LoginTimeMinAggregate>;
+    @Field(() => LoginTimeMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof LoginTimeMaxAggregate>;
+}
+
+@ObjectType()
+export class BlogNewsCountAggregate {
+    @Field(() => Int, {nullable:false})
+    id!: number;
+    @Field(() => Int, {nullable:false})
+    title!: number;
+    @Field(() => Int, {nullable:false})
+    content!: number;
+    @Field(() => Int, {nullable:false})
+    link!: number;
+    @Field(() => Int, {nullable:false})
+    createdAt!: number;
+    @Field(() => Int, {nullable:false})
+    updatedAt!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@ObjectType()
+export class BlogNewsGroupBy {
+    @Field(() => String, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    title!: string;
+    @Field(() => String, {nullable:false})
+    content!: string;
+    @Field(() => String, {nullable:false})
+    link!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date | string;
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date | string;
+    @Field(() => BlogNewsCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof BlogNewsCountAggregate>;
+    @Field(() => BlogNewsMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof BlogNewsMinAggregate>;
+    @Field(() => BlogNewsMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof BlogNewsMaxAggregate>;
+}
+
+@ObjectType()
+export class BlogNewsMaxAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    title?: string;
+    @Field(() => String, {nullable:true})
+    content?: string;
+    @Field(() => String, {nullable:true})
+    link?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@ObjectType()
+export class BlogNewsMinAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    title?: string;
+    @Field(() => String, {nullable:true})
+    content?: string;
+    @Field(() => String, {nullable:true})
+    link?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
 @InputType()
 export class DateTimeFieldUpdateOperationsInput {
     @Field(() => Date, {nullable:true})
@@ -8278,6 +9377,64 @@ export class IntWithAggregatesFilter {
     _min?: InstanceType<typeof NestedIntFilter>;
     @Field(() => NestedIntFilter, {nullable:true})
     _max?: InstanceType<typeof NestedIntFilter>;
+}
+
+@ObjectType()
+export class LoginTimeCountAggregate {
+    @Field(() => Int, {nullable:false})
+    id!: number;
+    @Field(() => Int, {nullable:false})
+    userId!: number;
+    @Field(() => Int, {nullable:false})
+    createdAt!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@ObjectType()
+export class LoginTimeGroupBy {
+    @Field(() => String, {nullable:false})
+    id!: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date | string;
+    @Field(() => LoginTimeCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof LoginTimeCountAggregate>;
+    @Field(() => LoginTimeMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof LoginTimeMinAggregate>;
+    @Field(() => LoginTimeMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof LoginTimeMaxAggregate>;
+}
+
+@InputType()
+export class LoginTimeListRelationFilter {
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    every?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    some?: InstanceType<typeof loginTimeWhereInput>;
+    @Field(() => loginTimeWhereInput, {nullable:true})
+    none?: InstanceType<typeof loginTimeWhereInput>;
+}
+
+@ObjectType()
+export class LoginTimeMaxAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    userId?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@ObjectType()
+export class LoginTimeMinAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:true})
+    userId?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }
 
 @InputType()
@@ -11845,6 +13002,8 @@ export class UserCount {
     Message?: number;
     @Field(() => Int, {nullable:false})
     UserProject?: number;
+    @Field(() => Int, {nullable:false})
+    loginTime?: number;
 }
 
 @InputType()
@@ -11877,6 +13036,19 @@ export class UserCreateNestedOneWithoutDownloadInput {
     @Field(() => UserCreateOrConnectWithoutDownloadInput, {nullable:true})
     @Type(() => UserCreateOrConnectWithoutDownloadInput)
     connectOrCreate?: InstanceType<typeof UserCreateOrConnectWithoutDownloadInput>;
+    @Field(() => UserWhereUniqueInput, {nullable:true})
+    @Type(() => UserWhereUniqueInput)
+    connect?: InstanceType<typeof UserWhereUniqueInput>;
+}
+
+@InputType()
+export class UserCreateNestedOneWithoutLoginTimeInput {
+    @Field(() => UserCreateWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserCreateWithoutLoginTimeInput)
+    create?: InstanceType<typeof UserCreateWithoutLoginTimeInput>;
+    @Field(() => UserCreateOrConnectWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserCreateOrConnectWithoutLoginTimeInput)
+    connectOrCreate?: InstanceType<typeof UserCreateOrConnectWithoutLoginTimeInput>;
     @Field(() => UserWhereUniqueInput, {nullable:true})
     @Type(() => UserWhereUniqueInput)
     connect?: InstanceType<typeof UserWhereUniqueInput>;
@@ -11942,6 +13114,16 @@ export class UserCreateOrConnectWithoutDownloadInput {
     @Field(() => UserCreateWithoutDownloadInput, {nullable:false})
     @Type(() => UserCreateWithoutDownloadInput)
     create!: InstanceType<typeof UserCreateWithoutDownloadInput>;
+}
+
+@InputType()
+export class UserCreateOrConnectWithoutLoginTimeInput {
+    @Field(() => UserWhereUniqueInput, {nullable:false})
+    @Type(() => UserWhereUniqueInput)
+    where!: InstanceType<typeof UserWhereUniqueInput>;
+    @Field(() => UserCreateWithoutLoginTimeInput, {nullable:false})
+    @Type(() => UserCreateWithoutLoginTimeInput)
+    create!: InstanceType<typeof UserCreateWithoutLoginTimeInput>;
 }
 
 @InputType()
@@ -12012,6 +13194,40 @@ export class UserCreateWithoutDownloadInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+}
+
+@InputType()
+export class UserCreateWithoutLoginTimeInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:false})
+    @Validator.IsEmail()
+    email!: string;
+    @Field(() => String, {nullable:false})
+    password!: string;
+    @Field(() => Role, {nullable:true})
+    role?: keyof typeof Role;
+    @Field(() => String, {nullable:true})
+    avatar?: string;
+    @Field(() => Date, {nullable:true})
+    createAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updateAt?: Date | string;
+    @Field(() => DownloadCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PageCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Page?: InstanceType<typeof PageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PostCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Post?: InstanceType<typeof PostCreateNestedManyWithoutAuthorInput>;
+    @Field(() => MessageCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -12042,6 +13258,8 @@ export class UserCreateWithoutMessageInput {
     Post?: InstanceType<typeof PostCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12072,6 +13290,8 @@ export class UserCreateWithoutPageInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12102,6 +13322,8 @@ export class UserCreateWithoutPostInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12132,6 +13354,8 @@ export class UserCreateWithoutUserProjectInput {
     Post?: InstanceType<typeof PostCreateNestedManyWithoutAuthorInput>;
     @Field(() => MessageCreateNestedManyWithoutAuthorInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12164,6 +13388,8 @@ export class UserCreateInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
 }
 
 @ArgsType()
@@ -12389,6 +13615,8 @@ export class UserOrderByWithRelationInput {
     Message?: InstanceType<typeof MessageOrderByRelationAggregateInput>;
     @Field(() => UserProjectOrderByRelationAggregateInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectOrderByRelationAggregateInput>;
+    @Field(() => loginTimeOrderByRelationAggregateInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeOrderByRelationAggregateInput>;
 }
 
 @InputType()
@@ -12453,6 +13681,40 @@ export class UserUncheckedCreateWithoutDownloadInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+}
+
+@InputType()
+export class UserUncheckedCreateWithoutLoginTimeInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:false})
+    @Validator.IsEmail()
+    email!: string;
+    @Field(() => String, {nullable:false})
+    password!: string;
+    @Field(() => Role, {nullable:true})
+    role?: keyof typeof Role;
+    @Field(() => String, {nullable:true})
+    avatar?: string;
+    @Field(() => Date, {nullable:true})
+    createAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updateAt?: Date | string;
+    @Field(() => DownloadUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Page?: InstanceType<typeof PageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PostUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Post?: InstanceType<typeof PostUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -12483,6 +13745,8 @@ export class UserUncheckedCreateWithoutMessageInput {
     Post?: InstanceType<typeof PostUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12513,6 +13777,8 @@ export class UserUncheckedCreateWithoutPageInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12543,6 +13809,8 @@ export class UserUncheckedCreateWithoutPostInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12573,6 +13841,8 @@ export class UserUncheckedCreateWithoutUserProjectInput {
     Post?: InstanceType<typeof PostUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12605,6 +13875,8 @@ export class UserUncheckedCreateInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
 }
 
 @InputType()
@@ -12653,6 +13925,38 @@ export class UserUncheckedUpdateWithoutDownloadInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+}
+
+@InputType()
+export class UserUncheckedUpdateWithoutLoginTimeInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    password?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => EnumRoleFieldUpdateOperationsInput, {nullable:true})
+    role?: InstanceType<typeof EnumRoleFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    avatar?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updateAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DownloadUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Page?: InstanceType<typeof PageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PostUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Post?: InstanceType<typeof PostUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -12681,6 +13985,8 @@ export class UserUncheckedUpdateWithoutMessageInput {
     Post?: InstanceType<typeof PostUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12709,6 +14015,8 @@ export class UserUncheckedUpdateWithoutPageInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12737,6 +14045,8 @@ export class UserUncheckedUpdateWithoutPostInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12765,6 +14075,8 @@ export class UserUncheckedUpdateWithoutUserProjectInput {
     Post?: InstanceType<typeof PostUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12795,6 +14107,8 @@ export class UserUncheckedUpdateInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12834,6 +14148,25 @@ export class UserUpdateOneRequiredWithoutDownloadNestedInput {
     @Field(() => UserUpdateWithoutDownloadInput, {nullable:true})
     @Type(() => UserUpdateWithoutDownloadInput)
     update?: InstanceType<typeof UserUpdateWithoutDownloadInput>;
+}
+
+@InputType()
+export class UserUpdateOneRequiredWithoutLoginTimeNestedInput {
+    @Field(() => UserCreateWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserCreateWithoutLoginTimeInput)
+    create?: InstanceType<typeof UserCreateWithoutLoginTimeInput>;
+    @Field(() => UserCreateOrConnectWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserCreateOrConnectWithoutLoginTimeInput)
+    connectOrCreate?: InstanceType<typeof UserCreateOrConnectWithoutLoginTimeInput>;
+    @Field(() => UserUpsertWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserUpsertWithoutLoginTimeInput)
+    upsert?: InstanceType<typeof UserUpsertWithoutLoginTimeInput>;
+    @Field(() => UserWhereUniqueInput, {nullable:true})
+    @Type(() => UserWhereUniqueInput)
+    connect?: InstanceType<typeof UserWhereUniqueInput>;
+    @Field(() => UserUpdateWithoutLoginTimeInput, {nullable:true})
+    @Type(() => UserUpdateWithoutLoginTimeInput)
+    update?: InstanceType<typeof UserUpdateWithoutLoginTimeInput>;
 }
 
 @InputType()
@@ -12938,6 +14271,38 @@ export class UserUpdateWithoutDownloadInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+}
+
+@InputType()
+export class UserUpdateWithoutLoginTimeInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    password?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => EnumRoleFieldUpdateOperationsInput, {nullable:true})
+    role?: InstanceType<typeof EnumRoleFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    avatar?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updateAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DownloadUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PageUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Page?: InstanceType<typeof PageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PostUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Post?: InstanceType<typeof PostUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => MessageUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -12966,6 +14331,8 @@ export class UserUpdateWithoutMessageInput {
     Post?: InstanceType<typeof PostUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -12994,6 +14361,8 @@ export class UserUpdateWithoutPageInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -13022,6 +14391,8 @@ export class UserUpdateWithoutPostInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -13050,6 +14421,8 @@ export class UserUpdateWithoutUserProjectInput {
     Post?: InstanceType<typeof PostUpdateManyWithoutAuthorNestedInput>;
     @Field(() => MessageUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -13080,6 +14453,8 @@ export class UserUpdateInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
 }
 
 @InputType()
@@ -13090,6 +14465,16 @@ export class UserUpsertWithoutDownloadInput {
     @Field(() => UserCreateWithoutDownloadInput, {nullable:false})
     @Type(() => UserCreateWithoutDownloadInput)
     create!: InstanceType<typeof UserCreateWithoutDownloadInput>;
+}
+
+@InputType()
+export class UserUpsertWithoutLoginTimeInput {
+    @Field(() => UserUpdateWithoutLoginTimeInput, {nullable:false})
+    @Type(() => UserUpdateWithoutLoginTimeInput)
+    update!: InstanceType<typeof UserUpdateWithoutLoginTimeInput>;
+    @Field(() => UserCreateWithoutLoginTimeInput, {nullable:false})
+    @Type(() => UserCreateWithoutLoginTimeInput)
+    create!: InstanceType<typeof UserCreateWithoutLoginTimeInput>;
 }
 
 @InputType()
@@ -13175,6 +14560,8 @@ export class UserWhereInput {
     Message?: InstanceType<typeof MessageListRelationFilter>;
     @Field(() => UserProjectListRelationFilter, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectListRelationFilter>;
+    @Field(() => LoginTimeListRelationFilter, {nullable:true})
+    loginTime?: InstanceType<typeof LoginTimeListRelationFilter>;
 }
 
 @ObjectType()
@@ -13205,6 +14592,8 @@ export class User {
     Message?: Array<Message>;
     @Field(() => [UserProject], {nullable:true})
     UserProject?: Array<UserProject>;
+    @Field(() => [loginTime], {nullable:true})
+    loginTime?: Array<loginTime>;
     @Field(() => UserCount, {nullable:false})
     _count?: InstanceType<typeof UserCount>;
 }

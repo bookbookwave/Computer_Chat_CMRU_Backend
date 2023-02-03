@@ -23,6 +23,75 @@ const projectTypes = [
   { name: 'Hardware' },
   { name: 'Game' },
 ];
+const Banner = [
+  {
+    title: 'Hello',
+    image: 'https://picsum.photos/1280/320',
+    link: 'https://picsum.photos/1280/320',
+  },
+  {
+    title: 'Hello',
+    image: 'https://picsum.photos/1280/320',
+    link: 'https://picsum.photos/1280/320',
+  },
+  {
+    title: 'Hello',
+    image: 'https://picsum.photos/1280/320',
+    link: 'https://picsum.photos/1280/320',
+  },
+  {
+    title: 'Hello',
+    image: 'https://picsum.photos/1280/320',
+    link: 'https://picsum.photos/1280/320',
+  },
+  {
+    title: 'Hello',
+    image: 'https://picsum.photos/1280/320',
+    link: 'https://picsum.photos/1280/320',
+  },
+];
+const BlogNews = [
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ2',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ3',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ4',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ4',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ4',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ4',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+  {
+    title: 'งานไม่เสร็จไม่ต้องกลับ4',
+    content: 'บลาๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ',
+    link: 'https://facebook.com',
+  },
+];
 
 async function main() {
   await prisma.user.create({
@@ -41,8 +110,6 @@ async function main() {
       role: 'ADMIN',
     },
   });
-  await prisma.projectStatus.createMany({ data: status });
-  await prisma.projectType.createMany({ data: projectTypes });
 
   for (let i = 0; i < 10; i++) {
     await prisma.user.create({
@@ -53,6 +120,14 @@ async function main() {
       },
     });
   }
+
+  await prisma.projectStatus.createMany({ data: status });
+
+  await prisma.projectType.createMany({ data: projectTypes });
+
+  await prisma.banner.createMany({ data: Banner });
+
+  await prisma.blogNews.createMany({ data: BlogNews });
 }
 
 main();

@@ -70,7 +70,10 @@ export class ChatGateway {
   handleJoin(Client: Socket, room: string): void {
     Client.join(room);
     console.log('join :>> ', room);
-    this.server.to(room).emit('response', { msg: `Server: Now you Join Room` });
+
+    // TODO : Emit Check Error message >>>>
+    // this.server.to(room).emit('response', { msg: `Server: Now you Join Room` });
+
     // this.server
     //   .to(room)
     //   .emit('response', { msg: `user ${Client.id} join, ${room}!` });

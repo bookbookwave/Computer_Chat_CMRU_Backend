@@ -44,6 +44,15 @@ type Banner {
   updateAt: DateTime!
 }
 
+type blogNews {
+  id: ID!
+  title: String!
+  content: String!
+  link: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type CategoryCountAggregate {
   id: Int!
   name: Int!
@@ -221,6 +230,13 @@ type File {
   status: ProjectStatus!
 }
 
+type loginTime {
+  id: ID!
+  userId: String!
+  createdAt: DateTime!
+  author: User!
+}
+
 type MessageCountAggregate {
   id: Int!
   message: Int!
@@ -373,6 +389,53 @@ type Post {
   author: User!
 }
 
+type BlogNewsCountAggregate {
+  id: Int!
+  title: Int!
+  content: Int!
+  link: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  _all: Int!
+}
+
+type BlogNewsMaxAggregate {
+  id: String
+  title: String
+  content: String
+  link: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type BlogNewsMinAggregate {
+  id: String
+  title: String
+  content: String
+  link: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type LoginTimeCountAggregate {
+  id: Int!
+  userId: Int!
+  createdAt: Int!
+  _all: Int!
+}
+
+type LoginTimeMaxAggregate {
+  id: String
+  userId: String
+  createdAt: DateTime
+}
+
+type LoginTimeMinAggregate {
+  id: String
+  userId: String
+  createdAt: DateTime
+}
+
 type ProjectCountAggregate {
   id: Int!
   nameTH: Int!
@@ -500,6 +563,7 @@ type UserCount {
   Post: Int!
   Message: Int!
   UserProject: Int!
+  loginTime: Int!
 }
 
 type UserMaxAggregate {
@@ -544,6 +608,7 @@ type User {
   Post: [Post!]
   Message: [Message!]
   UserProject: [UserProject!]
+  loginTime: [loginTime!]
   _count: UserCount!
 }
 
@@ -580,7 +645,7 @@ type Query {
   page(id: String!): Page!
   pages: [Page!]!
   banner(id: String!): Banner!
-  banners: Banner!
+  banners: [Banner!]!
   download(id: String!): Download!
   downloads: [Download!]!
   configuration(id: String!): Configuration!
@@ -602,6 +667,10 @@ type Query {
   findFile(id: String!): File!
   getFiles: [File!]!
   getFilesById(id: String!): [File!]!
+  getLogs: [loginTime!]!
+  getLogById(id: String!): [loginTime!]!
+  findBlogNewsById(id: String!): blogNews!
+  blogNews: [blogNews!]!
 }
 
 type Mutation {
@@ -647,6 +716,11 @@ type Mutation {
   createFile(input: FileUncheckedCreateInput!): File!
   updateFile(input: FileUncheckedCreateInput!): File!
   deleteFile(id: String!): Boolean!
+  createLogLogin(input: loginTimeUncheckedCreateInput!): loginTime!
+  deleteLogLogin(id: String!): loginTime!
+  createBlogNews(input: blogNewsUncheckedCreateInput!): blogNews!
+  updateBlogNews(input: blogNewsUncheckedCreateInput!): blogNews!
+  deleteBlogNews(id: String!): Boolean!
 }
 
 input UserUncheckedCreateInput {
@@ -663,6 +737,7 @@ input UserUncheckedCreateInput {
   Post: PostUncheckedCreateNestedManyWithoutAuthorInput
   Message: MessageUncheckedCreateNestedManyWithoutAuthorInput
   UserProject: UserProjectUncheckedCreateNestedManyWithoutUserInput
+  loginTime: loginTimeUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 input DownloadUncheckedCreateNestedManyWithoutAuthorInput {
@@ -959,6 +1034,7 @@ input UserCreateWithoutUserProjectInput {
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
 }
 
 input DownloadCreateNestedManyWithoutAuthorInput {
@@ -1009,6 +1085,37 @@ input MessageCreateManyAuthorInput {
   projectId: String!
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input loginTimeCreateNestedManyWithoutAuthorInput {
+  create: [loginTimeCreateWithoutAuthorInput!]
+  connectOrCreate: [loginTimeCreateOrConnectWithoutAuthorInput!]
+  createMany: loginTimeCreateManyAuthorInputEnvelope
+  connect: [loginTimeWhereUniqueInput!]
+}
+
+input loginTimeCreateWithoutAuthorInput {
+  id: String
+  createdAt: DateTime
+}
+
+input loginTimeCreateOrConnectWithoutAuthorInput {
+  where: loginTimeWhereUniqueInput!
+  create: loginTimeCreateWithoutAuthorInput!
+}
+
+input loginTimeWhereUniqueInput {
+  id: String
+}
+
+input loginTimeCreateManyAuthorInputEnvelope {
+  data: [loginTimeCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input loginTimeCreateManyAuthorInput {
+  id: String
+  createdAt: DateTime
 }
 
 input UserCreateOrConnectWithoutUserProjectInput {
@@ -1078,6 +1185,7 @@ input UserCreateWithoutMessageInput {
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
   UserProject: UserProjectCreateNestedManyWithoutUserInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
 }
 
 input UserProjectCreateNestedManyWithoutUserInput {
@@ -1294,6 +1402,13 @@ input UserProjectUncheckedCreateNestedManyWithoutUserInput {
   connect: [UserProjectWhereUniqueInput!]
 }
 
+input loginTimeUncheckedCreateNestedManyWithoutAuthorInput {
+  create: [loginTimeCreateWithoutAuthorInput!]
+  connectOrCreate: [loginTimeCreateOrConnectWithoutAuthorInput!]
+  createMany: loginTimeCreateManyAuthorInputEnvelope
+  connect: [loginTimeWhereUniqueInput!]
+}
+
 input inputLogin {
   email: String!
   password: String!
@@ -1313,6 +1428,7 @@ input inputRegister {
   Post: PostCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
   UserProject: UserProjectCreateNestedManyWithoutUserInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
   confirmPassword: String!
 }
 
@@ -1359,6 +1475,7 @@ input UserCreateWithoutPostInput {
   Page: PageCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
   UserProject: UserProjectCreateNestedManyWithoutUserInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
 }
 
 input UserCreateOrConnectWithoutPostInput {
@@ -1413,7 +1530,7 @@ input PageUncheckedCreateInput {
 input BannerCreateInput {
   id: String
   title: String!
-  image: String!
+  image: String
   link: String
   createAt: DateTime
   updateAt: DateTime
@@ -1478,6 +1595,7 @@ input UserCreateWithoutDownloadInput {
   Post: PostCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
   UserProject: UserProjectCreateNestedManyWithoutUserInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
 }
 
 input UserCreateOrConnectWithoutDownloadInput {
@@ -1630,4 +1748,19 @@ input FileUncheckedCreateInput {
   statusId: String!
   comment: String!
   createdAt: DateTime
+}
+
+input loginTimeUncheckedCreateInput {
+  id: String
+  userId: String!
+  createdAt: DateTime
+}
+
+input blogNewsUncheckedCreateInput {
+  id: String
+  title: String!
+  content: String!
+  link: String!
+  createdAt: DateTime
+  updatedAt: DateTime
 }

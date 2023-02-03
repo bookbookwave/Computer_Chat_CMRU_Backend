@@ -24,7 +24,7 @@ export class UserResolver {
   async createUser(
     @Args('input') input: UserUncheckedCreateInput,
   ): Promise<User> {
-    let avatar = 'https://via.placeholder.com/150x150';
+    let avatar = 'https://picsum.photos/300/300';
     console.log('input :>> ', input);
     if (input.avatar) {
       avatar = input.avatar;
@@ -36,7 +36,7 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UserUncheckedCreateInput,
   ): Promise<User> {
-    let avatar = 'https://via.placeholder.com/150x150';
+    let avatar = 'https://picsum.photos/300/300';
     if (input.avatar) {
       avatar = input.avatar;
       // avatar = await this.utilsService.singleUpload(input.avatar);
