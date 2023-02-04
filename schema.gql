@@ -192,6 +192,7 @@ type FileCountAggregate {
   fileName: Int!
   file: Int!
   projectId: Int!
+  messageRoomId: Int!
   statusId: Int!
   comment: Int!
   createdAt: Int!
@@ -203,6 +204,7 @@ type FileMaxAggregate {
   fileName: String
   file: String
   projectId: String
+  messageRoomId: String
   statusId: String
   comment: String
   createdAt: DateTime
@@ -213,6 +215,7 @@ type FileMinAggregate {
   fileName: String
   file: String
   projectId: String
+  messageRoomId: String
   statusId: String
   comment: String
   createdAt: DateTime
@@ -222,11 +225,13 @@ type File {
   id: ID!
   fileName: String!
   file: String!
-  projectId: String!
+  projectId: String
+  messageRoomId: String
   statusId: String!
   comment: String!
   createdAt: DateTime!
-  project: Project!
+  messageRoom: MessageRoom
+  project: Project
   status: ProjectStatus!
 }
 
@@ -289,6 +294,7 @@ type MessageRoomCountAggregate {
 type MessageRoomCount {
   UserMessageRoom: Int!
   Message: Int!
+  File: Int!
 }
 
 type MessageRoomMaxAggregate {
@@ -303,6 +309,7 @@ type MessageRoom {
   id: ID!
   UserMessageRoom: [UserMessageRoom!]
   Message: [Message!]
+  File: [File!]
   _count: MessageRoomCount!
 }
 
@@ -723,6 +730,7 @@ type Query {
   findFile(id: String!): File!
   getFiles: [File!]!
   getFilesById(id: String!): [File!]!
+  getFilesByRoom(id: String!): [File!]!
   getLogs: [loginTime!]!
   getLogById(id: String!): [loginTime!]!
   findBlogNewsById(id: String!): blogNews!
@@ -1053,45 +1061,40 @@ input FileCreateWithoutStatusInput {
   file: String!
   comment: String!
   createdAt: DateTime
-  project: ProjectCreateNestedOneWithoutFileInput!
+  messageRoom: MessageRoomCreateNestedOneWithoutFileInput
+  project: ProjectCreateNestedOneWithoutFileInput
 }
 
-input ProjectCreateNestedOneWithoutFileInput {
-  create: ProjectCreateWithoutFileInput
-  connectOrCreate: ProjectCreateOrConnectWithoutFileInput
-  connect: ProjectWhereUniqueInput
+input MessageRoomCreateNestedOneWithoutFileInput {
+  create: MessageRoomCreateWithoutFileInput
+  connectOrCreate: MessageRoomCreateOrConnectWithoutFileInput
+  connect: MessageRoomWhereUniqueInput
 }
 
-input ProjectCreateWithoutFileInput {
+input MessageRoomCreateWithoutFileInput {
   id: String
-  nameTH: String!
-  nameEN: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
-  status: ProjectStatusCreateNestedOneWithoutProjectInput!
-  UserProject: UserProjectCreateNestedManyWithoutProjectInput
-  Message: MessageCreateNestedManyWithoutProjectInput
+  UserMessageRoom: UserMessageRoomCreateNestedManyWithoutMessageRoomInput
+  Message: MessageCreateNestedManyWithoutMessageRoomInput
 }
 
-input UserProjectCreateNestedManyWithoutProjectInput {
-  create: [UserProjectCreateWithoutProjectInput!]
-  connectOrCreate: [UserProjectCreateOrConnectWithoutProjectInput!]
-  createMany: UserProjectCreateManyProjectInputEnvelope
-  connect: [UserProjectWhereUniqueInput!]
+input UserMessageRoomCreateNestedManyWithoutMessageRoomInput {
+  create: [UserMessageRoomCreateWithoutMessageRoomInput!]
+  connectOrCreate: [UserMessageRoomCreateOrConnectWithoutMessageRoomInput!]
+  createMany: UserMessageRoomCreateManyMessageRoomInputEnvelope
+  connect: [UserMessageRoomWhereUniqueInput!]
 }
 
-input UserProjectCreateWithoutProjectInput {
-  user: UserCreateNestedOneWithoutUserProjectInput!
+input UserMessageRoomCreateWithoutMessageRoomInput {
+  user: UserCreateNestedOneWithoutUserMessageRoomInput!
 }
 
-input UserCreateNestedOneWithoutUserProjectInput {
-  create: UserCreateWithoutUserProjectInput
-  connectOrCreate: UserCreateOrConnectWithoutUserProjectInput
+input UserCreateNestedOneWithoutUserMessageRoomInput {
+  create: UserCreateWithoutUserMessageRoomInput
+  connectOrCreate: UserCreateOrConnectWithoutUserMessageRoomInput
   connect: UserWhereUniqueInput
 }
 
-input UserCreateWithoutUserProjectInput {
+input UserCreateWithoutUserMessageRoomInput {
   id: String
   name: String!
   email: String!
@@ -1104,8 +1107,8 @@ input UserCreateWithoutUserProjectInput {
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
   loginTime: loginTimeCreateNestedManyWithoutAuthorInput
-  UserMessageRoom: UserMessageRoomCreateNestedManyWithoutUserInput
 }
 
 input DownloadCreateNestedManyWithoutAuthorInput {
@@ -1157,98 +1160,6 @@ input MessageCreateManyAuthorInput {
   messageRoomId: String
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-input loginTimeCreateNestedManyWithoutAuthorInput {
-  create: [loginTimeCreateWithoutAuthorInput!]
-  connectOrCreate: [loginTimeCreateOrConnectWithoutAuthorInput!]
-  createMany: loginTimeCreateManyAuthorInputEnvelope
-  connect: [loginTimeWhereUniqueInput!]
-}
-
-input loginTimeCreateWithoutAuthorInput {
-  id: String
-  createdAt: DateTime
-}
-
-input loginTimeCreateOrConnectWithoutAuthorInput {
-  where: loginTimeWhereUniqueInput!
-  create: loginTimeCreateWithoutAuthorInput!
-}
-
-input loginTimeWhereUniqueInput {
-  id: String
-}
-
-input loginTimeCreateManyAuthorInputEnvelope {
-  data: [loginTimeCreateManyAuthorInput!]!
-  skipDuplicates: Boolean
-}
-
-input loginTimeCreateManyAuthorInput {
-  id: String
-  createdAt: DateTime
-}
-
-input UserMessageRoomCreateNestedManyWithoutUserInput {
-  create: [UserMessageRoomCreateWithoutUserInput!]
-  connectOrCreate: [UserMessageRoomCreateOrConnectWithoutUserInput!]
-  createMany: UserMessageRoomCreateManyUserInputEnvelope
-  connect: [UserMessageRoomWhereUniqueInput!]
-}
-
-input UserMessageRoomCreateWithoutUserInput {
-  messageRoom: MessageRoomCreateNestedOneWithoutUserMessageRoomInput!
-}
-
-input MessageRoomCreateNestedOneWithoutUserMessageRoomInput {
-  create: MessageRoomCreateWithoutUserMessageRoomInput
-  connectOrCreate: MessageRoomCreateOrConnectWithoutUserMessageRoomInput
-  connect: MessageRoomWhereUniqueInput
-}
-
-input MessageRoomCreateWithoutUserMessageRoomInput {
-  id: String
-  Message: MessageCreateNestedManyWithoutMessageRoomInput
-}
-
-input MessageCreateNestedManyWithoutMessageRoomInput {
-  create: [MessageCreateWithoutMessageRoomInput!]
-  connectOrCreate: [MessageCreateOrConnectWithoutMessageRoomInput!]
-  createMany: MessageCreateManyMessageRoomInputEnvelope
-  connect: [MessageWhereUniqueInput!]
-}
-
-input MessageCreateWithoutMessageRoomInput {
-  id: String
-  message: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  project: ProjectCreateNestedOneWithoutMessageInput
-  author: UserCreateNestedOneWithoutMessageInput!
-}
-
-input UserCreateNestedOneWithoutMessageInput {
-  create: UserCreateWithoutMessageInput
-  connectOrCreate: UserCreateOrConnectWithoutMessageInput
-  connect: UserWhereUniqueInput
-}
-
-input UserCreateWithoutMessageInput {
-  id: String
-  name: String!
-  email: String!
-  password: String!
-  role: Role
-  avatar: String
-  createAt: DateTime
-  updateAt: DateTime
-  Download: DownloadCreateNestedManyWithoutAuthorInput
-  Page: PageCreateNestedManyWithoutAuthorInput
-  Post: PostCreateNestedManyWithoutAuthorInput
-  UserProject: UserProjectCreateNestedManyWithoutUserInput
-  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
-  UserMessageRoom: UserMessageRoomCreateNestedManyWithoutUserInput
 }
 
 input UserProjectCreateNestedManyWithoutUserInput {
@@ -1305,26 +1216,62 @@ input MessageRoomCreateNestedOneWithoutMessageInput {
 input MessageRoomCreateWithoutMessageInput {
   id: String
   UserMessageRoom: UserMessageRoomCreateNestedManyWithoutMessageRoomInput
+  File: FileCreateNestedManyWithoutMessageRoomInput
 }
 
-input UserMessageRoomCreateNestedManyWithoutMessageRoomInput {
-  create: [UserMessageRoomCreateWithoutMessageRoomInput!]
-  connectOrCreate: [UserMessageRoomCreateOrConnectWithoutMessageRoomInput!]
-  createMany: UserMessageRoomCreateManyMessageRoomInputEnvelope
-  connect: [UserMessageRoomWhereUniqueInput!]
+input FileCreateNestedManyWithoutMessageRoomInput {
+  create: [FileCreateWithoutMessageRoomInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutMessageRoomInput!]
+  createMany: FileCreateManyMessageRoomInputEnvelope
+  connect: [FileWhereUniqueInput!]
 }
 
-input UserMessageRoomCreateWithoutMessageRoomInput {
-  user: UserCreateNestedOneWithoutUserMessageRoomInput!
+input FileCreateWithoutMessageRoomInput {
+  id: String
+  fileName: String!
+  file: String!
+  comment: String!
+  createdAt: DateTime
+  project: ProjectCreateNestedOneWithoutFileInput
+  status: ProjectStatusCreateNestedOneWithoutFileInput!
 }
 
-input UserCreateNestedOneWithoutUserMessageRoomInput {
-  create: UserCreateWithoutUserMessageRoomInput
-  connectOrCreate: UserCreateOrConnectWithoutUserMessageRoomInput
+input ProjectCreateNestedOneWithoutFileInput {
+  create: ProjectCreateWithoutFileInput
+  connectOrCreate: ProjectCreateOrConnectWithoutFileInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutFileInput {
+  id: String
+  nameTH: String!
+  nameEN: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  projectType: ProjectTypeCreateNestedOneWithoutProjectInput!
+  status: ProjectStatusCreateNestedOneWithoutProjectInput!
+  UserProject: UserProjectCreateNestedManyWithoutProjectInput
+  Message: MessageCreateNestedManyWithoutProjectInput
+}
+
+input UserProjectCreateNestedManyWithoutProjectInput {
+  create: [UserProjectCreateWithoutProjectInput!]
+  connectOrCreate: [UserProjectCreateOrConnectWithoutProjectInput!]
+  createMany: UserProjectCreateManyProjectInputEnvelope
+  connect: [UserProjectWhereUniqueInput!]
+}
+
+input UserProjectCreateWithoutProjectInput {
+  user: UserCreateNestedOneWithoutUserProjectInput!
+}
+
+input UserCreateNestedOneWithoutUserProjectInput {
+  create: UserCreateWithoutUserProjectInput
+  connectOrCreate: UserCreateOrConnectWithoutUserProjectInput
   connect: UserWhereUniqueInput
 }
 
-input UserCreateWithoutUserMessageRoomInput {
+input UserCreateWithoutUserProjectInput {
   id: String
   name: String!
   email: String!
@@ -1337,13 +1284,106 @@ input UserCreateWithoutUserMessageRoomInput {
   Page: PageCreateNestedManyWithoutAuthorInput
   Post: PostCreateNestedManyWithoutAuthorInput
   Message: MessageCreateNestedManyWithoutAuthorInput
-  UserProject: UserProjectCreateNestedManyWithoutUserInput
   loginTime: loginTimeCreateNestedManyWithoutAuthorInput
+  UserMessageRoom: UserMessageRoomCreateNestedManyWithoutUserInput
 }
 
-input UserCreateOrConnectWithoutUserMessageRoomInput {
+input loginTimeCreateNestedManyWithoutAuthorInput {
+  create: [loginTimeCreateWithoutAuthorInput!]
+  connectOrCreate: [loginTimeCreateOrConnectWithoutAuthorInput!]
+  createMany: loginTimeCreateManyAuthorInputEnvelope
+  connect: [loginTimeWhereUniqueInput!]
+}
+
+input loginTimeCreateWithoutAuthorInput {
+  id: String
+  createdAt: DateTime
+}
+
+input loginTimeCreateOrConnectWithoutAuthorInput {
+  where: loginTimeWhereUniqueInput!
+  create: loginTimeCreateWithoutAuthorInput!
+}
+
+input loginTimeWhereUniqueInput {
+  id: String
+}
+
+input loginTimeCreateManyAuthorInputEnvelope {
+  data: [loginTimeCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input loginTimeCreateManyAuthorInput {
+  id: String
+  createdAt: DateTime
+}
+
+input UserMessageRoomCreateNestedManyWithoutUserInput {
+  create: [UserMessageRoomCreateWithoutUserInput!]
+  connectOrCreate: [UserMessageRoomCreateOrConnectWithoutUserInput!]
+  createMany: UserMessageRoomCreateManyUserInputEnvelope
+  connect: [UserMessageRoomWhereUniqueInput!]
+}
+
+input UserMessageRoomCreateWithoutUserInput {
+  messageRoom: MessageRoomCreateNestedOneWithoutUserMessageRoomInput!
+}
+
+input MessageRoomCreateNestedOneWithoutUserMessageRoomInput {
+  create: MessageRoomCreateWithoutUserMessageRoomInput
+  connectOrCreate: MessageRoomCreateOrConnectWithoutUserMessageRoomInput
+  connect: MessageRoomWhereUniqueInput
+}
+
+input MessageRoomCreateWithoutUserMessageRoomInput {
+  id: String
+  Message: MessageCreateNestedManyWithoutMessageRoomInput
+  File: FileCreateNestedManyWithoutMessageRoomInput
+}
+
+input MessageCreateNestedManyWithoutMessageRoomInput {
+  create: [MessageCreateWithoutMessageRoomInput!]
+  connectOrCreate: [MessageCreateOrConnectWithoutMessageRoomInput!]
+  createMany: MessageCreateManyMessageRoomInputEnvelope
+  connect: [MessageWhereUniqueInput!]
+}
+
+input MessageCreateWithoutMessageRoomInput {
+  id: String
+  message: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  project: ProjectCreateNestedOneWithoutMessageInput
+  author: UserCreateNestedOneWithoutMessageInput!
+}
+
+input UserCreateNestedOneWithoutMessageInput {
+  create: UserCreateWithoutMessageInput
+  connectOrCreate: UserCreateOrConnectWithoutMessageInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutMessageInput {
+  id: String
+  name: String!
+  email: String!
+  password: String!
+  role: Role
+  avatar: String
+  createAt: DateTime
+  updateAt: DateTime
+  Download: DownloadCreateNestedManyWithoutAuthorInput
+  Page: PageCreateNestedManyWithoutAuthorInput
+  Post: PostCreateNestedManyWithoutAuthorInput
+  UserProject: UserProjectCreateNestedManyWithoutUserInput
+  loginTime: loginTimeCreateNestedManyWithoutAuthorInput
+  UserMessageRoom: UserMessageRoomCreateNestedManyWithoutUserInput
+}
+
+input UserCreateOrConnectWithoutMessageInput {
   where: UserWhereUniqueInput!
-  create: UserCreateWithoutUserMessageRoomInput!
+  create: UserCreateWithoutMessageInput!
 }
 
 input UserWhereUniqueInput {
@@ -1351,9 +1391,37 @@ input UserWhereUniqueInput {
   email: String
 }
 
-input UserMessageRoomCreateOrConnectWithoutMessageRoomInput {
+input MessageCreateOrConnectWithoutMessageRoomInput {
+  where: MessageWhereUniqueInput!
+  create: MessageCreateWithoutMessageRoomInput!
+}
+
+input MessageCreateManyMessageRoomInputEnvelope {
+  data: [MessageCreateManyMessageRoomInput!]!
+  skipDuplicates: Boolean
+}
+
+input MessageCreateManyMessageRoomInput {
+  id: String
+  message: String!
+  userId: String!
+  projectId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input MessageRoomCreateOrConnectWithoutUserMessageRoomInput {
+  where: MessageRoomWhereUniqueInput!
+  create: MessageRoomCreateWithoutUserMessageRoomInput!
+}
+
+input MessageRoomWhereUniqueInput {
+  id: String
+}
+
+input UserMessageRoomCreateOrConnectWithoutUserInput {
   where: UserMessageRoomWhereUniqueInput!
-  create: UserMessageRoomCreateWithoutMessageRoomInput!
+  create: UserMessageRoomCreateWithoutUserInput!
 }
 
 input UserMessageRoomWhereUniqueInput {
@@ -1365,57 +1433,50 @@ input UserMessageRoomUserIdMessageRoomIdCompoundUniqueInput {
   messageRoomId: String!
 }
 
-input UserMessageRoomCreateManyMessageRoomInputEnvelope {
-  data: [UserMessageRoomCreateManyMessageRoomInput!]!
+input UserMessageRoomCreateManyUserInputEnvelope {
+  data: [UserMessageRoomCreateManyUserInput!]!
   skipDuplicates: Boolean
 }
 
-input UserMessageRoomCreateManyMessageRoomInput {
+input UserMessageRoomCreateManyUserInput {
+  messageRoomId: String!
+}
+
+input UserCreateOrConnectWithoutUserProjectInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutUserProjectInput!
+}
+
+input UserProjectCreateOrConnectWithoutProjectInput {
+  where: UserProjectWhereUniqueInput!
+  create: UserProjectCreateWithoutProjectInput!
+}
+
+input UserProjectWhereUniqueInput {
+  projectId_userId: UserProjectProjectIdUserIdCompoundUniqueInput
+}
+
+input UserProjectProjectIdUserIdCompoundUniqueInput {
+  projectId: String!
   userId: String!
 }
 
-input MessageRoomCreateOrConnectWithoutMessageInput {
-  where: MessageRoomWhereUniqueInput!
-  create: MessageRoomCreateWithoutMessageInput!
-}
-
-input MessageRoomWhereUniqueInput {
-  id: String
-}
-
-input MessageCreateOrConnectWithoutProjectInput {
-  where: MessageWhereUniqueInput!
-  create: MessageCreateWithoutProjectInput!
-}
-
-input MessageCreateManyProjectInputEnvelope {
-  data: [MessageCreateManyProjectInput!]!
+input UserProjectCreateManyProjectInputEnvelope {
+  data: [UserProjectCreateManyProjectInput!]!
   skipDuplicates: Boolean
 }
 
-input MessageCreateManyProjectInput {
-  id: String
-  message: String!
+input UserProjectCreateManyProjectInput {
   userId: String!
-  messageRoomId: String
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
-input FileCreateNestedManyWithoutProjectInput {
-  create: [FileCreateWithoutProjectInput!]
-  connectOrCreate: [FileCreateOrConnectWithoutProjectInput!]
-  createMany: FileCreateManyProjectInputEnvelope
-  connect: [FileWhereUniqueInput!]
+input ProjectCreateOrConnectWithoutFileInput {
+  where: ProjectWhereUniqueInput!
+  create: ProjectCreateWithoutFileInput!
 }
 
-input FileCreateWithoutProjectInput {
+input ProjectWhereUniqueInput {
   id: String
-  fileName: String!
-  file: String!
-  comment: String!
-  createdAt: DateTime
-  status: ProjectStatusCreateNestedOneWithoutFileInput!
 }
 
 input ProjectStatusCreateNestedOneWithoutFileInput {
@@ -1449,13 +1510,50 @@ input ProjectCreateWithoutStatusInput {
   File: FileCreateNestedManyWithoutProjectInput
 }
 
+input FileCreateNestedManyWithoutProjectInput {
+  create: [FileCreateWithoutProjectInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutProjectInput!]
+  createMany: FileCreateManyProjectInputEnvelope
+  connect: [FileWhereUniqueInput!]
+}
+
+input FileCreateWithoutProjectInput {
+  id: String
+  fileName: String!
+  file: String!
+  comment: String!
+  createdAt: DateTime
+  messageRoom: MessageRoomCreateNestedOneWithoutFileInput
+  status: ProjectStatusCreateNestedOneWithoutFileInput!
+}
+
+input FileCreateOrConnectWithoutProjectInput {
+  where: FileWhereUniqueInput!
+  create: FileCreateWithoutProjectInput!
+}
+
+input FileWhereUniqueInput {
+  id: String
+}
+
+input FileCreateManyProjectInputEnvelope {
+  data: [FileCreateManyProjectInput!]!
+  skipDuplicates: Boolean
+}
+
+input FileCreateManyProjectInput {
+  id: String
+  fileName: String!
+  file: String!
+  messageRoomId: String
+  statusId: String!
+  comment: String!
+  createdAt: DateTime
+}
+
 input ProjectCreateOrConnectWithoutStatusInput {
   where: ProjectWhereUniqueInput!
   create: ProjectCreateWithoutStatusInput!
-}
-
-input ProjectWhereUniqueInput {
-  id: String
 }
 
 input ProjectCreateManyStatusInputEnvelope {
@@ -1481,27 +1579,48 @@ input ProjectStatusWhereUniqueInput {
   id: String
 }
 
-input FileCreateOrConnectWithoutProjectInput {
+input FileCreateOrConnectWithoutMessageRoomInput {
   where: FileWhereUniqueInput!
-  create: FileCreateWithoutProjectInput!
+  create: FileCreateWithoutMessageRoomInput!
 }
 
-input FileWhereUniqueInput {
-  id: String
-}
-
-input FileCreateManyProjectInputEnvelope {
-  data: [FileCreateManyProjectInput!]!
+input FileCreateManyMessageRoomInputEnvelope {
+  data: [FileCreateManyMessageRoomInput!]!
   skipDuplicates: Boolean
 }
 
-input FileCreateManyProjectInput {
+input FileCreateManyMessageRoomInput {
   id: String
   fileName: String!
   file: String!
+  projectId: String
   statusId: String!
   comment: String!
   createdAt: DateTime
+}
+
+input MessageRoomCreateOrConnectWithoutMessageInput {
+  where: MessageRoomWhereUniqueInput!
+  create: MessageRoomCreateWithoutMessageInput!
+}
+
+input MessageCreateOrConnectWithoutProjectInput {
+  where: MessageWhereUniqueInput!
+  create: MessageCreateWithoutProjectInput!
+}
+
+input MessageCreateManyProjectInputEnvelope {
+  data: [MessageCreateManyProjectInput!]!
+  skipDuplicates: Boolean
+}
+
+input MessageCreateManyProjectInput {
+  id: String
+  message: String!
+  userId: String!
+  messageRoomId: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input ProjectCreateOrConnectWithoutUserProjectInput {
@@ -1514,15 +1633,6 @@ input UserProjectCreateOrConnectWithoutUserInput {
   create: UserProjectCreateWithoutUserInput!
 }
 
-input UserProjectWhereUniqueInput {
-  projectId_userId: UserProjectProjectIdUserIdCompoundUniqueInput
-}
-
-input UserProjectProjectIdUserIdCompoundUniqueInput {
-  projectId: String!
-  userId: String!
-}
-
 input UserProjectCreateManyUserInputEnvelope {
   data: [UserProjectCreateManyUserInput!]!
   skipDuplicates: Boolean
@@ -1532,71 +1642,28 @@ input UserProjectCreateManyUserInput {
   projectId: String!
 }
 
-input UserCreateOrConnectWithoutMessageInput {
+input UserCreateOrConnectWithoutUserMessageRoomInput {
   where: UserWhereUniqueInput!
-  create: UserCreateWithoutMessageInput!
+  create: UserCreateWithoutUserMessageRoomInput!
 }
 
-input MessageCreateOrConnectWithoutMessageRoomInput {
-  where: MessageWhereUniqueInput!
-  create: MessageCreateWithoutMessageRoomInput!
-}
-
-input MessageCreateManyMessageRoomInputEnvelope {
-  data: [MessageCreateManyMessageRoomInput!]!
-  skipDuplicates: Boolean
-}
-
-input MessageCreateManyMessageRoomInput {
-  id: String
-  message: String!
-  userId: String!
-  projectId: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input MessageRoomCreateOrConnectWithoutUserMessageRoomInput {
-  where: MessageRoomWhereUniqueInput!
-  create: MessageRoomCreateWithoutUserMessageRoomInput!
-}
-
-input UserMessageRoomCreateOrConnectWithoutUserInput {
+input UserMessageRoomCreateOrConnectWithoutMessageRoomInput {
   where: UserMessageRoomWhereUniqueInput!
-  create: UserMessageRoomCreateWithoutUserInput!
+  create: UserMessageRoomCreateWithoutMessageRoomInput!
 }
 
-input UserMessageRoomCreateManyUserInputEnvelope {
-  data: [UserMessageRoomCreateManyUserInput!]!
+input UserMessageRoomCreateManyMessageRoomInputEnvelope {
+  data: [UserMessageRoomCreateManyMessageRoomInput!]!
   skipDuplicates: Boolean
 }
 
-input UserMessageRoomCreateManyUserInput {
-  messageRoomId: String!
-}
-
-input UserCreateOrConnectWithoutUserProjectInput {
-  where: UserWhereUniqueInput!
-  create: UserCreateWithoutUserProjectInput!
-}
-
-input UserProjectCreateOrConnectWithoutProjectInput {
-  where: UserProjectWhereUniqueInput!
-  create: UserProjectCreateWithoutProjectInput!
-}
-
-input UserProjectCreateManyProjectInputEnvelope {
-  data: [UserProjectCreateManyProjectInput!]!
-  skipDuplicates: Boolean
-}
-
-input UserProjectCreateManyProjectInput {
+input UserMessageRoomCreateManyMessageRoomInput {
   userId: String!
 }
 
-input ProjectCreateOrConnectWithoutFileInput {
-  where: ProjectWhereUniqueInput!
-  create: ProjectCreateWithoutFileInput!
+input MessageRoomCreateOrConnectWithoutFileInput {
+  where: MessageRoomWhereUniqueInput!
+  create: MessageRoomCreateWithoutFileInput!
 }
 
 input FileCreateOrConnectWithoutStatusInput {
@@ -1613,7 +1680,8 @@ input FileCreateManyStatusInput {
   id: String
   fileName: String!
   file: String!
-  projectId: String!
+  projectId: String
+  messageRoomId: String
   comment: String!
   createdAt: DateTime
 }
@@ -1988,7 +2056,8 @@ input FileUncheckedCreateInput {
   id: String
   fileName: String!
   file: String!
-  projectId: String!
+  projectId: String
+  messageRoomId: String
   statusId: String!
   comment: String!
   createdAt: DateTime

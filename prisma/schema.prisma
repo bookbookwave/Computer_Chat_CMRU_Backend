@@ -191,6 +191,7 @@ model MessageRoom {
 
   UserMessageRoom UserMessageRoom[]
   Message         Message[]
+  File            File[]
 }
 
 model UserMessageRoom {
@@ -217,15 +218,17 @@ model Message {
 }
 
 model File {
-  id        String        @id @default(cuid())
-  fileName  String
-  file      String
-  projectId String
-  statusId  String
-  comment   String        @db.Text
-  createdAt DateTime      @default(now())
-  project   Project       @relation(fields: [projectId], references: [id])
-  status    ProjectStatus @relation(fields: [statusId], references: [id])
+  id            String        @id @default(cuid())
+  fileName      String
+  file          String
+  projectId     String?
+  messageRoomId String?
+  statusId      String
+  comment       String        @db.Text
+  createdAt     DateTime      @default(now())
+  messageRoom   MessageRoom?  @relation(fields: [messageRoomId], references: [id])
+  project       Project?      @relation(fields: [projectId], references: [id])
+  status        ProjectStatus @relation(fields: [statusId], references: [id])
 }
 
 model loginTime {

@@ -18,6 +18,10 @@ export class FileUploadResolver {
   async getFilesById(@Args('id') id: string): Promise<File[]> {
     return this.fileUploadService.getFilesById(id);
   }
+  @Query((returns) => [File])
+  async getFilesByRoom(@Args('id') id: string): Promise<File[]> {
+    return this.fileUploadService.getFilesByRoom(id);
+  }
   @Mutation((returns) => File)
   async createFile(
     @Args('input') input: FileUncheckedCreateInput,

@@ -130,6 +130,7 @@ export enum FileScalarFieldEnum {
     fileName = "fileName",
     file = "file",
     projectId = "projectId",
+    messageRoomId = "messageRoomId",
     statusId = "statusId",
     comment = "comment",
     createdAt = "createdAt"
@@ -3998,6 +3999,8 @@ export class FileCountAggregateInput {
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
     @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
     statusId?: true;
     @Field(() => Boolean, {nullable:true})
     comment?: true;
@@ -4017,6 +4020,8 @@ export class FileCountAggregate {
     file!: number;
     @Field(() => Int, {nullable:false})
     projectId!: number;
+    @Field(() => Int, {nullable:false})
+    messageRoomId!: number;
     @Field(() => Int, {nullable:false})
     statusId!: number;
     @Field(() => Int, {nullable:false})
@@ -4038,11 +4043,40 @@ export class FileCountOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     comment?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class FileCreateManyMessageRoomInputEnvelope {
+    @Field(() => [FileCreateManyMessageRoomInput], {nullable:false})
+    @Type(() => FileCreateManyMessageRoomInput)
+    data!: Array<FileCreateManyMessageRoomInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class FileCreateManyMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }
 
 @InputType()
@@ -4062,6 +4096,8 @@ export class FileCreateManyProjectInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
@@ -4087,8 +4123,10 @@ export class FileCreateManyStatusInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     comment!: string;
     @Field(() => Date, {nullable:true})
@@ -4103,14 +4141,32 @@ export class FileCreateManyInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
     comment!: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
+}
+
+@InputType()
+export class FileCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [FileCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create?: Array<FileCreateWithoutMessageRoomInput>;
+    @Field(() => [FileCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => FileCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
 }
 
 @InputType()
@@ -4146,6 +4202,16 @@ export class FileCreateNestedManyWithoutStatusInput {
 }
 
 @InputType()
+export class FileCreateOrConnectWithoutMessageRoomInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof FileCreateWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class FileCreateOrConnectWithoutProjectInput {
     @Field(() => FileWhereUniqueInput, {nullable:false})
     @Type(() => FileWhereUniqueInput)
@@ -4166,6 +4232,24 @@ export class FileCreateOrConnectWithoutStatusInput {
 }
 
 @InputType()
+export class FileCreateWithoutMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
+    @Field(() => ProjectStatusCreateNestedOneWithoutFileInput, {nullable:false})
+    status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutFileInput>;
+}
+
+@InputType()
 export class FileCreateWithoutProjectInput {
     @Field(() => String, {nullable:true})
     id?: string;
@@ -4177,6 +4261,8 @@ export class FileCreateWithoutProjectInput {
     comment!: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
+    @Field(() => MessageRoomCreateNestedOneWithoutFileInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutFileInput>;
     @Field(() => ProjectStatusCreateNestedOneWithoutFileInput, {nullable:false})
     status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutFileInput>;
 }
@@ -4193,8 +4279,10 @@ export class FileCreateWithoutStatusInput {
     comment!: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
-    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:false})
-    project!: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
+    @Field(() => MessageRoomCreateNestedOneWithoutFileInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutFileInput>;
+    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
 }
 
 @InputType()
@@ -4209,8 +4297,10 @@ export class FileCreateInput {
     comment!: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
-    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:false})
-    project!: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
+    @Field(() => MessageRoomCreateNestedOneWithoutFileInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutFileInput>;
+    @Field(() => ProjectCreateNestedOneWithoutFileInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutFileInput>;
     @Field(() => ProjectStatusCreateNestedOneWithoutFileInput, {nullable:false})
     status!: InstanceType<typeof ProjectStatusCreateNestedOneWithoutFileInput>;
 }
@@ -4246,8 +4336,10 @@ export class FileGroupBy {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
@@ -4283,6 +4375,8 @@ export class FileMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
     @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
     statusId?: true;
     @Field(() => Boolean, {nullable:true})
     comment?: true;
@@ -4300,6 +4394,8 @@ export class FileMaxAggregate {
     file?: string;
     @Field(() => String, {nullable:true})
     projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:true})
     statusId?: string;
     @Field(() => String, {nullable:true})
@@ -4319,6 +4415,8 @@ export class FileMaxOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     comment?: keyof typeof SortOrder;
@@ -4336,6 +4434,8 @@ export class FileMinAggregateInput {
     file?: true;
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
+    @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
     @Field(() => Boolean, {nullable:true})
     statusId?: true;
     @Field(() => Boolean, {nullable:true})
@@ -4355,6 +4455,8 @@ export class FileMinAggregate {
     @Field(() => String, {nullable:true})
     projectId?: string;
     @Field(() => String, {nullable:true})
+    messageRoomId?: string;
+    @Field(() => String, {nullable:true})
     statusId?: string;
     @Field(() => String, {nullable:true})
     comment?: string;
@@ -4372,6 +4474,8 @@ export class FileMinOrderByAggregateInput {
     file?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -4397,6 +4501,8 @@ export class FileOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     comment?: keyof typeof SortOrder;
@@ -4421,11 +4527,15 @@ export class FileOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     comment?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
+    @Field(() => MessageRoomOrderByWithRelationInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomOrderByWithRelationInput>;
     @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
     project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
     @Field(() => ProjectStatusOrderByWithRelationInput, {nullable:true})
@@ -4446,8 +4556,10 @@ export class FileScalarWhereWithAggregatesInput {
     fileName?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     file?: InstanceType<typeof StringWithAggregatesFilter>;
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableWithAggregatesFilter>;
+    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     statusId?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
@@ -4470,14 +4582,32 @@ export class FileScalarWhereInput {
     fileName?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     file?: InstanceType<typeof StringFilter>;
-    @Field(() => StringFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableFilter>;
     @Field(() => StringFilter, {nullable:true})
     statusId?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     comment?: InstanceType<typeof StringFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFilter>;
+}
+
+@InputType()
+export class FileUncheckedCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [FileCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create?: Array<FileCreateWithoutMessageRoomInput>;
+    @Field(() => [FileCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => FileCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
 }
 
 @InputType()
@@ -4513,6 +4643,24 @@ export class FileUncheckedCreateNestedManyWithoutStatusInput {
 }
 
 @InputType()
+export class FileUncheckedCreateWithoutMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    fileName!: string;
+    @Field(() => String, {nullable:false})
+    file!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:false})
+    statusId!: string;
+    @Field(() => String, {nullable:false})
+    comment!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+}
+
+@InputType()
 export class FileUncheckedCreateWithoutProjectInput {
     @Field(() => String, {nullable:true})
     id?: string;
@@ -4520,6 +4668,8 @@ export class FileUncheckedCreateWithoutProjectInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
@@ -4536,8 +4686,10 @@ export class FileUncheckedCreateWithoutStatusInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     comment!: string;
     @Field(() => Date, {nullable:true})
@@ -4552,8 +4704,10 @@ export class FileUncheckedCreateInput {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
@@ -4570,12 +4724,51 @@ export class FileUncheckedUpdateManyWithoutFileInput {
     fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [FileCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create?: Array<FileCreateWithoutMessageRoomInput>;
+    @Field(() => [FileCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => FileCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
 }
 
 @InputType()
@@ -4660,8 +4853,28 @@ export class FileUncheckedUpdateManyInput {
     fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class FileUncheckedUpdateWithoutMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -4678,6 +4891,8 @@ export class FileUncheckedUpdateWithoutProjectInput {
     fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -4694,8 +4909,10 @@ export class FileUncheckedUpdateWithoutStatusInput {
     fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -4710,8 +4927,10 @@ export class FileUncheckedUpdateInput {
     fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     statusId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -4735,6 +4954,16 @@ export class FileUpdateManyMutationInput {
 }
 
 @InputType()
+export class FileUpdateManyWithWhereWithoutMessageRoomInput {
+    @Field(() => FileScalarWhereInput, {nullable:false})
+    @Type(() => FileScalarWhereInput)
+    where!: InstanceType<typeof FileScalarWhereInput>;
+    @Field(() => FileUpdateManyMutationInput, {nullable:false})
+    @Type(() => FileUpdateManyMutationInput)
+    data!: InstanceType<typeof FileUpdateManyMutationInput>;
+}
+
+@InputType()
 export class FileUpdateManyWithWhereWithoutProjectInput {
     @Field(() => FileScalarWhereInput, {nullable:false})
     @Type(() => FileScalarWhereInput)
@@ -4752,6 +4981,43 @@ export class FileUpdateManyWithWhereWithoutStatusInput {
     @Field(() => FileUpdateManyMutationInput, {nullable:false})
     @Type(() => FileUpdateManyMutationInput)
     data!: InstanceType<typeof FileUpdateManyMutationInput>;
+}
+
+@InputType()
+export class FileUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [FileCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create?: Array<FileCreateWithoutMessageRoomInput>;
+    @Field(() => [FileCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<FileCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [FileUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<FileUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => FileCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => FileCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof FileCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    set?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    disconnect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    delete?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileWhereUniqueInput], {nullable:true})
+    @Type(() => FileWhereUniqueInput)
+    connect?: Array<FileWhereUniqueInput>;
+    @Field(() => [FileUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<FileUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [FileUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => FileUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<FileUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [FileScalarWhereInput], {nullable:true})
+    @Type(() => FileScalarWhereInput)
+    deleteMany?: Array<FileScalarWhereInput>;
 }
 
 @InputType()
@@ -4829,6 +5095,16 @@ export class FileUpdateManyWithoutStatusNestedInput {
 }
 
 @InputType()
+export class FileUpdateWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => FileUpdateWithoutMessageRoomInput)
+    data!: InstanceType<typeof FileUpdateWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class FileUpdateWithWhereUniqueWithoutProjectInput {
     @Field(() => FileWhereUniqueInput, {nullable:false})
     @Type(() => FileWhereUniqueInput)
@@ -4849,6 +5125,24 @@ export class FileUpdateWithWhereUniqueWithoutStatusInput {
 }
 
 @InputType()
+export class FileUpdateWithoutMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    fileName?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    file?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneWithoutFileNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutFileNestedInput>;
+    @Field(() => ProjectStatusUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
+    status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutFileNestedInput>;
+}
+
+@InputType()
 export class FileUpdateWithoutProjectInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
@@ -4860,6 +5154,8 @@ export class FileUpdateWithoutProjectInput {
     comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => MessageRoomUpdateOneWithoutFileNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutFileNestedInput>;
     @Field(() => ProjectStatusUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
     status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutFileNestedInput>;
 }
@@ -4876,8 +5172,10 @@ export class FileUpdateWithoutStatusInput {
     comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
-    @Field(() => ProjectUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
-    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutFileNestedInput>;
+    @Field(() => MessageRoomUpdateOneWithoutFileNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutFileNestedInput>;
+    @Field(() => ProjectUpdateOneWithoutFileNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutFileNestedInput>;
 }
 
 @InputType()
@@ -4892,10 +5190,25 @@ export class FileUpdateInput {
     comment?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
-    @Field(() => ProjectUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
-    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutFileNestedInput>;
+    @Field(() => MessageRoomUpdateOneWithoutFileNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutFileNestedInput>;
+    @Field(() => ProjectUpdateOneWithoutFileNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutFileNestedInput>;
     @Field(() => ProjectStatusUpdateOneRequiredWithoutFileNestedInput, {nullable:true})
     status?: InstanceType<typeof ProjectStatusUpdateOneRequiredWithoutFileNestedInput>;
+}
+
+@InputType()
+export class FileUpsertWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => FileWhereUniqueInput, {nullable:false})
+    @Type(() => FileWhereUniqueInput)
+    where!: InstanceType<typeof FileWhereUniqueInput>;
+    @Field(() => FileUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => FileUpdateWithoutMessageRoomInput)
+    update!: InstanceType<typeof FileUpdateWithoutMessageRoomInput>;
+    @Field(() => FileCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => FileCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof FileCreateWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -4944,14 +5257,18 @@ export class FileWhereInput {
     fileName?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     file?: InstanceType<typeof StringFilter>;
-    @Field(() => StringFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableFilter>;
     @Field(() => StringFilter, {nullable:true})
     statusId?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     comment?: InstanceType<typeof StringFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFilter>;
+    @Field(() => MessageRoomRelationFilter, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomRelationFilter>;
     @Field(() => ProjectRelationFilter, {nullable:true})
     project?: InstanceType<typeof ProjectRelationFilter>;
     @Field(() => ProjectStatusRelationFilter, {nullable:true})
@@ -4966,16 +5283,20 @@ export class File {
     fileName!: string;
     @Field(() => String, {nullable:false})
     file!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId!: string | null;
+    @Field(() => String, {nullable:true})
+    messageRoomId!: string | null;
     @Field(() => String, {nullable:false})
     statusId!: string;
     @Field(() => String, {nullable:false})
     comment!: string;
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
-    @Field(() => Project, {nullable:false})
-    project?: InstanceType<typeof Project>;
+    @Field(() => MessageRoom, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoom> | null;
+    @Field(() => Project, {nullable:true})
+    project?: InstanceType<typeof Project> | null;
     @Field(() => ProjectStatus, {nullable:false})
     status?: InstanceType<typeof ProjectStatus>;
 }
@@ -7192,12 +7513,27 @@ export class MessageRoomCount {
     UserMessageRoom?: number;
     @Field(() => Int, {nullable:false})
     Message?: number;
+    @Field(() => Int, {nullable:false})
+    File?: number;
 }
 
 @InputType()
 export class MessageRoomCreateManyInput {
     @Field(() => String, {nullable:true})
     id?: string;
+}
+
+@InputType()
+export class MessageRoomCreateNestedOneWithoutFileInput {
+    @Field(() => MessageRoomCreateWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutFileInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutFileInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutFileInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
 }
 
 @InputType()
@@ -7227,6 +7563,16 @@ export class MessageRoomCreateNestedOneWithoutUserMessageRoomInput {
 }
 
 @InputType()
+export class MessageRoomCreateOrConnectWithoutFileInput {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomCreateWithoutFileInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutFileInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutFileInput>;
+}
+
+@InputType()
 export class MessageRoomCreateOrConnectWithoutMessageInput {
     @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
     @Type(() => MessageRoomWhereUniqueInput)
@@ -7247,11 +7593,23 @@ export class MessageRoomCreateOrConnectWithoutUserMessageRoomInput {
 }
 
 @InputType()
+export class MessageRoomCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => MessageCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class MessageRoomCreateWithoutMessageInput {
     @Field(() => String, {nullable:true})
     id?: string;
     @Field(() => UserMessageRoomCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -7260,6 +7618,8 @@ export class MessageRoomCreateWithoutUserMessageRoomInput {
     id?: string;
     @Field(() => MessageCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -7270,6 +7630,8 @@ export class MessageRoomCreateInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutMessageRoomInput>;
     @Field(() => MessageCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @ArgsType()
@@ -7363,6 +7725,8 @@ export class MessageRoomOrderByWithRelationInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomOrderByRelationAggregateInput>;
     @Field(() => MessageOrderByRelationAggregateInput, {nullable:true})
     Message?: InstanceType<typeof MessageOrderByRelationAggregateInput>;
+    @Field(() => FileOrderByRelationAggregateInput, {nullable:true})
+    File?: InstanceType<typeof FileOrderByRelationAggregateInput>;
 }
 
 @InputType()
@@ -7386,11 +7750,23 @@ export class MessageRoomScalarWhereWithAggregatesInput {
 }
 
 @InputType()
+export class MessageRoomUncheckedCreateWithoutFileInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class MessageRoomUncheckedCreateWithoutMessageInput {
     @Field(() => String, {nullable:true})
     id?: string;
     @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -7399,6 +7775,8 @@ export class MessageRoomUncheckedCreateWithoutUserMessageRoomInput {
     id?: string;
     @Field(() => MessageUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -7409,6 +7787,8 @@ export class MessageRoomUncheckedCreateInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => FileUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedCreateNestedManyWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -7418,11 +7798,23 @@ export class MessageRoomUncheckedUpdateManyInput {
 }
 
 @InputType()
+export class MessageRoomUncheckedUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
 export class MessageRoomUncheckedUpdateWithoutMessageInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutMessageRoomNestedInput>;
 }
 
 @InputType()
@@ -7431,6 +7823,8 @@ export class MessageRoomUncheckedUpdateWithoutUserMessageRoomInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutMessageRoomNestedInput>;
 }
 
 @InputType()
@@ -7441,6 +7835,8 @@ export class MessageRoomUncheckedUpdateInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUncheckedUpdateManyWithoutMessageRoomNestedInput>;
 }
 
 @InputType()
@@ -7469,6 +7865,29 @@ export class MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput {
 }
 
 @InputType()
+export class MessageRoomUpdateOneWithoutFileNestedInput {
+    @Field(() => MessageRoomCreateWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutFileInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutFileInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutFileInput>;
+    @Field(() => MessageRoomUpsertWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomUpsertWithoutFileInput)
+    upsert?: InstanceType<typeof MessageRoomUpsertWithoutFileInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomUpdateWithoutFileInput, {nullable:true})
+    @Type(() => MessageRoomUpdateWithoutFileInput)
+    update?: InstanceType<typeof MessageRoomUpdateWithoutFileInput>;
+}
+
+@InputType()
 export class MessageRoomUpdateOneWithoutMessageNestedInput {
     @Field(() => MessageRoomCreateWithoutMessageInput, {nullable:true})
     @Type(() => MessageRoomCreateWithoutMessageInput)
@@ -7492,11 +7911,23 @@ export class MessageRoomUpdateOneWithoutMessageNestedInput {
 }
 
 @InputType()
+export class MessageRoomUpdateWithoutFileInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => MessageUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
 export class MessageRoomUpdateWithoutMessageInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => UserMessageRoomUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutMessageRoomNestedInput>;
 }
 
 @InputType()
@@ -7505,6 +7936,8 @@ export class MessageRoomUpdateWithoutUserMessageRoomInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => MessageUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutMessageRoomNestedInput>;
 }
 
 @InputType()
@@ -7515,6 +7948,18 @@ export class MessageRoomUpdateInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutMessageRoomNestedInput>;
     @Field(() => MessageUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => FileUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    File?: InstanceType<typeof FileUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUpsertWithoutFileInput {
+    @Field(() => MessageRoomUpdateWithoutFileInput, {nullable:false})
+    @Type(() => MessageRoomUpdateWithoutFileInput)
+    update!: InstanceType<typeof MessageRoomUpdateWithoutFileInput>;
+    @Field(() => MessageRoomCreateWithoutFileInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutFileInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutFileInput>;
 }
 
 @InputType()
@@ -7557,6 +8002,8 @@ export class MessageRoomWhereInput {
     UserMessageRoom?: InstanceType<typeof UserMessageRoomListRelationFilter>;
     @Field(() => MessageListRelationFilter, {nullable:true})
     Message?: InstanceType<typeof MessageListRelationFilter>;
+    @Field(() => FileListRelationFilter, {nullable:true})
+    File?: InstanceType<typeof FileListRelationFilter>;
 }
 
 @ObjectType()
@@ -7567,6 +8014,8 @@ export class MessageRoom {
     UserMessageRoom?: Array<UserMessageRoom>;
     @Field(() => [Message], {nullable:true})
     Message?: Array<Message>;
+    @Field(() => [File], {nullable:true})
+    File?: Array<File>;
     @Field(() => MessageRoomCount, {nullable:false})
     _count?: InstanceType<typeof MessageRoomCount>;
 }
@@ -12064,25 +12513,6 @@ export class ProjectUpdateManyWithoutStatusNestedInput {
 }
 
 @InputType()
-export class ProjectUpdateOneRequiredWithoutFileNestedInput {
-    @Field(() => ProjectCreateWithoutFileInput, {nullable:true})
-    @Type(() => ProjectCreateWithoutFileInput)
-    create?: InstanceType<typeof ProjectCreateWithoutFileInput>;
-    @Field(() => ProjectCreateOrConnectWithoutFileInput, {nullable:true})
-    @Type(() => ProjectCreateOrConnectWithoutFileInput)
-    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutFileInput>;
-    @Field(() => ProjectUpsertWithoutFileInput, {nullable:true})
-    @Type(() => ProjectUpsertWithoutFileInput)
-    upsert?: InstanceType<typeof ProjectUpsertWithoutFileInput>;
-    @Field(() => ProjectWhereUniqueInput, {nullable:true})
-    @Type(() => ProjectWhereUniqueInput)
-    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
-    @Field(() => ProjectUpdateWithoutFileInput, {nullable:true})
-    @Type(() => ProjectUpdateWithoutFileInput)
-    update?: InstanceType<typeof ProjectUpdateWithoutFileInput>;
-}
-
-@InputType()
 export class ProjectUpdateOneRequiredWithoutUserProjectNestedInput {
     @Field(() => ProjectCreateWithoutUserProjectInput, {nullable:true})
     @Type(() => ProjectCreateWithoutUserProjectInput)
@@ -12099,6 +12529,29 @@ export class ProjectUpdateOneRequiredWithoutUserProjectNestedInput {
     @Field(() => ProjectUpdateWithoutUserProjectInput, {nullable:true})
     @Type(() => ProjectUpdateWithoutUserProjectInput)
     update?: InstanceType<typeof ProjectUpdateWithoutUserProjectInput>;
+}
+
+@InputType()
+export class ProjectUpdateOneWithoutFileNestedInput {
+    @Field(() => ProjectCreateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateWithoutFileInput)
+    create?: InstanceType<typeof ProjectCreateWithoutFileInput>;
+    @Field(() => ProjectCreateOrConnectWithoutFileInput, {nullable:true})
+    @Type(() => ProjectCreateOrConnectWithoutFileInput)
+    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutFileInput>;
+    @Field(() => ProjectUpsertWithoutFileInput, {nullable:true})
+    @Type(() => ProjectUpsertWithoutFileInput)
+    upsert?: InstanceType<typeof ProjectUpsertWithoutFileInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => ProjectWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
+    @Field(() => ProjectUpdateWithoutFileInput, {nullable:true})
+    @Type(() => ProjectUpdateWithoutFileInput)
+    update?: InstanceType<typeof ProjectUpdateWithoutFileInput>;
 }
 
 @InputType()
