@@ -31,6 +31,8 @@ import { PrismaService } from './prisma.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { LogLoginModule } from './log-login/log-login.module';
 import { BlogNewsModule } from './blog-news/blog-news.module';
+import { UserMessageRoomModule } from './user-message-room/user-message-room.module';
+import { MessageRoomModule } from './message-room/message-room.module';
 dotenv.config();
 @Module({
   imports: [
@@ -69,6 +71,8 @@ dotenv.config();
     FileUploadModule,
     LogLoginModule,
     BlogNewsModule,
+    UserMessageRoomModule,
+    MessageRoomModule,
   ],
   controllers: [AppController],
   providers: [

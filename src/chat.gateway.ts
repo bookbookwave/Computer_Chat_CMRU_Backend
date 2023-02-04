@@ -8,7 +8,8 @@ import { ChatService } from './chat.service';
 type MessageBody = {
   userId: string;
   msg: string;
-  projectId: string;
+  projectId?: string;
+  messageRoomId?: string;
 };
 
 import { Socket } from 'socket.io';
@@ -33,23 +34,25 @@ export class ChatGateway {
     this.chatService.saveMessage({
       userId: input.userId,
       message: input.msg,
-      projectId: input.projectId,
+      projectId: input.projectId ? input.projectId : undefined,
+      messageRoomId: input.messageRoomId ? input.messageRoomId : undefined,
     });
     this.server
-      .to(input.projectId)
+      .to(input.projectId ? input.projectId : input.messageRoomId)
       .emit('response', { msg: input.msg, userId: input.userId });
   }
   @SubscribeMessage('fileUpload')
   handleFileUploadMessage(@MessageBody() input: MessageBody): void {
-    console.log('msg', input.msg);
+    // console.log('msg', input.msg);
     console.log('input :>> ', input);
     this.chatService.saveMessage({
       userId: input.userId,
       message: input.msg,
-      projectId: input.projectId,
+      projectId: input.projectId ? input.projectId : undefined,
+      messageRoomId: input.messageRoomId ? input.messageRoomId : undefined,
     });
     this.server
-      .to(input.projectId)
+      .to(input.projectId ? input.projectId : input.messageRoomId)
       .emit('response', { msg: input.msg, userId: input.userId });
   }
 

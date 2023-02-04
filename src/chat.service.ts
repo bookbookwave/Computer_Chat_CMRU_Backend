@@ -47,22 +47,43 @@ export class ChatService {
     projectId: string;
     userId: string;
     message: string;
+    messageRoomId: string;
   }) {
-    return this.db.message.create({
-      data: {
-        project: {
-          connect: {
-            id: data.projectId,
+    console.log('messageRoomId :>> ', data.messageRoomId);
+    if (data.messageRoomId) {
+      return this.db.message.create({
+        data: {
+          author: {
+            connect: {
+              id: data.userId,
+            },
+          },
+          message: data.message,
+          messageRoom: {
+            connect: {
+              id: data.messageRoomId,
+            },
           },
         },
-        author: {
-          connect: {
-            id: data.userId,
+      });
+    }
+    if (data.projectId) {
+      return this.db.message.create({
+        data: {
+          project: {
+            connect: {
+              id: data.projectId,
+            },
           },
+          author: {
+            connect: {
+              id: data.userId,
+            },
+          },
+          message: data.message,
         },
-        message: data.message,
-      },
-    });
+      });
+    }
   }
 
   //   fetch message

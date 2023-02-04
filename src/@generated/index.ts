@@ -14,6 +14,11 @@ export enum UserProjectScalarFieldEnum {
     userId = "userId"
 }
 
+export enum UserMessageRoomScalarFieldEnum {
+    userId = "userId",
+    messageRoomId = "messageRoomId"
+}
+
 export enum UserScalarFieldEnum {
     id = "id",
     name = "name",
@@ -106,11 +111,16 @@ export enum PageScalarFieldEnum {
     updateAt = "updateAt"
 }
 
+export enum MessageRoomScalarFieldEnum {
+    id = "id"
+}
+
 export enum MessageScalarFieldEnum {
     id = "id",
     message = "message",
     userId = "userId",
     projectId = "projectId",
+    messageRoomId = "messageRoomId",
     createdAt = "createdAt",
     updatedAt = "updatedAt"
 }
@@ -168,6 +178,7 @@ registerEnumType(DownloadScalarFieldEnum, { name: 'DownloadScalarFieldEnum', des
 registerEnumType(DownloadCategoryScalarFieldEnum, { name: 'DownloadCategoryScalarFieldEnum', description: undefined })
 registerEnumType(FileScalarFieldEnum, { name: 'FileScalarFieldEnum', description: undefined })
 registerEnumType(MessageScalarFieldEnum, { name: 'MessageScalarFieldEnum', description: undefined })
+registerEnumType(MessageRoomScalarFieldEnum, { name: 'MessageRoomScalarFieldEnum', description: undefined })
 registerEnumType(PageScalarFieldEnum, { name: 'PageScalarFieldEnum', description: undefined })
 registerEnumType(PostScalarFieldEnum, { name: 'PostScalarFieldEnum', description: undefined })
 registerEnumType(BlogNewsScalarFieldEnum, { name: 'BlogNewsScalarFieldEnum', description: undefined })
@@ -180,6 +191,7 @@ registerEnumType(ProjectScalarFieldEnum, { name: 'ProjectScalarFieldEnum', descr
 registerEnumType(ProjectStatusScalarFieldEnum, { name: 'ProjectStatusScalarFieldEnum', description: undefined })
 registerEnumType(ProjectTypeScalarFieldEnum, { name: 'ProjectTypeScalarFieldEnum', description: undefined })
 registerEnumType(UserScalarFieldEnum, { name: 'UserScalarFieldEnum', description: undefined })
+registerEnumType(UserMessageRoomScalarFieldEnum, { name: 'UserMessageRoomScalarFieldEnum', description: undefined })
 registerEnumType(UserProjectScalarFieldEnum, { name: 'UserProjectScalarFieldEnum', description: undefined })
 
 @ObjectType()
@@ -5769,6 +5781,8 @@ export class MessageCountAggregateInput {
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
     @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
     createdAt?: true;
     @Field(() => Boolean, {nullable:true})
     updatedAt?: true;
@@ -5787,6 +5801,8 @@ export class MessageCountAggregate {
     @Field(() => Int, {nullable:false})
     projectId!: number;
     @Field(() => Int, {nullable:false})
+    messageRoomId!: number;
+    @Field(() => Int, {nullable:false})
     createdAt!: number;
     @Field(() => Int, {nullable:false})
     updatedAt!: number;
@@ -5804,6 +5820,8 @@ export class MessageCountOrderByAggregateInput {
     userId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -5825,8 +5843,35 @@ export class MessageCreateManyAuthorInput {
     id?: string;
     @Field(() => String, {nullable:false})
     message!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@InputType()
+export class MessageCreateManyMessageRoomInputEnvelope {
+    @Field(() => [MessageCreateManyMessageRoomInput], {nullable:false})
+    @Type(() => MessageCreateManyMessageRoomInput)
+    data!: Array<MessageCreateManyMessageRoomInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class MessageCreateManyMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
     @Field(() => String, {nullable:false})
-    projectId!: string;
+    message!: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -5850,6 +5895,8 @@ export class MessageCreateManyProjectInput {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -5864,8 +5911,10 @@ export class MessageCreateManyInput {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -5883,6 +5932,22 @@ export class MessageCreateNestedManyWithoutAuthorInput {
     @Field(() => MessageCreateManyAuthorInputEnvelope, {nullable:true})
     @Type(() => MessageCreateManyAuthorInputEnvelope)
     createMany?: InstanceType<typeof MessageCreateManyAuthorInputEnvelope>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    connect?: Array<MessageWhereUniqueInput>;
+}
+
+@InputType()
+export class MessageCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [MessageCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create?: Array<MessageCreateWithoutMessageRoomInput>;
+    @Field(() => [MessageCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<MessageCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => MessageCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => MessageCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof MessageCreateManyMessageRoomInputEnvelope>;
     @Field(() => [MessageWhereUniqueInput], {nullable:true})
     @Type(() => MessageWhereUniqueInput)
     connect?: Array<MessageWhereUniqueInput>;
@@ -5915,6 +5980,16 @@ export class MessageCreateOrConnectWithoutAuthorInput {
 }
 
 @InputType()
+export class MessageCreateOrConnectWithoutMessageRoomInput {
+    @Field(() => MessageWhereUniqueInput, {nullable:false})
+    @Type(() => MessageWhereUniqueInput)
+    where!: InstanceType<typeof MessageWhereUniqueInput>;
+    @Field(() => MessageCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof MessageCreateWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class MessageCreateOrConnectWithoutProjectInput {
     @Field(() => MessageWhereUniqueInput, {nullable:false})
     @Type(() => MessageWhereUniqueInput)
@@ -5930,12 +6005,30 @@ export class MessageCreateWithoutAuthorInput {
     id?: string;
     @Field(() => String, {nullable:false})
     message!: string;
-    @Field(() => ProjectCreateNestedOneWithoutMessageInput, {nullable:false})
-    project!: InstanceType<typeof ProjectCreateNestedOneWithoutMessageInput>;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutMessageInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutMessageInput>;
+    @Field(() => MessageRoomCreateNestedOneWithoutMessageInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutMessageInput>;
+}
+
+@InputType()
+export class MessageCreateWithoutMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    message!: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutMessageInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutMessageInput>;
+    @Field(() => UserCreateNestedOneWithoutMessageInput, {nullable:false})
+    author!: InstanceType<typeof UserCreateNestedOneWithoutMessageInput>;
 }
 
 @InputType()
@@ -5944,12 +6037,14 @@ export class MessageCreateWithoutProjectInput {
     id?: string;
     @Field(() => String, {nullable:false})
     message!: string;
-    @Field(() => UserCreateNestedOneWithoutMessageInput, {nullable:false})
-    author!: InstanceType<typeof UserCreateNestedOneWithoutMessageInput>;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+    @Field(() => MessageRoomCreateNestedOneWithoutMessageInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutMessageInput>;
+    @Field(() => UserCreateNestedOneWithoutMessageInput, {nullable:false})
+    author!: InstanceType<typeof UserCreateNestedOneWithoutMessageInput>;
 }
 
 @InputType()
@@ -5958,14 +6053,16 @@ export class MessageCreateInput {
     id?: string;
     @Field(() => String, {nullable:false})
     message!: string;
-    @Field(() => ProjectCreateNestedOneWithoutMessageInput, {nullable:false})
-    project!: InstanceType<typeof ProjectCreateNestedOneWithoutMessageInput>;
-    @Field(() => UserCreateNestedOneWithoutMessageInput, {nullable:false})
-    author!: InstanceType<typeof UserCreateNestedOneWithoutMessageInput>;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+    @Field(() => ProjectCreateNestedOneWithoutMessageInput, {nullable:true})
+    project?: InstanceType<typeof ProjectCreateNestedOneWithoutMessageInput>;
+    @Field(() => MessageRoomCreateNestedOneWithoutMessageInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomCreateNestedOneWithoutMessageInput>;
+    @Field(() => UserCreateNestedOneWithoutMessageInput, {nullable:false})
+    author!: InstanceType<typeof UserCreateNestedOneWithoutMessageInput>;
 }
 
 @ArgsType()
@@ -5999,8 +6096,10 @@ export class MessageGroupBy {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
     @Field(() => Date, {nullable:false})
@@ -6034,6 +6133,8 @@ export class MessageMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
     @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
     createdAt?: true;
     @Field(() => Boolean, {nullable:true})
     updatedAt?: true;
@@ -6049,6 +6150,8 @@ export class MessageMaxAggregate {
     userId?: string;
     @Field(() => String, {nullable:true})
     projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -6066,6 +6169,8 @@ export class MessageMaxOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     updatedAt?: keyof typeof SortOrder;
@@ -6082,6 +6187,8 @@ export class MessageMinAggregateInput {
     @Field(() => Boolean, {nullable:true})
     projectId?: true;
     @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
     createdAt?: true;
     @Field(() => Boolean, {nullable:true})
     updatedAt?: true;
@@ -6097,6 +6204,8 @@ export class MessageMinAggregate {
     userId?: string;
     @Field(() => String, {nullable:true})
     projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -6113,6 +6222,8 @@ export class MessageMinOrderByAggregateInput {
     userId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -6136,6 +6247,8 @@ export class MessageOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     updatedAt?: keyof typeof SortOrder;
@@ -6155,16 +6268,20 @@ export class MessageOrderByWithRelationInput {
     message?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
-    @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
-    project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
-    @Field(() => UserOrderByWithRelationInput, {nullable:true})
-    author?: InstanceType<typeof UserOrderByWithRelationInput>;
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     updatedAt?: keyof typeof SortOrder;
+    @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
+    project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
+    @Field(() => MessageRoomOrderByWithRelationInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomOrderByWithRelationInput>;
+    @Field(() => UserOrderByWithRelationInput, {nullable:true})
+    author?: InstanceType<typeof UserOrderByWithRelationInput>;
 }
 
 @InputType()
@@ -6181,8 +6298,10 @@ export class MessageScalarWhereWithAggregatesInput {
     message?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     userId?: InstanceType<typeof StringWithAggregatesFilter>;
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableWithAggregatesFilter>;
+    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableWithAggregatesFilter>;
     @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeWithAggregatesFilter>;
     @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
@@ -6203,8 +6322,10 @@ export class MessageScalarWhereInput {
     message?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     userId?: InstanceType<typeof StringFilter>;
-    @Field(() => StringFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
@@ -6222,6 +6343,22 @@ export class MessageUncheckedCreateNestedManyWithoutAuthorInput {
     @Field(() => MessageCreateManyAuthorInputEnvelope, {nullable:true})
     @Type(() => MessageCreateManyAuthorInputEnvelope)
     createMany?: InstanceType<typeof MessageCreateManyAuthorInputEnvelope>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    connect?: Array<MessageWhereUniqueInput>;
+}
+
+@InputType()
+export class MessageUncheckedCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [MessageCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create?: Array<MessageCreateWithoutMessageRoomInput>;
+    @Field(() => [MessageCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<MessageCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => MessageCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => MessageCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof MessageCreateManyMessageRoomInputEnvelope>;
     @Field(() => [MessageWhereUniqueInput], {nullable:true})
     @Type(() => MessageWhereUniqueInput)
     connect?: Array<MessageWhereUniqueInput>;
@@ -6249,8 +6386,26 @@ export class MessageUncheckedCreateWithoutAuthorInput {
     id?: string;
     @Field(() => String, {nullable:false})
     message!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+}
+
+@InputType()
+export class MessageUncheckedCreateWithoutMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
     @Field(() => String, {nullable:false})
-    projectId!: string;
+    message!: string;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -6265,6 +6420,8 @@ export class MessageUncheckedCreateWithoutProjectInput {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -6279,8 +6436,10 @@ export class MessageUncheckedCreateInput {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
     @Field(() => Date, {nullable:true})
@@ -6325,13 +6484,52 @@ export class MessageUncheckedUpdateManyWithoutAuthorNestedInput {
 }
 
 @InputType()
+export class MessageUncheckedUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [MessageCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create?: Array<MessageCreateWithoutMessageRoomInput>;
+    @Field(() => [MessageCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<MessageCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [MessageUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<MessageUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => MessageCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => MessageCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof MessageCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    set?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    disconnect?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    delete?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    connect?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<MessageUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [MessageUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<MessageUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [MessageScalarWhereInput], {nullable:true})
+    @Type(() => MessageScalarWhereInput)
+    deleteMany?: Array<MessageScalarWhereInput>;
+}
+
+@InputType()
 export class MessageUncheckedUpdateManyWithoutMessageInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -6383,8 +6581,10 @@ export class MessageUncheckedUpdateManyInput {
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -6397,8 +6597,26 @@ export class MessageUncheckedUpdateWithoutAuthorInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class MessageUncheckedUpdateWithoutMessageRoomInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -6413,6 +6631,8 @@ export class MessageUncheckedUpdateWithoutProjectInput {
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -6427,8 +6647,10 @@ export class MessageUncheckedUpdateInput {
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    projectId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    projectId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof NullableStringFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
@@ -6449,6 +6671,16 @@ export class MessageUpdateManyMutationInput {
 
 @InputType()
 export class MessageUpdateManyWithWhereWithoutAuthorInput {
+    @Field(() => MessageScalarWhereInput, {nullable:false})
+    @Type(() => MessageScalarWhereInput)
+    where!: InstanceType<typeof MessageScalarWhereInput>;
+    @Field(() => MessageUpdateManyMutationInput, {nullable:false})
+    @Type(() => MessageUpdateManyMutationInput)
+    data!: InstanceType<typeof MessageUpdateManyMutationInput>;
+}
+
+@InputType()
+export class MessageUpdateManyWithWhereWithoutMessageRoomInput {
     @Field(() => MessageScalarWhereInput, {nullable:false})
     @Type(() => MessageScalarWhereInput)
     where!: InstanceType<typeof MessageScalarWhereInput>;
@@ -6505,6 +6737,43 @@ export class MessageUpdateManyWithoutAuthorNestedInput {
 }
 
 @InputType()
+export class MessageUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [MessageCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create?: Array<MessageCreateWithoutMessageRoomInput>;
+    @Field(() => [MessageCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<MessageCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [MessageUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<MessageUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => MessageCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => MessageCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof MessageCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    set?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    disconnect?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    delete?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageWhereUniqueInput], {nullable:true})
+    @Type(() => MessageWhereUniqueInput)
+    connect?: Array<MessageWhereUniqueInput>;
+    @Field(() => [MessageUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<MessageUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [MessageUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => MessageUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<MessageUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [MessageScalarWhereInput], {nullable:true})
+    @Type(() => MessageScalarWhereInput)
+    deleteMany?: Array<MessageScalarWhereInput>;
+}
+
+@InputType()
 export class MessageUpdateManyWithoutProjectNestedInput {
     @Field(() => [MessageCreateWithoutProjectInput], {nullable:true})
     @Type(() => MessageCreateWithoutProjectInput)
@@ -6552,6 +6821,16 @@ export class MessageUpdateWithWhereUniqueWithoutAuthorInput {
 }
 
 @InputType()
+export class MessageUpdateWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => MessageWhereUniqueInput, {nullable:false})
+    @Type(() => MessageWhereUniqueInput)
+    where!: InstanceType<typeof MessageWhereUniqueInput>;
+    @Field(() => MessageUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => MessageUpdateWithoutMessageRoomInput)
+    data!: InstanceType<typeof MessageUpdateWithoutMessageRoomInput>;
+}
+
+@InputType()
 export class MessageUpdateWithWhereUniqueWithoutProjectInput {
     @Field(() => MessageWhereUniqueInput, {nullable:false})
     @Type(() => MessageWhereUniqueInput)
@@ -6567,12 +6846,30 @@ export class MessageUpdateWithoutAuthorInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => ProjectUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
-    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutMessageNestedInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneWithoutMessageNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutMessageNestedInput>;
+    @Field(() => MessageRoomUpdateOneWithoutMessageNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutMessageNestedInput>;
+}
+
+@InputType()
+export class MessageUpdateWithoutMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneWithoutMessageNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutMessageNestedInput>;
+    @Field(() => UserUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
+    author?: InstanceType<typeof UserUpdateOneRequiredWithoutMessageNestedInput>;
 }
 
 @InputType()
@@ -6581,12 +6878,14 @@ export class MessageUpdateWithoutProjectInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => UserUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
-    author?: InstanceType<typeof UserUpdateOneRequiredWithoutMessageNestedInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => MessageRoomUpdateOneWithoutMessageNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutMessageNestedInput>;
+    @Field(() => UserUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
+    author?: InstanceType<typeof UserUpdateOneRequiredWithoutMessageNestedInput>;
 }
 
 @InputType()
@@ -6595,14 +6894,16 @@ export class MessageUpdateInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     message?: InstanceType<typeof StringFieldUpdateOperationsInput>;
-    @Field(() => ProjectUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
-    project?: InstanceType<typeof ProjectUpdateOneRequiredWithoutMessageNestedInput>;
-    @Field(() => UserUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
-    author?: InstanceType<typeof UserUpdateOneRequiredWithoutMessageNestedInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     updatedAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => ProjectUpdateOneWithoutMessageNestedInput, {nullable:true})
+    project?: InstanceType<typeof ProjectUpdateOneWithoutMessageNestedInput>;
+    @Field(() => MessageRoomUpdateOneWithoutMessageNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneWithoutMessageNestedInput>;
+    @Field(() => UserUpdateOneRequiredWithoutMessageNestedInput, {nullable:true})
+    author?: InstanceType<typeof UserUpdateOneRequiredWithoutMessageNestedInput>;
 }
 
 @InputType()
@@ -6616,6 +6917,19 @@ export class MessageUpsertWithWhereUniqueWithoutAuthorInput {
     @Field(() => MessageCreateWithoutAuthorInput, {nullable:false})
     @Type(() => MessageCreateWithoutAuthorInput)
     create!: InstanceType<typeof MessageCreateWithoutAuthorInput>;
+}
+
+@InputType()
+export class MessageUpsertWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => MessageWhereUniqueInput, {nullable:false})
+    @Type(() => MessageWhereUniqueInput)
+    where!: InstanceType<typeof MessageWhereUniqueInput>;
+    @Field(() => MessageUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => MessageUpdateWithoutMessageRoomInput)
+    update!: InstanceType<typeof MessageUpdateWithoutMessageRoomInput>;
+    @Field(() => MessageCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => MessageCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof MessageCreateWithoutMessageRoomInput>;
 }
 
 @InputType()
@@ -6651,16 +6965,20 @@ export class MessageWhereInput {
     message?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     userId?: InstanceType<typeof StringFilter>;
-    @Field(() => ProjectRelationFilter, {nullable:true})
-    project?: InstanceType<typeof ProjectRelationFilter>;
-    @Field(() => UserRelationFilter, {nullable:true})
-    author?: InstanceType<typeof UserRelationFilter>;
-    @Field(() => StringFilter, {nullable:true})
-    projectId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    projectId?: InstanceType<typeof StringNullableFilter>;
+    @Field(() => StringNullableFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringNullableFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: InstanceType<typeof DateTimeFilter>;
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: InstanceType<typeof DateTimeFilter>;
+    @Field(() => ProjectRelationFilter, {nullable:true})
+    project?: InstanceType<typeof ProjectRelationFilter>;
+    @Field(() => MessageRoomRelationFilter, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomRelationFilter>;
+    @Field(() => UserRelationFilter, {nullable:true})
+    author?: InstanceType<typeof UserRelationFilter>;
 }
 
 @ObjectType()
@@ -6671,16 +6989,20 @@ export class Message {
     message!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
-    @Field(() => Project, {nullable:false})
-    project?: InstanceType<typeof Project>;
-    @Field(() => User, {nullable:false})
-    author?: InstanceType<typeof User>;
-    @Field(() => String, {nullable:false})
-    projectId!: string;
+    @Field(() => String, {nullable:true})
+    projectId!: string | null;
+    @Field(() => String, {nullable:true})
+    messageRoomId!: string | null;
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
+    @Field(() => Project, {nullable:true})
+    project?: InstanceType<typeof Project> | null;
+    @Field(() => MessageRoom, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoom> | null;
+    @Field(() => User, {nullable:false})
+    author?: InstanceType<typeof User>;
 }
 
 @ArgsType()
@@ -6714,6 +7036,572 @@ export class UpsertOneMessageArgs {
     @Field(() => MessageUpdateInput, {nullable:false})
     @Type(() => MessageUpdateInput)
     update!: InstanceType<typeof MessageUpdateInput>;
+}
+
+@ObjectType()
+export class AggregateMessageRoom {
+    @Field(() => MessageRoomCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof MessageRoomCountAggregate>;
+    @Field(() => MessageRoomMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof MessageRoomMinAggregate>;
+    @Field(() => MessageRoomMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof MessageRoomMaxAggregate>;
+}
+
+@ArgsType()
+export class CreateManyMessageRoomArgs {
+    @Field(() => [MessageRoomCreateManyInput], {nullable:false})
+    @Type(() => MessageRoomCreateManyInput)
+    data!: Array<MessageRoomCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneMessageRoomArgs {
+    @Field(() => MessageRoomCreateInput, {nullable:false})
+    @Type(() => MessageRoomCreateInput)
+    data!: InstanceType<typeof MessageRoomCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyMessageRoomArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneMessageRoomArgs {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindFirstMessageRoomOrThrowArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => [MessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<MessageRoomOrderByWithRelationInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [MessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof MessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstMessageRoomArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => [MessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<MessageRoomOrderByWithRelationInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [MessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof MessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyMessageRoomArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => [MessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<MessageRoomOrderByWithRelationInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [MessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof MessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueMessageRoomOrThrowArgs {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueMessageRoomArgs {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class MessageRoomAggregateArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => [MessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<MessageRoomOrderByWithRelationInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => MessageRoomCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof MessageRoomCountAggregateInput>;
+    @Field(() => MessageRoomMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof MessageRoomMinAggregateInput>;
+    @Field(() => MessageRoomMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof MessageRoomMaxAggregateInput>;
+}
+
+@InputType()
+export class MessageRoomCountAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    _all?: true;
+}
+
+@ObjectType()
+export class MessageRoomCountAggregate {
+    @Field(() => Int, {nullable:false})
+    id!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@InputType()
+export class MessageRoomCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+}
+
+@ObjectType()
+export class MessageRoomCount {
+    @Field(() => Int, {nullable:false})
+    UserMessageRoom?: number;
+    @Field(() => Int, {nullable:false})
+    Message?: number;
+}
+
+@InputType()
+export class MessageRoomCreateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class MessageRoomCreateNestedOneWithoutMessageInput {
+    @Field(() => MessageRoomCreateWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutMessageInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutMessageInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutMessageInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutMessageInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class MessageRoomCreateNestedOneWithoutUserMessageRoomInput {
+    @Field(() => MessageRoomCreateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutUserMessageRoomInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutUserMessageRoomInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class MessageRoomCreateOrConnectWithoutMessageInput {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomCreateWithoutMessageInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutMessageInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutMessageInput>;
+}
+
+@InputType()
+export class MessageRoomCreateOrConnectWithoutUserMessageRoomInput {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomCreateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutUserMessageRoomInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomCreateWithoutMessageInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomCreateWithoutUserMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => MessageCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => MessageCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@ArgsType()
+export class MessageRoomGroupByArgs {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => [MessageRoomOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<MessageRoomOrderByWithAggregationInput>;
+    @Field(() => [MessageRoomScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof MessageRoomScalarFieldEnum>;
+    @Field(() => MessageRoomScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof MessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => MessageRoomCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof MessageRoomCountAggregateInput>;
+    @Field(() => MessageRoomMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof MessageRoomMinAggregateInput>;
+    @Field(() => MessageRoomMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof MessageRoomMaxAggregateInput>;
+}
+
+@ObjectType()
+export class MessageRoomGroupBy {
+    @Field(() => String, {nullable:false})
+    id!: string;
+    @Field(() => MessageRoomCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof MessageRoomCountAggregate>;
+    @Field(() => MessageRoomMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof MessageRoomMinAggregate>;
+    @Field(() => MessageRoomMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof MessageRoomMaxAggregate>;
+}
+
+@InputType()
+export class MessageRoomMaxAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+}
+
+@ObjectType()
+export class MessageRoomMaxAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class MessageRoomMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class MessageRoomMinAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+}
+
+@ObjectType()
+export class MessageRoomMinAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class MessageRoomMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class MessageRoomOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => MessageRoomCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof MessageRoomCountOrderByAggregateInput>;
+    @Field(() => MessageRoomMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof MessageRoomMaxOrderByAggregateInput>;
+    @Field(() => MessageRoomMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof MessageRoomMinOrderByAggregateInput>;
+}
+
+@InputType()
+export class MessageRoomOrderByWithRelationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => UserMessageRoomOrderByRelationAggregateInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomOrderByRelationAggregateInput>;
+    @Field(() => MessageOrderByRelationAggregateInput, {nullable:true})
+    Message?: InstanceType<typeof MessageOrderByRelationAggregateInput>;
+}
+
+@InputType()
+export class MessageRoomRelationFilter {
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    is?: InstanceType<typeof MessageRoomWhereInput>;
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    isNot?: InstanceType<typeof MessageRoomWhereInput>;
+}
+
+@InputType()
+export class MessageRoomScalarWhereWithAggregatesInput {
+    @Field(() => [MessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<MessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => [MessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<MessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => [MessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<MessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    id?: InstanceType<typeof StringWithAggregatesFilter>;
+}
+
+@InputType()
+export class MessageRoomUncheckedCreateWithoutMessageInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedCreateWithoutUserMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput>;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutMessageRoomInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedUpdateManyInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedUpdateWithoutMessageInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedUpdateWithoutUserMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUncheckedUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateManyMutationInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput {
+    @Field(() => MessageRoomCreateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutUserMessageRoomInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutUserMessageRoomInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomUpsertWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomUpsertWithoutUserMessageRoomInput)
+    upsert?: InstanceType<typeof MessageRoomUpsertWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomUpdateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => MessageRoomUpdateWithoutUserMessageRoomInput)
+    update?: InstanceType<typeof MessageRoomUpdateWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateOneWithoutMessageNestedInput {
+    @Field(() => MessageRoomCreateWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomCreateWithoutMessageInput)
+    create?: InstanceType<typeof MessageRoomCreateWithoutMessageInput>;
+    @Field(() => MessageRoomCreateOrConnectWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomCreateOrConnectWithoutMessageInput)
+    connectOrCreate?: InstanceType<typeof MessageRoomCreateOrConnectWithoutMessageInput>;
+    @Field(() => MessageRoomUpsertWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomUpsertWithoutMessageInput)
+    upsert?: InstanceType<typeof MessageRoomUpsertWithoutMessageInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:true})
+    @Type(() => MessageRoomWhereUniqueInput)
+    connect?: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomUpdateWithoutMessageInput, {nullable:true})
+    @Type(() => MessageRoomUpdateWithoutMessageInput)
+    update?: InstanceType<typeof MessageRoomUpdateWithoutMessageInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateWithoutMessageInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateWithoutUserMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => MessageUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutMessageRoomNestedInput>;
+    @Field(() => MessageUpdateManyWithoutMessageRoomNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutMessageRoomNestedInput>;
+}
+
+@InputType()
+export class MessageRoomUpsertWithoutMessageInput {
+    @Field(() => MessageRoomUpdateWithoutMessageInput, {nullable:false})
+    @Type(() => MessageRoomUpdateWithoutMessageInput)
+    update!: InstanceType<typeof MessageRoomUpdateWithoutMessageInput>;
+    @Field(() => MessageRoomCreateWithoutMessageInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutMessageInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutMessageInput>;
+}
+
+@InputType()
+export class MessageRoomUpsertWithoutUserMessageRoomInput {
+    @Field(() => MessageRoomUpdateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => MessageRoomUpdateWithoutUserMessageRoomInput)
+    update!: InstanceType<typeof MessageRoomUpdateWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomCreateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => MessageRoomCreateWithoutUserMessageRoomInput)
+    create!: InstanceType<typeof MessageRoomCreateWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class MessageRoomWhereUniqueInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class MessageRoomWhereInput {
+    @Field(() => [MessageRoomWhereInput], {nullable:true})
+    AND?: Array<MessageRoomWhereInput>;
+    @Field(() => [MessageRoomWhereInput], {nullable:true})
+    OR?: Array<MessageRoomWhereInput>;
+    @Field(() => [MessageRoomWhereInput], {nullable:true})
+    NOT?: Array<MessageRoomWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => UserMessageRoomListRelationFilter, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomListRelationFilter>;
+    @Field(() => MessageListRelationFilter, {nullable:true})
+    Message?: InstanceType<typeof MessageListRelationFilter>;
+}
+
+@ObjectType()
+export class MessageRoom {
+    @Field(() => ID, {nullable:false})
+    id!: string;
+    @Field(() => [UserMessageRoom], {nullable:true})
+    UserMessageRoom?: Array<UserMessageRoom>;
+    @Field(() => [Message], {nullable:true})
+    Message?: Array<Message>;
+    @Field(() => MessageRoomCount, {nullable:false})
+    _count?: InstanceType<typeof MessageRoomCount>;
+}
+
+@ArgsType()
+export class UpdateManyMessageRoomArgs {
+    @Field(() => MessageRoomUpdateManyMutationInput, {nullable:false})
+    @Type(() => MessageRoomUpdateManyMutationInput)
+    data!: InstanceType<typeof MessageRoomUpdateManyMutationInput>;
+    @Field(() => MessageRoomWhereInput, {nullable:true})
+    @Type(() => MessageRoomWhereInput)
+    where?: InstanceType<typeof MessageRoomWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneMessageRoomArgs {
+    @Field(() => MessageRoomUpdateInput, {nullable:false})
+    @Type(() => MessageRoomUpdateInput)
+    data!: InstanceType<typeof MessageRoomUpdateInput>;
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneMessageRoomArgs {
+    @Field(() => MessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => MessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof MessageRoomWhereUniqueInput>;
+    @Field(() => MessageRoomCreateInput, {nullable:false})
+    @Type(() => MessageRoomCreateInput)
+    create!: InstanceType<typeof MessageRoomCreateInput>;
+    @Field(() => MessageRoomUpdateInput, {nullable:false})
+    @Type(() => MessageRoomUpdateInput)
+    update!: InstanceType<typeof MessageRoomUpdateInput>;
 }
 
 @ObjectType()
@@ -11195,25 +12083,6 @@ export class ProjectUpdateOneRequiredWithoutFileNestedInput {
 }
 
 @InputType()
-export class ProjectUpdateOneRequiredWithoutMessageNestedInput {
-    @Field(() => ProjectCreateWithoutMessageInput, {nullable:true})
-    @Type(() => ProjectCreateWithoutMessageInput)
-    create?: InstanceType<typeof ProjectCreateWithoutMessageInput>;
-    @Field(() => ProjectCreateOrConnectWithoutMessageInput, {nullable:true})
-    @Type(() => ProjectCreateOrConnectWithoutMessageInput)
-    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutMessageInput>;
-    @Field(() => ProjectUpsertWithoutMessageInput, {nullable:true})
-    @Type(() => ProjectUpsertWithoutMessageInput)
-    upsert?: InstanceType<typeof ProjectUpsertWithoutMessageInput>;
-    @Field(() => ProjectWhereUniqueInput, {nullable:true})
-    @Type(() => ProjectWhereUniqueInput)
-    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
-    @Field(() => ProjectUpdateWithoutMessageInput, {nullable:true})
-    @Type(() => ProjectUpdateWithoutMessageInput)
-    update?: InstanceType<typeof ProjectUpdateWithoutMessageInput>;
-}
-
-@InputType()
 export class ProjectUpdateOneRequiredWithoutUserProjectNestedInput {
     @Field(() => ProjectCreateWithoutUserProjectInput, {nullable:true})
     @Type(() => ProjectCreateWithoutUserProjectInput)
@@ -11230,6 +12099,29 @@ export class ProjectUpdateOneRequiredWithoutUserProjectNestedInput {
     @Field(() => ProjectUpdateWithoutUserProjectInput, {nullable:true})
     @Type(() => ProjectUpdateWithoutUserProjectInput)
     update?: InstanceType<typeof ProjectUpdateWithoutUserProjectInput>;
+}
+
+@InputType()
+export class ProjectUpdateOneWithoutMessageNestedInput {
+    @Field(() => ProjectCreateWithoutMessageInput, {nullable:true})
+    @Type(() => ProjectCreateWithoutMessageInput)
+    create?: InstanceType<typeof ProjectCreateWithoutMessageInput>;
+    @Field(() => ProjectCreateOrConnectWithoutMessageInput, {nullable:true})
+    @Type(() => ProjectCreateOrConnectWithoutMessageInput)
+    connectOrCreate?: InstanceType<typeof ProjectCreateOrConnectWithoutMessageInput>;
+    @Field(() => ProjectUpsertWithoutMessageInput, {nullable:true})
+    @Type(() => ProjectUpsertWithoutMessageInput)
+    upsert?: InstanceType<typeof ProjectUpsertWithoutMessageInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => ProjectWhereUniqueInput, {nullable:true})
+    @Type(() => ProjectWhereUniqueInput)
+    connect?: InstanceType<typeof ProjectWhereUniqueInput>;
+    @Field(() => ProjectUpdateWithoutMessageInput, {nullable:true})
+    @Type(() => ProjectUpdateWithoutMessageInput)
+    update?: InstanceType<typeof ProjectUpdateWithoutMessageInput>;
 }
 
 @InputType()
@@ -13004,6 +13896,8 @@ export class UserCount {
     UserProject?: number;
     @Field(() => Int, {nullable:false})
     loginTime?: number;
+    @Field(() => Int, {nullable:false})
+    UserMessageRoom?: number;
 }
 
 @InputType()
@@ -13094,6 +13988,19 @@ export class UserCreateNestedOneWithoutPostInput {
 }
 
 @InputType()
+export class UserCreateNestedOneWithoutUserMessageRoomInput {
+    @Field(() => UserCreateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserCreateWithoutUserMessageRoomInput)
+    create?: InstanceType<typeof UserCreateWithoutUserMessageRoomInput>;
+    @Field(() => UserCreateOrConnectWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserCreateOrConnectWithoutUserMessageRoomInput)
+    connectOrCreate?: InstanceType<typeof UserCreateOrConnectWithoutUserMessageRoomInput>;
+    @Field(() => UserWhereUniqueInput, {nullable:true})
+    @Type(() => UserWhereUniqueInput)
+    connect?: InstanceType<typeof UserWhereUniqueInput>;
+}
+
+@InputType()
 export class UserCreateNestedOneWithoutUserProjectInput {
     @Field(() => UserCreateWithoutUserProjectInput, {nullable:true})
     @Type(() => UserCreateWithoutUserProjectInput)
@@ -13157,6 +14064,16 @@ export class UserCreateOrConnectWithoutPostInput {
 }
 
 @InputType()
+export class UserCreateOrConnectWithoutUserMessageRoomInput {
+    @Field(() => UserWhereUniqueInput, {nullable:false})
+    @Type(() => UserWhereUniqueInput)
+    where!: InstanceType<typeof UserWhereUniqueInput>;
+    @Field(() => UserCreateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => UserCreateWithoutUserMessageRoomInput)
+    create!: InstanceType<typeof UserCreateWithoutUserMessageRoomInput>;
+}
+
+@InputType()
 export class UserCreateOrConnectWithoutUserProjectInput {
     @Field(() => UserWhereUniqueInput, {nullable:false})
     @Type(() => UserWhereUniqueInput)
@@ -13196,6 +14113,8 @@ export class UserCreateWithoutDownloadInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13228,6 +14147,8 @@ export class UserCreateWithoutLoginTimeInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13260,6 +14181,8 @@ export class UserCreateWithoutMessageInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13292,6 +14215,8 @@ export class UserCreateWithoutPageInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13318,6 +14243,42 @@ export class UserCreateWithoutPostInput {
     Download?: InstanceType<typeof DownloadCreateNestedManyWithoutAuthorInput>;
     @Field(() => PageCreateNestedManyWithoutAuthorInput, {nullable:true})
     Page?: InstanceType<typeof PageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => MessageCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
+}
+
+@InputType()
+export class UserCreateWithoutUserMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:false})
+    @Validator.IsEmail()
+    email!: string;
+    @Field(() => String, {nullable:false})
+    password!: string;
+    @Field(() => Role, {nullable:true})
+    role?: keyof typeof Role;
+    @Field(() => String, {nullable:true})
+    avatar?: string;
+    @Field(() => Date, {nullable:true})
+    createAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updateAt?: Date | string;
+    @Field(() => DownloadCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PageCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Page?: InstanceType<typeof PageCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PostCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Post?: InstanceType<typeof PostCreateNestedManyWithoutAuthorInput>;
     @Field(() => MessageCreateNestedManyWithoutAuthorInput, {nullable:true})
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectCreateNestedManyWithoutUserInput, {nullable:true})
@@ -13356,6 +14317,8 @@ export class UserCreateWithoutUserProjectInput {
     Message?: InstanceType<typeof MessageCreateNestedManyWithoutAuthorInput>;
     @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13390,6 +14353,8 @@ export class UserCreateInput {
     UserProject?: InstanceType<typeof UserProjectCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomCreateNestedManyWithoutUserInput>;
 }
 
 @ArgsType()
@@ -13617,6 +14582,8 @@ export class UserOrderByWithRelationInput {
     UserProject?: InstanceType<typeof UserProjectOrderByRelationAggregateInput>;
     @Field(() => loginTimeOrderByRelationAggregateInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeOrderByRelationAggregateInput>;
+    @Field(() => UserMessageRoomOrderByRelationAggregateInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomOrderByRelationAggregateInput>;
 }
 
 @InputType()
@@ -13683,6 +14650,8 @@ export class UserUncheckedCreateWithoutDownloadInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13715,6 +14684,8 @@ export class UserUncheckedCreateWithoutLoginTimeInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13747,6 +14718,8 @@ export class UserUncheckedCreateWithoutMessageInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13779,6 +14752,8 @@ export class UserUncheckedCreateWithoutPageInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13805,6 +14780,42 @@ export class UserUncheckedCreateWithoutPostInput {
     Download?: InstanceType<typeof DownloadUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => PageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     Page?: InstanceType<typeof PageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => MessageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
+    @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
+}
+
+@InputType()
+export class UserUncheckedCreateWithoutUserMessageRoomInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => String, {nullable:false})
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:false})
+    @Validator.IsEmail()
+    email!: string;
+    @Field(() => String, {nullable:false})
+    password!: string;
+    @Field(() => Role, {nullable:true})
+    role?: keyof typeof Role;
+    @Field(() => String, {nullable:true})
+    avatar?: string;
+    @Field(() => Date, {nullable:true})
+    createAt?: Date | string;
+    @Field(() => Date, {nullable:true})
+    updateAt?: Date | string;
+    @Field(() => DownloadUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Page?: InstanceType<typeof PageUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => PostUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
+    Post?: InstanceType<typeof PostUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => MessageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => UserProjectUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
@@ -13843,6 +14854,8 @@ export class UserUncheckedCreateWithoutUserProjectInput {
     Message?: InstanceType<typeof MessageUncheckedCreateNestedManyWithoutAuthorInput>;
     @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13877,6 +14890,8 @@ export class UserUncheckedCreateInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedCreateNestedManyWithoutUserInput>;
     @Field(() => loginTimeUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedCreateNestedManyWithoutAuthorInput>;
+    @Field(() => UserMessageRoomUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedCreateNestedManyWithoutUserInput>;
 }
 
 @InputType()
@@ -13927,6 +14942,8 @@ export class UserUncheckedUpdateWithoutDownloadInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -13957,6 +14974,8 @@ export class UserUncheckedUpdateWithoutLoginTimeInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -13987,6 +15006,8 @@ export class UserUncheckedUpdateWithoutMessageInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14017,6 +15038,8 @@ export class UserUncheckedUpdateWithoutPageInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14041,6 +15064,40 @@ export class UserUncheckedUpdateWithoutPostInput {
     Download?: InstanceType<typeof DownloadUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => PageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Page?: InstanceType<typeof PageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => MessageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
+}
+
+@InputType()
+export class UserUncheckedUpdateWithoutUserMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    password?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => EnumRoleFieldUpdateOperationsInput, {nullable:true})
+    role?: InstanceType<typeof EnumRoleFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    avatar?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updateAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DownloadUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Page?: InstanceType<typeof PageUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PostUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Post?: InstanceType<typeof PostUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => MessageUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
@@ -14077,6 +15134,8 @@ export class UserUncheckedUpdateWithoutUserProjectInput {
     Message?: InstanceType<typeof MessageUncheckedUpdateManyWithoutAuthorNestedInput>;
     @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14109,6 +15168,8 @@ export class UserUncheckedUpdateInput {
     UserProject?: InstanceType<typeof UserProjectUncheckedUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUncheckedUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUncheckedUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14227,6 +15288,25 @@ export class UserUpdateOneRequiredWithoutPostNestedInput {
 }
 
 @InputType()
+export class UserUpdateOneRequiredWithoutUserMessageRoomNestedInput {
+    @Field(() => UserCreateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserCreateWithoutUserMessageRoomInput)
+    create?: InstanceType<typeof UserCreateWithoutUserMessageRoomInput>;
+    @Field(() => UserCreateOrConnectWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserCreateOrConnectWithoutUserMessageRoomInput)
+    connectOrCreate?: InstanceType<typeof UserCreateOrConnectWithoutUserMessageRoomInput>;
+    @Field(() => UserUpsertWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserUpsertWithoutUserMessageRoomInput)
+    upsert?: InstanceType<typeof UserUpsertWithoutUserMessageRoomInput>;
+    @Field(() => UserWhereUniqueInput, {nullable:true})
+    @Type(() => UserWhereUniqueInput)
+    connect?: InstanceType<typeof UserWhereUniqueInput>;
+    @Field(() => UserUpdateWithoutUserMessageRoomInput, {nullable:true})
+    @Type(() => UserUpdateWithoutUserMessageRoomInput)
+    update?: InstanceType<typeof UserUpdateWithoutUserMessageRoomInput>;
+}
+
+@InputType()
 export class UserUpdateOneRequiredWithoutUserProjectNestedInput {
     @Field(() => UserCreateWithoutUserProjectInput, {nullable:true})
     @Type(() => UserCreateWithoutUserProjectInput)
@@ -14273,6 +15353,8 @@ export class UserUpdateWithoutDownloadInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14303,6 +15385,8 @@ export class UserUpdateWithoutLoginTimeInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14333,6 +15417,8 @@ export class UserUpdateWithoutMessageInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14363,6 +15449,8 @@ export class UserUpdateWithoutPageInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14387,6 +15475,40 @@ export class UserUpdateWithoutPostInput {
     Download?: InstanceType<typeof DownloadUpdateManyWithoutAuthorNestedInput>;
     @Field(() => PageUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Page?: InstanceType<typeof PageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => MessageUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
+    @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
+}
+
+@InputType()
+export class UserUpdateWithoutUserMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    password?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => EnumRoleFieldUpdateOperationsInput, {nullable:true})
+    role?: InstanceType<typeof EnumRoleFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    avatar?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    createAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updateAt?: InstanceType<typeof DateTimeFieldUpdateOperationsInput>;
+    @Field(() => DownloadUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Download?: InstanceType<typeof DownloadUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PageUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Page?: InstanceType<typeof PageUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => PostUpdateManyWithoutAuthorNestedInput, {nullable:true})
+    Post?: InstanceType<typeof PostUpdateManyWithoutAuthorNestedInput>;
     @Field(() => MessageUpdateManyWithoutAuthorNestedInput, {nullable:true})
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => UserProjectUpdateManyWithoutUserNestedInput, {nullable:true})
@@ -14423,6 +15545,8 @@ export class UserUpdateWithoutUserProjectInput {
     Message?: InstanceType<typeof MessageUpdateManyWithoutAuthorNestedInput>;
     @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14455,6 +15579,8 @@ export class UserUpdateInput {
     UserProject?: InstanceType<typeof UserProjectUpdateManyWithoutUserNestedInput>;
     @Field(() => loginTimeUpdateManyWithoutAuthorNestedInput, {nullable:true})
     loginTime?: InstanceType<typeof loginTimeUpdateManyWithoutAuthorNestedInput>;
+    @Field(() => UserMessageRoomUpdateManyWithoutUserNestedInput, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomUpdateManyWithoutUserNestedInput>;
 }
 
 @InputType()
@@ -14505,6 +15631,16 @@ export class UserUpsertWithoutPostInput {
     @Field(() => UserCreateWithoutPostInput, {nullable:false})
     @Type(() => UserCreateWithoutPostInput)
     create!: InstanceType<typeof UserCreateWithoutPostInput>;
+}
+
+@InputType()
+export class UserUpsertWithoutUserMessageRoomInput {
+    @Field(() => UserUpdateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => UserUpdateWithoutUserMessageRoomInput)
+    update!: InstanceType<typeof UserUpdateWithoutUserMessageRoomInput>;
+    @Field(() => UserCreateWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => UserCreateWithoutUserMessageRoomInput)
+    create!: InstanceType<typeof UserCreateWithoutUserMessageRoomInput>;
 }
 
 @InputType()
@@ -14562,6 +15698,8 @@ export class UserWhereInput {
     UserProject?: InstanceType<typeof UserProjectListRelationFilter>;
     @Field(() => LoginTimeListRelationFilter, {nullable:true})
     loginTime?: InstanceType<typeof LoginTimeListRelationFilter>;
+    @Field(() => UserMessageRoomListRelationFilter, {nullable:true})
+    UserMessageRoom?: InstanceType<typeof UserMessageRoomListRelationFilter>;
 }
 
 @ObjectType()
@@ -14594,8 +15732,826 @@ export class User {
     UserProject?: Array<UserProject>;
     @Field(() => [loginTime], {nullable:true})
     loginTime?: Array<loginTime>;
+    @Field(() => [UserMessageRoom], {nullable:true})
+    UserMessageRoom?: Array<UserMessageRoom>;
     @Field(() => UserCount, {nullable:false})
     _count?: InstanceType<typeof UserCount>;
+}
+
+@ObjectType()
+export class AggregateUserMessageRoom {
+    @Field(() => UserMessageRoomCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof UserMessageRoomCountAggregate>;
+    @Field(() => UserMessageRoomMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof UserMessageRoomMinAggregate>;
+    @Field(() => UserMessageRoomMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof UserMessageRoomMaxAggregate>;
+}
+
+@ArgsType()
+export class CreateManyUserMessageRoomArgs {
+    @Field(() => [UserMessageRoomCreateManyInput], {nullable:false})
+    @Type(() => UserMessageRoomCreateManyInput)
+    data!: Array<UserMessageRoomCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneUserMessageRoomArgs {
+    @Field(() => UserMessageRoomCreateInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateInput)
+    data!: InstanceType<typeof UserMessageRoomCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindFirstUserMessageRoomOrThrowArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<UserMessageRoomOrderByWithRelationInput>;
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [UserMessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof UserMessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<UserMessageRoomOrderByWithRelationInput>;
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [UserMessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof UserMessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<UserMessageRoomOrderByWithRelationInput>;
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [UserMessageRoomScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof UserMessageRoomScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueUserMessageRoomOrThrowArgs {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpdateManyUserMessageRoomArgs {
+    @Field(() => UserMessageRoomUncheckedUpdateManyInput, {nullable:false})
+    @Type(() => UserMessageRoomUncheckedUpdateManyInput)
+    data!: InstanceType<typeof UserMessageRoomUncheckedUpdateManyInput>;
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneUserMessageRoomArgs {
+    @Field(() => UserMessageRoomUpdateInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateInput)
+    data!: InstanceType<typeof UserMessageRoomUpdateInput>;
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneUserMessageRoomArgs {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomCreateInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateInput)
+    create!: InstanceType<typeof UserMessageRoomCreateInput>;
+    @Field(() => UserMessageRoomUpdateInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateInput)
+    update!: InstanceType<typeof UserMessageRoomUpdateInput>;
+}
+
+@ArgsType()
+export class UserMessageRoomAggregateArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<UserMessageRoomOrderByWithRelationInput>;
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => UserMessageRoomCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof UserMessageRoomCountAggregateInput>;
+    @Field(() => UserMessageRoomMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof UserMessageRoomMinAggregateInput>;
+    @Field(() => UserMessageRoomMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof UserMessageRoomMaxAggregateInput>;
+}
+
+@InputType()
+export class UserMessageRoomCountAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    userId?: true;
+    @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+    @Field(() => Boolean, {nullable:true})
+    _all?: true;
+}
+
+@ObjectType()
+export class UserMessageRoomCountAggregate {
+    @Field(() => Int, {nullable:false})
+    userId!: number;
+    @Field(() => Int, {nullable:false})
+    messageRoomId!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@InputType()
+export class UserMessageRoomCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class UserMessageRoomCreateManyMessageRoomInputEnvelope {
+    @Field(() => [UserMessageRoomCreateManyMessageRoomInput], {nullable:false})
+    @Type(() => UserMessageRoomCreateManyMessageRoomInput)
+    data!: Array<UserMessageRoomCreateManyMessageRoomInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class UserMessageRoomCreateManyMessageRoomInput {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+}
+
+@InputType()
+export class UserMessageRoomCreateManyUserInputEnvelope {
+    @Field(() => [UserMessageRoomCreateManyUserInput], {nullable:false})
+    @Type(() => UserMessageRoomCreateManyUserInput)
+    data!: Array<UserMessageRoomCreateManyUserInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@InputType()
+export class UserMessageRoomCreateManyUserInput {
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+}
+
+@InputType()
+export class UserMessageRoomCreateManyInput {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+}
+
+@InputType()
+export class UserMessageRoomCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [UserMessageRoomCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create?: Array<UserMessageRoomCreateWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => UserMessageRoomCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateNestedManyWithoutUserInput {
+    @Field(() => [UserMessageRoomCreateWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create?: Array<UserMessageRoomCreateWithoutUserInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutUserInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateManyUserInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyUserInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyUserInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateOrConnectWithoutMessageRoomInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof UserMessageRoomCreateWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateOrConnectWithoutUserInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomCreateWithoutUserInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create!: InstanceType<typeof UserMessageRoomCreateWithoutUserInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateWithoutMessageRoomInput {
+    @Field(() => UserCreateNestedOneWithoutUserMessageRoomInput, {nullable:false})
+    user!: InstanceType<typeof UserCreateNestedOneWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateWithoutUserInput {
+    @Field(() => MessageRoomCreateNestedOneWithoutUserMessageRoomInput, {nullable:false})
+    messageRoom!: InstanceType<typeof MessageRoomCreateNestedOneWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomCreateInput {
+    @Field(() => UserCreateNestedOneWithoutUserMessageRoomInput, {nullable:false})
+    user!: InstanceType<typeof UserCreateNestedOneWithoutUserMessageRoomInput>;
+    @Field(() => MessageRoomCreateNestedOneWithoutUserMessageRoomInput, {nullable:false})
+    messageRoom!: InstanceType<typeof MessageRoomCreateNestedOneWithoutUserMessageRoomInput>;
+}
+
+@ArgsType()
+export class UserMessageRoomGroupByArgs {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    @Type(() => UserMessageRoomWhereInput)
+    where?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<UserMessageRoomOrderByWithAggregationInput>;
+    @Field(() => [UserMessageRoomScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof UserMessageRoomScalarFieldEnum>;
+    @Field(() => UserMessageRoomScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof UserMessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => UserMessageRoomCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof UserMessageRoomCountAggregateInput>;
+    @Field(() => UserMessageRoomMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof UserMessageRoomMinAggregateInput>;
+    @Field(() => UserMessageRoomMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof UserMessageRoomMaxAggregateInput>;
+}
+
+@ObjectType()
+export class UserMessageRoomGroupBy {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+    @Field(() => UserMessageRoomCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof UserMessageRoomCountAggregate>;
+    @Field(() => UserMessageRoomMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof UserMessageRoomMinAggregate>;
+    @Field(() => UserMessageRoomMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof UserMessageRoomMaxAggregate>;
+}
+
+@InputType()
+export class UserMessageRoomListRelationFilter {
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    every?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    some?: InstanceType<typeof UserMessageRoomWhereInput>;
+    @Field(() => UserMessageRoomWhereInput, {nullable:true})
+    none?: InstanceType<typeof UserMessageRoomWhereInput>;
+}
+
+@InputType()
+export class UserMessageRoomMaxAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    userId?: true;
+    @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+}
+
+@ObjectType()
+export class UserMessageRoomMaxAggregate {
+    @Field(() => String, {nullable:true})
+    userId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
+}
+
+@InputType()
+export class UserMessageRoomMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class UserMessageRoomMinAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    userId?: true;
+    @Field(() => Boolean, {nullable:true})
+    messageRoomId?: true;
+}
+
+@ObjectType()
+export class UserMessageRoomMinAggregate {
+    @Field(() => String, {nullable:true})
+    userId?: string;
+    @Field(() => String, {nullable:true})
+    messageRoomId?: string;
+}
+
+@InputType()
+export class UserMessageRoomMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class UserMessageRoomOrderByRelationAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    _count?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class UserMessageRoomOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => UserMessageRoomCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof UserMessageRoomCountOrderByAggregateInput>;
+    @Field(() => UserMessageRoomMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof UserMessageRoomMaxOrderByAggregateInput>;
+    @Field(() => UserMessageRoomMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof UserMessageRoomMinOrderByAggregateInput>;
+}
+
+@InputType()
+export class UserMessageRoomOrderByWithRelationInput {
+    @Field(() => UserOrderByWithRelationInput, {nullable:true})
+    user?: InstanceType<typeof UserOrderByWithRelationInput>;
+    @Field(() => MessageRoomOrderByWithRelationInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomOrderByWithRelationInput>;
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    messageRoomId?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class UserMessageRoomScalarWhereWithAggregatesInput {
+    @Field(() => [UserMessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<UserMessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => [UserMessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<UserMessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => [UserMessageRoomScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<UserMessageRoomScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    userId?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringWithAggregatesFilter>;
+}
+
+@InputType()
+export class UserMessageRoomScalarWhereInput {
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    AND?: Array<UserMessageRoomScalarWhereInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    OR?: Array<UserMessageRoomScalarWhereInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    NOT?: Array<UserMessageRoomScalarWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    userId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFilter>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedCreateNestedManyWithoutMessageRoomInput {
+    @Field(() => [UserMessageRoomCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create?: Array<UserMessageRoomCreateWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => UserMessageRoomCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedCreateNestedManyWithoutUserInput {
+    @Field(() => [UserMessageRoomCreateWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create?: Array<UserMessageRoomCreateWithoutUserInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutUserInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateManyUserInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyUserInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyUserInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedCreateWithoutMessageRoomInput {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedCreateWithoutUserInput {
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedCreateInput {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [UserMessageRoomCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create?: Array<UserMessageRoomCreateWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => UserMessageRoomCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    set?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    disconnect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    delete?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    deleteMany?: Array<UserMessageRoomScalarWhereInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateManyWithoutUserNestedInput {
+    @Field(() => [UserMessageRoomCreateWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create?: Array<UserMessageRoomCreateWithoutUserInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutUserInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutUserInput>;
+    @Field(() => [UserMessageRoomUpsertWithWhereUniqueWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpsertWithWhereUniqueWithoutUserInput)
+    upsert?: Array<UserMessageRoomUpsertWithWhereUniqueWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateManyUserInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyUserInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyUserInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    set?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    disconnect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    delete?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomUpdateWithWhereUniqueWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateWithWhereUniqueWithoutUserInput)
+    update?: Array<UserMessageRoomUpdateWithWhereUniqueWithoutUserInput>;
+    @Field(() => [UserMessageRoomUpdateManyWithWhereWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateManyWithWhereWithoutUserInput)
+    updateMany?: Array<UserMessageRoomUpdateManyWithWhereWithoutUserInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    deleteMany?: Array<UserMessageRoomScalarWhereInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateManyInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateWithoutMessageRoomInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateWithoutUserInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class UserMessageRoomUncheckedUpdateInput {
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    userId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput {
+    @Field(() => UserMessageRoomScalarWhereInput, {nullable:false})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    where!: InstanceType<typeof UserMessageRoomScalarWhereInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput)
+    data!: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateManyWithWhereWithoutUserInput {
+    @Field(() => UserMessageRoomScalarWhereInput, {nullable:false})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    where!: InstanceType<typeof UserMessageRoomScalarWhereInput>;
+    @Field(() => UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput)
+    data!: InstanceType<typeof UserMessageRoomUncheckedUpdateManyWithoutUserMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateManyWithoutMessageRoomNestedInput {
+    @Field(() => [UserMessageRoomCreateWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create?: Array<UserMessageRoomCreateWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutMessageRoomInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput)
+    upsert?: Array<UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => UserMessageRoomCreateManyMessageRoomInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyMessageRoomInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyMessageRoomInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    set?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    disconnect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    delete?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput)
+    update?: Array<UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput)
+    updateMany?: Array<UserMessageRoomUpdateManyWithWhereWithoutMessageRoomInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    deleteMany?: Array<UserMessageRoomScalarWhereInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateManyWithoutUserNestedInput {
+    @Field(() => [UserMessageRoomCreateWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create?: Array<UserMessageRoomCreateWithoutUserInput>;
+    @Field(() => [UserMessageRoomCreateOrConnectWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomCreateOrConnectWithoutUserInput)
+    connectOrCreate?: Array<UserMessageRoomCreateOrConnectWithoutUserInput>;
+    @Field(() => [UserMessageRoomUpsertWithWhereUniqueWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpsertWithWhereUniqueWithoutUserInput)
+    upsert?: Array<UserMessageRoomUpsertWithWhereUniqueWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateManyUserInputEnvelope, {nullable:true})
+    @Type(() => UserMessageRoomCreateManyUserInputEnvelope)
+    createMany?: InstanceType<typeof UserMessageRoomCreateManyUserInputEnvelope>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    set?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    disconnect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    delete?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomWhereUniqueInput], {nullable:true})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    connect?: Array<UserMessageRoomWhereUniqueInput>;
+    @Field(() => [UserMessageRoomUpdateWithWhereUniqueWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateWithWhereUniqueWithoutUserInput)
+    update?: Array<UserMessageRoomUpdateWithWhereUniqueWithoutUserInput>;
+    @Field(() => [UserMessageRoomUpdateManyWithWhereWithoutUserInput], {nullable:true})
+    @Type(() => UserMessageRoomUpdateManyWithWhereWithoutUserInput)
+    updateMany?: Array<UserMessageRoomUpdateManyWithWhereWithoutUserInput>;
+    @Field(() => [UserMessageRoomScalarWhereInput], {nullable:true})
+    @Type(() => UserMessageRoomScalarWhereInput)
+    deleteMany?: Array<UserMessageRoomScalarWhereInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateWithoutMessageRoomInput)
+    data!: InstanceType<typeof UserMessageRoomUpdateWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateWithWhereUniqueWithoutUserInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomUpdateWithoutUserInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateWithoutUserInput)
+    data!: InstanceType<typeof UserMessageRoomUpdateWithoutUserInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateWithoutMessageRoomInput {
+    @Field(() => UserUpdateOneRequiredWithoutUserMessageRoomNestedInput, {nullable:true})
+    user?: InstanceType<typeof UserUpdateOneRequiredWithoutUserMessageRoomNestedInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateWithoutUserInput {
+    @Field(() => MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpdateInput {
+    @Field(() => UserUpdateOneRequiredWithoutUserMessageRoomNestedInput, {nullable:true})
+    user?: InstanceType<typeof UserUpdateOneRequiredWithoutUserMessageRoomNestedInput>;
+    @Field(() => MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomUpdateOneRequiredWithoutUserMessageRoomNestedInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpsertWithWhereUniqueWithoutMessageRoomInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomUpdateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateWithoutMessageRoomInput)
+    update!: InstanceType<typeof UserMessageRoomUpdateWithoutMessageRoomInput>;
+    @Field(() => UserMessageRoomCreateWithoutMessageRoomInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateWithoutMessageRoomInput)
+    create!: InstanceType<typeof UserMessageRoomCreateWithoutMessageRoomInput>;
+}
+
+@InputType()
+export class UserMessageRoomUpsertWithWhereUniqueWithoutUserInput {
+    @Field(() => UserMessageRoomWhereUniqueInput, {nullable:false})
+    @Type(() => UserMessageRoomWhereUniqueInput)
+    where!: InstanceType<typeof UserMessageRoomWhereUniqueInput>;
+    @Field(() => UserMessageRoomUpdateWithoutUserInput, {nullable:false})
+    @Type(() => UserMessageRoomUpdateWithoutUserInput)
+    update!: InstanceType<typeof UserMessageRoomUpdateWithoutUserInput>;
+    @Field(() => UserMessageRoomCreateWithoutUserInput, {nullable:false})
+    @Type(() => UserMessageRoomCreateWithoutUserInput)
+    create!: InstanceType<typeof UserMessageRoomCreateWithoutUserInput>;
+}
+
+@InputType()
+export class UserMessageRoomUserIdMessageRoomIdCompoundUniqueInput {
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
+}
+
+@InputType()
+export class UserMessageRoomWhereUniqueInput {
+    @Field(() => UserMessageRoomUserIdMessageRoomIdCompoundUniqueInput, {nullable:true})
+    userId_messageRoomId?: InstanceType<typeof UserMessageRoomUserIdMessageRoomIdCompoundUniqueInput>;
+}
+
+@InputType()
+export class UserMessageRoomWhereInput {
+    @Field(() => [UserMessageRoomWhereInput], {nullable:true})
+    AND?: Array<UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomWhereInput], {nullable:true})
+    OR?: Array<UserMessageRoomWhereInput>;
+    @Field(() => [UserMessageRoomWhereInput], {nullable:true})
+    NOT?: Array<UserMessageRoomWhereInput>;
+    @Field(() => UserRelationFilter, {nullable:true})
+    user?: InstanceType<typeof UserRelationFilter>;
+    @Field(() => MessageRoomRelationFilter, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomRelationFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    userId?: InstanceType<typeof StringFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    messageRoomId?: InstanceType<typeof StringFilter>;
+}
+
+@ObjectType()
+export class UserMessageRoom {
+    @Field(() => User, {nullable:false})
+    user?: InstanceType<typeof User>;
+    @Field(() => MessageRoom, {nullable:false})
+    messageRoom?: InstanceType<typeof MessageRoom>;
+    @Field(() => String, {nullable:false})
+    userId!: string;
+    @Field(() => String, {nullable:false})
+    messageRoomId!: string;
 }
 
 @ObjectType()

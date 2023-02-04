@@ -10,7 +10,7 @@ import { UserProjectService } from './user-project.service';
 import { UserProject, UserProjectCreateManyInput } from 'src/@generated';
 
 @InputType()
-class Input {
+class InputProjects {
   // array of objects
   @Field((type) => [UserProjectCreateManyInput])
   data: [UserProjectCreateManyInput];
@@ -30,7 +30,9 @@ export class UserProjectResolver {
   }
 
   @Mutation((returns) => Boolean)
-  async createUserProject(@Args('input') input: Input): Promise<boolean> {
+  async createUserProject(
+    @Args('input') input: InputProjects,
+  ): Promise<boolean> {
     console.log(input);
     await this.userProjectService.createUserProject(input.data);
     return true;

@@ -27,7 +27,7 @@ export class UserProjectService {
   ): Promise<void> => {
     try {
       const user = await this.db.userProject.createMany({ data: input });
-      console.log(user);
+      // console.log(user);
       // return user;
     } catch (error) {
       throw new Error(error);

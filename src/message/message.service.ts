@@ -20,6 +20,20 @@ export class MessageService {
       throw new Error(error);
     }
   };
+  getMessagesByRoom(id: string): Promise<MessageUncheckedCreateInput[]> {
+    try {
+      return this.db.message.findMany({
+        where: { messageRoomId: id },
+        take: 50,
+        include: { author: true, messageRoom: true },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   getMessagesByProject = async (
     id: string,
   ): Promise<MessageUncheckedCreateInput[]> => {
