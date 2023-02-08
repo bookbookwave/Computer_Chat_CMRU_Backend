@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres
+    container_name: Backend_Postgres
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespw
+      POSTGRES_DB: backend_cmru
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - backend_cmru
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_cmru
+    restart: always
+    ports:
+      - 3001:3000
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules/
+    depends_on:
+      - postgres
+    networks:
+      - backend_cmru
+
+networks:
+  backend_cmru:
+    driver: bridge

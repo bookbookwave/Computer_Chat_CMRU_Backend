@@ -1,7 +1,6 @@
-import { blogNews } from './../../node_modules/.prisma/client/index.d';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { blogNewsUncheckedCreateInput } from '../@generated';
+import { blogNews, blogNewsUncheckedCreateInput } from '../@generated';
 
 @Injectable()
 export class BlogNewsService {

@@ -125,9 +125,9 @@ async function main() {
 
   await prisma.projectType.createMany({ data: projectTypes });
 
-  await prisma.banner.createMany({ data: Banner });
+  // await prisma.banner.createMany({ data: Banner });
 
-  await prisma.blogNews.createMany({ data: BlogNews });
+  // await prisma.blogNews.createMany({ data: BlogNews });
 }
 
 main();
