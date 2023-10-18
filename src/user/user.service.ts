@@ -10,9 +10,26 @@ export class UserService {
   async findUser(id: string): Promise<User> {
     return this.db.user.findFirst({ where: { id: id } });
   }
-  async getUsers() {
-    return this.db.user.findMany();
+  async getUsers(): Promise<User[]> {
+    try {
+      return this.db.user.findMany();
+    } catch (error) {
+      console.log('None :>> ');
+    }
   }
+  getUserNoProject = async (): Promise<User[]> => {
+    const user = await this.db.user.findMany({});
+    const userProject = await this.db.userProject.findMany({});
+
+    const userNoProject = user.filter((user) => {
+      return !userProject.some((project) => {
+        if (user.role === 'STUDENT') {
+          return user.id === project.userId;
+        }
+      });
+    });
+    return userNoProject;
+  };
 
   async createUser(
     input: Omit<UserUncheckedCreateInput, 'avatar'> & { avatar: string },
@@ -25,11 +42,12 @@ export class UserService {
           password: hashSync(input.password, 10),
           role: input.role,
           avatar: input.avatar,
+          credentialId: input.credentialId,
         },
       });
       return {
         ...user,
-        role: user.role === 'ADMIN' ? Role.ADMIN : Role.USER,
+        role: user.role === 'ADMIN' ? Role.ADMIN : Role.STUDENT,
       };
     } catch (error) {
       throw new Error(error.message);
@@ -48,6 +66,7 @@ export class UserService {
           email: input.email,
           role: input.role,
           avatar: input.avatar,
+          credentialId: input.credentialId,
         },
       });
     } catch (error) {

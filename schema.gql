@@ -582,9 +582,14 @@ type ProjectType {
   _count: ProjectTypeCount!
 }
 
+type UserAvgAggregate {
+  credentialId: Float
+}
+
 type UserCountAggregate {
   id: Int!
   name: Int!
+  credentialId: Int!
   email: Int!
   password: Int!
   role: Int!
@@ -607,6 +612,7 @@ type UserCount {
 type UserMaxAggregate {
   id: String
   name: String
+  credentialId: Int
   email: String
   password: String
   role: Role
@@ -618,12 +624,13 @@ type UserMaxAggregate {
 enum Role {
   ADMIN
   TEACHER
-  USER
+  STUDENT
 }
 
 type UserMinAggregate {
   id: String
   name: String
+  credentialId: Int
   email: String
   password: String
   role: Role
@@ -632,9 +639,14 @@ type UserMinAggregate {
   updateAt: DateTime
 }
 
+type UserSumAggregate {
+  credentialId: Int
+}
+
 type User {
   id: ID!
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role!
@@ -668,10 +680,10 @@ type UserMessageRoomMinAggregate {
 }
 
 type UserMessageRoom {
-  user: User!
-  messageRoom: MessageRoom!
   userId: String!
   messageRoomId: String!
+  user: User!
+  messageRoom: MessageRoom!
 }
 
 type UserProjectCountAggregate {
@@ -691,15 +703,16 @@ type UserProjectMinAggregate {
 }
 
 type UserProject {
-  project: Project!
-  user: User!
   projectId: String!
   userId: String!
+  project: Project!
+  user: User!
 }
 
 type Query {
   user(id: String!): User!
   users: [User!]!
+  usersNoProject: [User!]!
   category(id: String!): Category!
   categories: [Category!]!
   post(id: String!): Post!
@@ -802,6 +815,7 @@ type Mutation {
 input UserUncheckedCreateInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1097,6 +1111,7 @@ input UserCreateNestedOneWithoutUserMessageRoomInput {
 input UserCreateWithoutUserMessageRoomInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1274,6 +1289,7 @@ input UserCreateNestedOneWithoutUserProjectInput {
 input UserCreateWithoutUserProjectInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1367,6 +1383,7 @@ input UserCreateNestedOneWithoutMessageInput {
 input UserCreateWithoutMessageInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1725,6 +1742,7 @@ input inputLogin {
 input inputRegister {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1774,6 +1792,7 @@ input UserCreateNestedOneWithoutPostInput {
 input UserCreateWithoutPostInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role
@@ -1895,6 +1914,7 @@ input UserCreateNestedOneWithoutDownloadInput {
 input UserCreateWithoutDownloadInput {
   id: String
   name: String!
+  credentialId: Int!
   email: String!
   password: String!
   role: Role

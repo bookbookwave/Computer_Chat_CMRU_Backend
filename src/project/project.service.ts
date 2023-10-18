@@ -61,14 +61,15 @@ export class ProjectService {
   };
   deleteProject = async (id: string): Promise<boolean> => {
     try {
+      // await this.db.userProject.deleteMany({ where: { projectId: id } });
       const userProject = await this.db.userProject.deleteMany({
         where: { projectId: id },
       });
       const project = this.db.project.delete({ where: { id: id } });
       if (!project && !userProject) {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     } catch (error) {
       throw new Error(error);
     }

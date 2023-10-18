@@ -24,10 +24,11 @@ model User {
   id              String            @id @default(cuid())
   /// @Validator.MinLength(3)
   name            String
+  credentialId    Int              
   /// @Validator.IsEmail()
   email           String            @unique
   password        String
-  role            Role              @default(USER)
+  role            Role              @default(STUDENT)
   /// @FieldType('Upload.GraphQLUpload')
   /// @PropertyType('Upload.Upload')
   avatar          String            @default("https://picsum.photos/300/300")
@@ -250,5 +251,6 @@ model blogNews {
 enum Role {
   ADMIN
   TEACHER
-  USER
+  STUDENT
+  // USER
 }

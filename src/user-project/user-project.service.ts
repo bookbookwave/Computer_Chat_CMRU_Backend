@@ -15,8 +15,8 @@ export class UserProjectService {
   getUserProject = async (id: string): Promise<UserProject[]> => {
     try {
       return await this.db.userProject.findMany({
-        where: { userId: id },
-        include: { project: true },
+        where: { projectId: id },
+        include: { project: true, user: true },
       });
     } catch (error) {
       throw new Error(error);

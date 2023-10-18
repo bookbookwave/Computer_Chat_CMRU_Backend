@@ -16,8 +16,12 @@ export class UserResolver {
     return await this.userService.findUser(id);
   }
   @Query((returns) => [User])
-  async users() {
+  async users(): Promise<User[]> {
     return await this.userService.getUsers();
+  }
+  @Query((returns) => [User])
+  async usersNoProject(): Promise<User[]> {
+    return await this.userService.getUserNoProject();
   }
 
   @Mutation((returns) => User)

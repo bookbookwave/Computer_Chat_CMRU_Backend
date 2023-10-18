@@ -22,6 +22,7 @@ export enum UserMessageRoomScalarFieldEnum {
 export enum UserScalarFieldEnum {
     id = "id",
     name = "name",
+    credentialId = "credentialId",
     email = "email",
     password = "password",
     role = "role",
@@ -65,12 +66,17 @@ export enum SortOrder {
 export enum Role {
     ADMIN = "ADMIN",
     TEACHER = "TEACHER",
-    USER = "USER"
+    STUDENT = "STUDENT"
 }
 
 export enum QueryMode {
     'default' = "default",
     insensitive = "insensitive"
+}
+
+export enum NullsOrder {
+    first = "first",
+    last = "last"
 }
 
 export enum LoginTimeScalarFieldEnum {
@@ -184,6 +190,7 @@ registerEnumType(PageScalarFieldEnum, { name: 'PageScalarFieldEnum', description
 registerEnumType(PostScalarFieldEnum, { name: 'PostScalarFieldEnum', description: undefined })
 registerEnumType(BlogNewsScalarFieldEnum, { name: 'BlogNewsScalarFieldEnum', description: undefined })
 registerEnumType(LoginTimeScalarFieldEnum, { name: 'LoginTimeScalarFieldEnum', description: undefined })
+registerEnumType(NullsOrder, { name: 'NullsOrder', description: undefined })
 registerEnumType(QueryMode, { name: 'QueryMode', description: undefined })
 registerEnumType(Role, { name: 'Role', description: undefined })
 registerEnumType(SortOrder, { name: 'SortOrder', description: undefined })
@@ -459,8 +466,8 @@ export class BannerOrderByWithAggregationInput {
     title?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     image?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    link?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    link?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     createAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -481,8 +488,8 @@ export class BannerOrderByWithRelationInput {
     title?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     image?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    link?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    link?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     createAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -4498,10 +4505,10 @@ export class FileOrderByWithAggregationInput {
     fileName?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     file?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    projectId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    projectId?: InstanceType<typeof SortOrderInput>;
+    @Field(() => SortOrderInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -4524,10 +4531,10 @@ export class FileOrderByWithRelationInput {
     fileName?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     file?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    projectId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    projectId?: InstanceType<typeof SortOrderInput>;
+    @Field(() => SortOrderInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     statusId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -6565,10 +6572,10 @@ export class MessageOrderByWithAggregationInput {
     message?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    projectId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    projectId?: InstanceType<typeof SortOrderInput>;
+    @Field(() => SortOrderInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -6589,10 +6596,10 @@ export class MessageOrderByWithRelationInput {
     message?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    projectId?: keyof typeof SortOrder;
-    @Field(() => SortOrder, {nullable:true})
-    messageRoomId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    projectId?: InstanceType<typeof SortOrderInput>;
+    @Field(() => SortOrderInput, {nullable:true})
+    messageRoomId?: InstanceType<typeof SortOrderInput>;
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -7380,9 +7387,9 @@ export class CreateManyMessageRoomArgs {
 
 @ArgsType()
 export class CreateOneMessageRoomArgs {
-    @Field(() => MessageRoomCreateInput, {nullable:false})
+    @Field(() => MessageRoomCreateInput, {nullable:true})
     @Type(() => MessageRoomCreateInput)
-    data!: InstanceType<typeof MessageRoomCreateInput>;
+    data?: InstanceType<typeof MessageRoomCreateInput>;
 }
 
 @ArgsType()
@@ -11063,6 +11070,14 @@ export class NullableStringFieldUpdateOperationsInput {
 }
 
 @InputType()
+export class SortOrderInput {
+    @Field(() => SortOrder, {nullable:false})
+    sort!: keyof typeof SortOrder;
+    @Field(() => NullsOrder, {nullable:true})
+    nulls?: keyof typeof NullsOrder;
+}
+
+@InputType()
 export class StringFieldUpdateOperationsInput {
     @Field(() => String, {nullable:true})
     set?: string;
@@ -14029,6 +14044,10 @@ export class AggregateUserProjectArgs {
 export class AggregateUser {
     @Field(() => UserCountAggregate, {nullable:true})
     _count?: InstanceType<typeof UserCountAggregate>;
+    @Field(() => UserAvgAggregate, {nullable:true})
+    _avg?: InstanceType<typeof UserAvgAggregate>;
+    @Field(() => UserSumAggregate, {nullable:true})
+    _sum?: InstanceType<typeof UserSumAggregate>;
     @Field(() => UserMinAggregate, {nullable:true})
     _min?: InstanceType<typeof UserMinAggregate>;
     @Field(() => UserMaxAggregate, {nullable:true})
@@ -14265,10 +14284,32 @@ export class UserAggregateArgs {
     skip?: number;
     @Field(() => UserCountAggregateInput, {nullable:true})
     _count?: InstanceType<typeof UserCountAggregateInput>;
+    @Field(() => UserAvgAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof UserAvgAggregateInput>;
+    @Field(() => UserSumAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof UserSumAggregateInput>;
     @Field(() => UserMinAggregateInput, {nullable:true})
     _min?: InstanceType<typeof UserMinAggregateInput>;
     @Field(() => UserMaxAggregateInput, {nullable:true})
     _max?: InstanceType<typeof UserMaxAggregateInput>;
+}
+
+@InputType()
+export class UserAvgAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    credentialId?: true;
+}
+
+@ObjectType()
+export class UserAvgAggregate {
+    @Field(() => Float, {nullable:true})
+    credentialId?: number;
+}
+
+@InputType()
+export class UserAvgOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
 }
 
 @InputType()
@@ -14277,6 +14318,8 @@ export class UserCountAggregateInput {
     id?: true;
     @Field(() => Boolean, {nullable:true})
     name?: true;
+    @Field(() => Boolean, {nullable:true})
+    credentialId?: true;
     @Field(() => Boolean, {nullable:true})
     email?: true;
     @Field(() => Boolean, {nullable:true})
@@ -14300,6 +14343,8 @@ export class UserCountAggregate {
     @Field(() => Int, {nullable:false})
     name!: number;
     @Field(() => Int, {nullable:false})
+    credentialId!: number;
+    @Field(() => Int, {nullable:false})
     email!: number;
     @Field(() => Int, {nullable:false})
     password!: number;
@@ -14321,6 +14366,8 @@ export class UserCountOrderByAggregateInput {
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -14360,6 +14407,8 @@ export class UserCreateManyInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14543,6 +14592,8 @@ export class UserCreateWithoutDownloadInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14577,6 +14628,8 @@ export class UserCreateWithoutLoginTimeInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14611,6 +14664,8 @@ export class UserCreateWithoutMessageInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14645,6 +14700,8 @@ export class UserCreateWithoutPageInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14679,6 +14736,8 @@ export class UserCreateWithoutPostInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14713,6 +14772,8 @@ export class UserCreateWithoutUserMessageRoomInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14747,6 +14808,8 @@ export class UserCreateWithoutUserProjectInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14781,6 +14844,8 @@ export class UserCreateInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -14827,6 +14892,10 @@ export class UserGroupByArgs {
     skip?: number;
     @Field(() => UserCountAggregateInput, {nullable:true})
     _count?: InstanceType<typeof UserCountAggregateInput>;
+    @Field(() => UserAvgAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof UserAvgAggregateInput>;
+    @Field(() => UserSumAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof UserSumAggregateInput>;
     @Field(() => UserMinAggregateInput, {nullable:true})
     _min?: InstanceType<typeof UserMinAggregateInput>;
     @Field(() => UserMaxAggregateInput, {nullable:true})
@@ -14839,6 +14908,8 @@ export class UserGroupBy {
     id!: string;
     @Field(() => String, {nullable:false})
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     email!: string;
     @Field(() => String, {nullable:false})
@@ -14853,6 +14924,10 @@ export class UserGroupBy {
     updateAt!: Date | string;
     @Field(() => UserCountAggregate, {nullable:true})
     _count?: InstanceType<typeof UserCountAggregate>;
+    @Field(() => UserAvgAggregate, {nullable:true})
+    _avg?: InstanceType<typeof UserAvgAggregate>;
+    @Field(() => UserSumAggregate, {nullable:true})
+    _sum?: InstanceType<typeof UserSumAggregate>;
     @Field(() => UserMinAggregate, {nullable:true})
     _min?: InstanceType<typeof UserMinAggregate>;
     @Field(() => UserMaxAggregate, {nullable:true})
@@ -14865,6 +14940,8 @@ export class UserMaxAggregateInput {
     id?: true;
     @Field(() => Boolean, {nullable:true})
     name?: true;
+    @Field(() => Boolean, {nullable:true})
+    credentialId?: true;
     @Field(() => Boolean, {nullable:true})
     email?: true;
     @Field(() => Boolean, {nullable:true})
@@ -14885,6 +14962,8 @@ export class UserMaxAggregate {
     id?: string;
     @Field(() => String, {nullable:true})
     name?: string;
+    @Field(() => Int, {nullable:true})
+    credentialId?: number;
     @Field(() => String, {nullable:true})
     email?: string;
     @Field(() => String, {nullable:true})
@@ -14906,6 +14985,8 @@ export class UserMaxOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     password?: keyof typeof SortOrder;
@@ -14926,6 +15007,8 @@ export class UserMinAggregateInput {
     @Field(() => Boolean, {nullable:true})
     name?: true;
     @Field(() => Boolean, {nullable:true})
+    credentialId?: true;
+    @Field(() => Boolean, {nullable:true})
     email?: true;
     @Field(() => Boolean, {nullable:true})
     password?: true;
@@ -14945,6 +15028,8 @@ export class UserMinAggregate {
     id?: string;
     @Field(() => String, {nullable:true})
     name?: string;
+    @Field(() => Int, {nullable:true})
+    credentialId?: number;
     @Field(() => String, {nullable:true})
     email?: string;
     @Field(() => String, {nullable:true})
@@ -14966,6 +15051,8 @@ export class UserMinOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     password?: keyof typeof SortOrder;
@@ -14986,6 +15073,8 @@ export class UserOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     password?: keyof typeof SortOrder;
@@ -14999,10 +15088,14 @@ export class UserOrderByWithAggregationInput {
     updateAt?: keyof typeof SortOrder;
     @Field(() => UserCountOrderByAggregateInput, {nullable:true})
     _count?: InstanceType<typeof UserCountOrderByAggregateInput>;
+    @Field(() => UserAvgOrderByAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof UserAvgOrderByAggregateInput>;
     @Field(() => UserMaxOrderByAggregateInput, {nullable:true})
     _max?: InstanceType<typeof UserMaxOrderByAggregateInput>;
     @Field(() => UserMinOrderByAggregateInput, {nullable:true})
     _min?: InstanceType<typeof UserMinOrderByAggregateInput>;
+    @Field(() => UserSumOrderByAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof UserSumOrderByAggregateInput>;
 }
 
 @InputType()
@@ -15011,6 +15104,8 @@ export class UserOrderByWithRelationInput {
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
@@ -15059,6 +15154,8 @@ export class UserScalarWhereWithAggregatesInput {
     id?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     name?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => IntWithAggregatesFilter, {nullable:true})
+    credentialId?: InstanceType<typeof IntWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     email?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
@@ -15074,12 +15171,32 @@ export class UserScalarWhereWithAggregatesInput {
 }
 
 @InputType()
+export class UserSumAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    credentialId?: true;
+}
+
+@ObjectType()
+export class UserSumAggregate {
+    @Field(() => Int, {nullable:true})
+    credentialId?: number;
+}
+
+@InputType()
+export class UserSumOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    credentialId?: keyof typeof SortOrder;
+}
+
+@InputType()
 export class UserUncheckedCreateWithoutDownloadInput {
     @Field(() => String, {nullable:true})
     id?: string;
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15114,6 +15231,8 @@ export class UserUncheckedCreateWithoutLoginTimeInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15148,6 +15267,8 @@ export class UserUncheckedCreateWithoutMessageInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15182,6 +15303,8 @@ export class UserUncheckedCreateWithoutPageInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15216,6 +15339,8 @@ export class UserUncheckedCreateWithoutPostInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15250,6 +15375,8 @@ export class UserUncheckedCreateWithoutUserMessageRoomInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15284,6 +15411,8 @@ export class UserUncheckedCreateWithoutUserProjectInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15318,6 +15447,8 @@ export class UserUncheckedCreateInput {
     @Field(() => String, {nullable:false})
     @Validator.MinLength(3)
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     @Validator.IsEmail()
     email!: string;
@@ -15353,6 +15484,8 @@ export class UserUncheckedUpdateManyInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15373,6 +15506,8 @@ export class UserUncheckedUpdateWithoutDownloadInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15405,6 +15540,8 @@ export class UserUncheckedUpdateWithoutLoginTimeInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15437,6 +15574,8 @@ export class UserUncheckedUpdateWithoutMessageInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15469,6 +15608,8 @@ export class UserUncheckedUpdateWithoutPageInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15501,6 +15642,8 @@ export class UserUncheckedUpdateWithoutPostInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15533,6 +15676,8 @@ export class UserUncheckedUpdateWithoutUserMessageRoomInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15565,6 +15710,8 @@ export class UserUncheckedUpdateWithoutUserProjectInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15597,6 +15744,8 @@ export class UserUncheckedUpdateInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15631,6 +15780,8 @@ export class UserUpdateManyMutationInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15784,6 +15935,8 @@ export class UserUpdateWithoutDownloadInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15816,6 +15969,8 @@ export class UserUpdateWithoutLoginTimeInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15848,6 +16003,8 @@ export class UserUpdateWithoutMessageInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15880,6 +16037,8 @@ export class UserUpdateWithoutPageInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15912,6 +16071,8 @@ export class UserUpdateWithoutPostInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15944,6 +16105,8 @@ export class UserUpdateWithoutUserMessageRoomInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -15976,6 +16139,8 @@ export class UserUpdateWithoutUserProjectInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -16008,6 +16173,8 @@ export class UserUpdateInput {
     id?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: InstanceType<typeof StringFieldUpdateOperationsInput>;
+    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
+    credentialId?: InstanceType<typeof IntFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     email?: InstanceType<typeof StringFieldUpdateOperationsInput>;
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
@@ -16127,6 +16294,8 @@ export class UserWhereInput {
     id?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     name?: InstanceType<typeof StringFilter>;
+    @Field(() => IntFilter, {nullable:true})
+    credentialId?: InstanceType<typeof IntFilter>;
     @Field(() => StringFilter, {nullable:true})
     email?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
@@ -16161,11 +16330,13 @@ export class User {
     id!: string;
     @Field(() => String, {nullable:false})
     name!: string;
+    @Field(() => Int, {nullable:false})
+    credentialId!: number;
     @Field(() => String, {nullable:false})
     email!: string;
     @Field(() => String, {nullable:false})
     password!: string;
-    @Field(() => Role, {nullable:false,defaultValue:'USER'})
+    @Field(() => Role, {nullable:false,defaultValue:'STUDENT'})
     role!: keyof typeof Role;
     @Field(() => String, {nullable:false,defaultValue:'https://picsum.photos/300/300'})
     avatar!: string;
@@ -16605,14 +16776,14 @@ export class UserMessageRoomOrderByWithAggregationInput {
 
 @InputType()
 export class UserMessageRoomOrderByWithRelationInput {
-    @Field(() => UserOrderByWithRelationInput, {nullable:true})
-    user?: InstanceType<typeof UserOrderByWithRelationInput>;
-    @Field(() => MessageRoomOrderByWithRelationInput, {nullable:true})
-    messageRoom?: InstanceType<typeof MessageRoomOrderByWithRelationInput>;
     @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     messageRoomId?: keyof typeof SortOrder;
+    @Field(() => UserOrderByWithRelationInput, {nullable:true})
+    user?: InstanceType<typeof UserOrderByWithRelationInput>;
+    @Field(() => MessageRoomOrderByWithRelationInput, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomOrderByWithRelationInput>;
 }
 
 @InputType()
@@ -16985,26 +17156,26 @@ export class UserMessageRoomWhereInput {
     OR?: Array<UserMessageRoomWhereInput>;
     @Field(() => [UserMessageRoomWhereInput], {nullable:true})
     NOT?: Array<UserMessageRoomWhereInput>;
-    @Field(() => UserRelationFilter, {nullable:true})
-    user?: InstanceType<typeof UserRelationFilter>;
-    @Field(() => MessageRoomRelationFilter, {nullable:true})
-    messageRoom?: InstanceType<typeof MessageRoomRelationFilter>;
     @Field(() => StringFilter, {nullable:true})
     userId?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     messageRoomId?: InstanceType<typeof StringFilter>;
+    @Field(() => UserRelationFilter, {nullable:true})
+    user?: InstanceType<typeof UserRelationFilter>;
+    @Field(() => MessageRoomRelationFilter, {nullable:true})
+    messageRoom?: InstanceType<typeof MessageRoomRelationFilter>;
 }
 
 @ObjectType()
 export class UserMessageRoom {
-    @Field(() => User, {nullable:false})
-    user?: InstanceType<typeof User>;
-    @Field(() => MessageRoom, {nullable:false})
-    messageRoom?: InstanceType<typeof MessageRoom>;
     @Field(() => String, {nullable:false})
     userId!: string;
     @Field(() => String, {nullable:false})
     messageRoomId!: string;
+    @Field(() => User, {nullable:false})
+    user?: InstanceType<typeof User>;
+    @Field(() => MessageRoom, {nullable:false})
+    messageRoom?: InstanceType<typeof MessageRoom>;
 }
 
 @ObjectType()
@@ -17313,14 +17484,14 @@ export class UserProjectOrderByWithAggregationInput {
 
 @InputType()
 export class UserProjectOrderByWithRelationInput {
-    @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
-    project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
-    @Field(() => UserOrderByWithRelationInput, {nullable:true})
-    user?: InstanceType<typeof UserOrderByWithRelationInput>;
     @Field(() => SortOrder, {nullable:true})
     projectId?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
+    @Field(() => ProjectOrderByWithRelationInput, {nullable:true})
+    project?: InstanceType<typeof ProjectOrderByWithRelationInput>;
+    @Field(() => UserOrderByWithRelationInput, {nullable:true})
+    user?: InstanceType<typeof UserOrderByWithRelationInput>;
 }
 
 @InputType()
@@ -17693,24 +17864,24 @@ export class UserProjectWhereInput {
     OR?: Array<UserProjectWhereInput>;
     @Field(() => [UserProjectWhereInput], {nullable:true})
     NOT?: Array<UserProjectWhereInput>;
-    @Field(() => ProjectRelationFilter, {nullable:true})
-    project?: InstanceType<typeof ProjectRelationFilter>;
-    @Field(() => UserRelationFilter, {nullable:true})
-    user?: InstanceType<typeof UserRelationFilter>;
     @Field(() => StringFilter, {nullable:true})
     projectId?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     userId?: InstanceType<typeof StringFilter>;
+    @Field(() => ProjectRelationFilter, {nullable:true})
+    project?: InstanceType<typeof ProjectRelationFilter>;
+    @Field(() => UserRelationFilter, {nullable:true})
+    user?: InstanceType<typeof UserRelationFilter>;
 }
 
 @ObjectType()
 export class UserProject {
-    @Field(() => Project, {nullable:false})
-    project?: InstanceType<typeof Project>;
-    @Field(() => User, {nullable:false})
-    user?: InstanceType<typeof User>;
     @Field(() => String, {nullable:false})
     projectId!: string;
     @Field(() => String, {nullable:false})
     userId!: string;
+    @Field(() => Project, {nullable:false})
+    project?: InstanceType<typeof Project>;
+    @Field(() => User, {nullable:false})
+    user?: InstanceType<typeof User>;
 }

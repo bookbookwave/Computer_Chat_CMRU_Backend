@@ -15,6 +15,7 @@ export type JWTPayLoad = {
   iat?: number;
   userId: string;
   role: Role;
+  credentialId: number;
   email: string;
   avatar: string;
   name: string;
@@ -74,6 +75,7 @@ export class AuthService {
         role: found.role as Role,
         avatar: found.avatar,
         name: found.name,
+        credentialId: found.credentialId,
       });
       return token;
     }
@@ -88,7 +90,8 @@ export class AuthService {
         password: hashSync(input.password, 10),
         name: input.name,
         avatar: input.avatar,
-        role: Role.USER,
+        role: Role.STUDENT,
+        credentialId: input.credentialId,
       },
     });
 
